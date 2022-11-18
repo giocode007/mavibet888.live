@@ -13,15 +13,15 @@ class CreateUserTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_types', function (Blueprint $table) {
+        Schema::create('user_status', function (Blueprint $table) {
             $table->id();
-            $table->string('type_name')->nullable();
+            $table->string('status_name')->nullable();
             $table->timestamps();
         });
 
-        DB::table('user_types')->insert([
-            ['type_name' => 'Active'],
-            ['type_name' => 'Disable']
+        DB::table('user_status')->insert([
+            ['status_name' => 'Active'],
+            ['status_name' => 'Disable']
         ]);
     }
 

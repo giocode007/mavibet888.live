@@ -211,11 +211,11 @@ class UserManagementController extends Controller
     {
         $request->validate([
             'current_password' => ['required', new MatchOldPassword],
-            'new_password' => ['required'],
-            'new_confirm_password' => ['same:new_password'],
+            'password'  => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required',
         ]);
    
-        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
+        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->password)]);
         Toastr::success('User change successfully :)','Success');
         return redirect()->route('home');
     }

@@ -13,13 +13,13 @@
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Form Change Password</h3>
-                <p class="text-subtitle text-muted">Chnage Password</p>
+                <p class="text-subtitle text-muted">Change Password</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Chnage Password</li>
+                        <li class="breadcrumb-item active" aria-current="page">Change Password</li>
                     </ol>
                 </nav>
             </div>
@@ -50,12 +50,12 @@
                         </div>
                         
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-lg @error('new_password') is-invalid @enderror" 
-                            name="new_password" placeholder="Enter Current Password">
+                            <input type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" 
+                            name="password" placeholder="Enter Current Password">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
-                            @error('new_password')
+                            @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-lg" name="new_confirm_password" placeholder="Choose Confirm Password">
+                            <input type="password" class="form-control form-control-lg" name="password_confirmation" placeholder="Choose Confirm Password">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>

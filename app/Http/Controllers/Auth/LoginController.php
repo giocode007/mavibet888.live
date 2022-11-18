@@ -58,28 +58,23 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'user_name' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        $email    = $request->email;
+        $username    = $request->user_name;
         $password = $request->password;
         
         $dt         = Carbon::now();
         $todayDate  = $dt->toDayDateTimeString();
 
         $activityLog = [
-
-            'name'        => $email,
-            'email'       => $email,
+            'user_name'        => $username,
             'description' => 'has log in',
             'date_time'   => $todayDate,
         ];
-        if (Auth::attempt(['email'=>$email,'password'=>$password,'status'=>'Active'])) {
-            DB::table('activity_logs')->insert($activityLog);
-            Toastr::success('Login successfully :)','Success');
-            return redirect()->intended('home');
-        }elseif (Auth::attempt(['email'=>$email,'password'=>$password,'status'=> null])) {
+        
+        if (Auth::attempt(['user_name'=>$username,'password'=>$password,'status'=>'Active'])) {
             DB::table('activity_logs')->insert($activityLog);
             Toastr::success('Login successfully :)','Success');
             return redirect()->intended('home');
@@ -97,18 +92,17 @@ class LoginController extends Controller
         Session::put('user', $user);
         $user=Session::get('user');
 
-        $name       = $user->name;
-        $email      = $user->email;
+        $username       = $user->user_name;
         $dt         = Carbon::now();
         $todayDate  = $dt->toDayDateTimeString();
 
         $activityLog = [
 
-            'name'        => $name,
-            'email'       => $email,
+            'user_name'        => $username,
             'description' => 'has logged out',
             'date_time'   => $todayDate,
         ];
+        
         DB::table('activity_logs')->insert($activityLog);
         Auth::logout();
         Toastr::success('Logout successfully :)','Success');

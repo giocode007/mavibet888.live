@@ -11,13 +11,13 @@ class Form extends Model
 
    protected $fillable = [
 
-    'rec_id',
-    'name',
-    'email',
-    'sex',
-    'country',
-    'phone',
-    'facebook_name',
-    'youtube_name'
+    // 'rec_id',
+    // 'name',
+    // 'email',
+    // 'sex',
+    // 'country',
+    // 'phone',
+    // 'facebook_name',
+    // 'youtube_name'
    ];
 }
