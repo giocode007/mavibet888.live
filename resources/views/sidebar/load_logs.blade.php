@@ -19,7 +19,7 @@
                 </li>
 
                 <li class="sidebar-title">Menu</li>
-                <li class="sidebar-item active">
+                <li class="sidebar-item">
                     <a href="{{ route('home') }}" class='sidebar-link'>
                         <i class="bi bi-speedometer"></i>
                         <span>Dashboard</span>
@@ -31,7 +31,7 @@
                         <span>Summary Report</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item active">
                     <a href="{{ route('load_logs') }}" class='sidebar-link'>
                         <i class="bi bi-clock-history"></i>
                         <span>Load Logs</span>

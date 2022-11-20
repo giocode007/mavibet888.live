@@ -19,7 +19,7 @@
                 </li>
 
                 <li class="sidebar-title">Menu</li>
-                <li class="sidebar-item active">
+                <li class="sidebar-item">
                     <a href="{{ route('home') }}" class='sidebar-link'>
                         <i class="bi bi-speedometer"></i>
                         <span>Dashboard</span>
@@ -43,7 +43,7 @@
                         <span>Commision Logs</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item active">
                     <a href="{{ route('commission_withdrawal') }}" class='sidebar-link'>
                         <i class="bi bi-wallet"></i>
                         <span>Commision Withdrawal</span>

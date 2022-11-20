@@ -30,4 +30,40 @@ class HomeController extends Controller
         $activity_logs = DB::table('activity_logs')->count();
         return view('home',compact('staff','users','user_activity_logs','activity_logs'));
     }
+
+    public function summaryReport()
+    {
+        $staff = DB::table('staff')->count();
+        $users = DB::table('users')->count();
+        $user_activity_logs = DB::table('user_activity_logs')->count();
+        $activity_logs = DB::table('activity_logs')->count();
+        return view('summary_report',compact('staff','users','user_activity_logs','activity_logs'));
+    }
+
+    public function loadLogs()
+    {
+        $staff = DB::table('staff')->count();
+        $users = DB::table('users')->count();
+        $user_activity_logs = DB::table('user_activity_logs')->count();
+        $activity_logs = DB::table('activity_logs')->count();
+        return view('load_logs',compact('staff','users','user_activity_logs','activity_logs'));
+    }
+
+    public function commissionLogs()
+    {
+        $staff = DB::table('staff')->count();
+        $users = DB::table('users')->count();
+        $user_activity_logs = DB::table('user_activity_logs')->count();
+        $activity_logs = DB::table('activity_logs')->count();
+        return view('commission_logs',compact('staff','users','user_activity_logs','activity_logs'));
+    }
+
+    public function commissionWithdrawal()
+    {
+        $staff = DB::table('staff')->count();
+        $users = DB::table('users')->count();
+        $user_activity_logs = DB::table('user_activity_logs')->count();
+        $activity_logs = DB::table('activity_logs')->count();
+        return view('commission_withdrawal',compact('staff','users','user_activity_logs','activity_logs'));
+    }
 }

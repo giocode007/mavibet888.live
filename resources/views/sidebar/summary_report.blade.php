@@ -19,13 +19,13 @@
                 </li>
 
                 <li class="sidebar-title">Menu</li>
-                <li class="sidebar-item active">
+                <li class="sidebar-item">
                     <a href="{{ route('home') }}" class='sidebar-link'>
                         <i class="bi bi-speedometer"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item active">
                     <a href="{{ route('summary_report') }}" class='sidebar-link'>
                         <i class="bi bi-bar-chart-line-fill"></i>
                         <span>Summary Report</span>

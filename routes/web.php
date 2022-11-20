@@ -39,8 +39,12 @@ Route::group(['middleware'=>'auth'],function()
 
 Auth::routes();
 
-// ----------------------------- home dashboard ------------------------------//
+// ----------------------------- sidebar ------------------------------//
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/summary_report', [App\Http\Controllers\HomeController::class, 'summaryReport'])->name('summary_report');
+Route::get('/load_logs', [App\Http\Controllers\HomeController::class, 'loadLogs'])->name('load_logs');
+Route::get('/commission_logs', [App\Http\Controllers\HomeController::class, 'commissionLogs'])->name('commission_logs');
+Route::get('/commission_withdrawal', [App\Http\Controllers\HomeController::class, 'commissionWithdrawal'])->name('commission_withdrawal');
 
 // -----------------------------login----------------------------------------//
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');

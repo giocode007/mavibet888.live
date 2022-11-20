@@ -19,7 +19,7 @@
                 </li>
 
                 <li class="sidebar-title">Menu</li>
-                <li class="sidebar-item active">
+                <li class="sidebar-item">
                     <a href="{{ route('home') }}" class='sidebar-link'>
                         <i class="bi bi-speedometer"></i>
                         <span>Dashboard</span>
@@ -37,7 +37,7 @@
                         <span>Load Logs</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item active">
                     <a href="{{ route('commission_logs') }}" class='sidebar-link'>
                         <i class="bi bi-calendar-week-fill"></i>
                         <span>Commision Logs</span>

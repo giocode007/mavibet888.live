@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('menu')
-@extends('sidebar.dashboard')
+@extends('sidebar.load_logs')
 @endsection
 @section('content')
 <div id="main">

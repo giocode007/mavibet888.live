@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('menu')
-@extends('sidebar.dashboard')
+@extends('sidebar.commission_withdrawal')
 @endsection
 @section('content')
 <div id="main">

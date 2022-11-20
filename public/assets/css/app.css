@@ -1413,6 +1413,7 @@
 }
 
 #main {
+    background-color: rgb(49, 49, 49);
     margin-left: 300px;
     padding: 2rem
 }
@@ -1549,7 +1550,7 @@ a {
 }
 
 .font-bold {
-    font-weight: 700
+    font-weight: 700;
 }
 
 .font-extrabold {

@@ -19,7 +19,6 @@ class RegisterController extends Controller
     }
     public function storeUser(Request $request)
     {   
-        if(DB::table('users')->where('agent_code', $request->agent_code)->exists()){
         $request->validate([
             'agent_code'      => 'required',
             'user_name'      => 'required|min:6|unique:users',
@@ -60,10 +59,7 @@ class RegisterController extends Controller
 
         Toastr::success('Create new account successfully :)','Success');
         return redirect('login');
-        }
 
-        else{
-            return back()->withErrors(['agent_code' => 'Code not exist'])->withInput();
-        }
+        
     }
 }
