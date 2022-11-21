@@ -13,6 +13,15 @@ use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('guest')->except([
+            'logout',
+            'locked',
+            'unlock'
+        ]);
+    }
+    
     public function register()
     {
         return view('auth.register');
@@ -22,7 +31,7 @@ class RegisterController extends Controller
         $request->validate([
             'agent_code'      => 'required',
             'user_name'      => 'required|min:6|unique:users',
-            'password'  => 'required|string|min:8|confirmed',
+            'password'  => 'required|string|min:6|confirmed',
             'password_confirmation' => 'required',
             'last_name'      => 'required',
             'first_name'      => 'required',

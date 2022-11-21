@@ -49,10 +49,9 @@ class LoginController extends Controller
         ]);
     }
 
-    public function login()
+    public function login(Request $request)
     {
-
-    return view('auth.login');
+        return view('auth.login');
     }
 
     public function authenticate(Request $request)

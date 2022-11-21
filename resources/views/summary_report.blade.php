@@ -10,7 +10,7 @@
         </a>
     </header>
     <div class="page-heading">
-        <h3 class="text-white">Profile Statistics</h3>
+        <h3 class="text-white">Summary Reports</h3>
     </div>
     {{-- message --}}
     {!! Toastr::message() !!}

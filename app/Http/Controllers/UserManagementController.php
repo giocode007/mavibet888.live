@@ -211,7 +211,7 @@ class UserManagementController extends Controller
     {
         $request->validate([
             'current_password' => ['required', new MatchOldPassword],
-            'password'  => 'required|string|min:8|confirmed',
+            'password'  => 'required|string|min:6|confirmed',
             'password_confirmation' => 'required',
         ]);
    

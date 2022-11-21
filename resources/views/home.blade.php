@@ -30,7 +30,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">Activity Log</h6>
+                                        <h6 class="text-muted font-semibold">Agents</h6>
                                         <h6 class="font-extrabold mb-0">{{ $activity_logs }}</h6>
                                     </div>
                                 </div>
@@ -47,7 +47,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">User Activity log</h6>
+                                        <h6 class="text-muted font-semibold">Active Players</h6>
                                         <h6 class="font-extrabold mb-0">{{ $user_activity_logs }}</h6>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">User Total</h6>
+                                        <h6 class="text-muted font-semibold">Approval Players</h6>
                                         <h6 class="font-extrabold mb-0">{{ $users }}</h6>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">Saved Record</h6>
+                                        <h6 class="text-muted font-semibold">Deleted Players</h6>
                                         <h6 class="font-extrabold mb-0">{{ $staff }}</h6>
                                     </div>
                                 </div>
@@ -91,13 +91,33 @@
                 </div>
 
                 {{-- Graph of commision --}}
-                <div class="row">
+                <div class="page-heading">
                     <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Commision</h4>
+                        <h4 class="section-title text-uppercase text-white">Commission</h4>
+                    </div>
+                </div>
+                <div class="row mb-10">
+                    <div class="col-12">
+                        <div class="card-group">
+                            <div class="card bg-primary">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-white">Current Wallet</h4>
+                                        <p class="card-text text-white">
+                                            Your points: 100.00</p>
+                                        <small class="text-white">Last updated 3 mins ago</small>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
+                            <div class="card bg-success">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-white">Current Commission (90%)</h4>
+                                        <p class="card-text text-white">
+                                            Your commission: 100.00</p>
+                                        <small class="text-white">Last updated 3 mins ago</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -53,7 +53,13 @@
 
     <script src="{{ URL::to('assets/js/main.js') }}"></script>
 
-    
+    <footer>
+        <div class="footer clearfix text-muted">
+            <div class="float-end">
+                <p>Copyright © 2022. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
 </body>
 
