@@ -1107,6 +1107,7 @@
 }
 
 .navbar {
+    background-color: #000;
     height: 90px;
     padding: 1.5rem
 }
@@ -1413,7 +1414,6 @@
 }
 
 #main {
-    margin-left: 300px;
     padding: 2rem
 }
 

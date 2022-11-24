@@ -18,11 +18,15 @@ class CreateUsersTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('user_name')->unique();
+            $table->float('current_balance');
+            $table->float('current_commission');
+            $table->float('commission_percent');
             $table->string('email')->unique()->nullable();
             $table->string('phone_number')->nullable();
             $table->string('agent_code');
+            $table->string('player_code')->nullable();
             $table->string('status');
-            $table->string('role_name');
+            $table->string('role_type');
             $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

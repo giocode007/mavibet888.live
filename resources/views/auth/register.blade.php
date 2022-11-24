@@ -90,9 +90,9 @@
 
                         
                         {{-- insert defaults --}}
-                        <input type="hidden" class="image" name="image" value="photo_defaults.jpg">
+                        {{-- <input type="hidden" class="image" name="image" value="photo_defaults.jpg">
                         <input type="hidden" class="text" name="role_name" value="Player">
-                        <input type="hidden" class="text" name="status" value="Active">
+                        <input type="hidden" class="text" name="status" value="Active"> --}}
 
                         {{-- <div class="form-group position-relative has-icon-left mb-4">
                             <fieldset class="form-group">

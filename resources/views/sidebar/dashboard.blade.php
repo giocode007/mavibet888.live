@@ -13,7 +13,7 @@
                     <div class="card-body">
                         <div class="badges">
                             <span>Your code:</span>
-                            <span class="badge bg-success">{{ Auth::user()->agent_code }}</span>
+                            <span class="badge bg-success">{{ Auth::user()->player_code }}</span>
                         </div>
                     </div>
                 </li>

@@ -33,7 +33,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -73,10 +73,26 @@ class LoginController extends Controller
             'date_time'   => $todayDate,
         ];
         
-        if (Auth::attempt(['user_name'=>$username,'password'=>$password,'status'=>'Active'])) {
+        if (Auth::attempt(['user_name'=>$username,'password'=>$password] )) {
             DB::table('activity_logs')->insert($activityLog);
             Toastr::success('Login successfully :)','Success');
-            return redirect()->intended('home');
+
+            if (Auth::user()->role_type=='Operator' || Auth::user()->role_type=='Declarator')
+            {
+                return redirect()->intended('/admin');
+            }
+            else if (Auth::user()->role_type == 'Admin' ||
+                        Auth::user()->role_type == 'Sub_Operator' || 
+                            Auth::user()->role_type == 'Master_Agent' ||
+                                Auth::user()->role_type == 'Gold_Agent')
+            {
+                return redirect()->intended('/dashboard');
+            }
+            else{
+                return redirect()->intended('/home');
+            }
+            
+
         }
         else{
             Toastr::error('fail, WRONG USERNAME OR PASSWORD :)','Error');

@@ -23,41 +23,47 @@ use App\Http\Controllers\LockScreen;
 
 Route::get('/', function () {
     return view('auth.login');
-});
-
-Route::group(['middleware'=>'auth'],function()
-{
-    Route::get('home',function()
-    {
-        return view('home');
-    });
-    Route::get('home',function()
-    {
-        return view('home');
-    });
-});
+})->middleware('guest');
 
 Auth::routes();
-
-// ----------------------------- sidebar ------------------------------//
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/summary_report', [App\Http\Controllers\HomeController::class, 'summaryReport'])->name('summary_report');
-Route::get('/load_logs', [App\Http\Controllers\HomeController::class, 'loadLogs'])->name('load_logs');
-Route::get('/commission_logs', [App\Http\Controllers\HomeController::class, 'commissionLogs'])->name('commission_logs');
-Route::get('/commission_withdrawal', [App\Http\Controllers\HomeController::class, 'commissionWithdrawal'])->name('commission_withdrawal');
 
 // -----------------------------login----------------------------------------//
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'authenticate']);
 Route::get('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-// ----------------------------- lock screen --------------------------------//
-Route::get('lock_screen', [App\Http\Controllers\LockScreen::class, 'lockScreen'])->middleware('auth')->name('lock_screen');
-Route::post('unlock', [App\Http\Controllers\LockScreen::class, 'unlock'])->name('unlock');
-
 // ------------------------------ register ---------------------------------//
 Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register');
 Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'storeUser'])->name('register');
+
+// ----------------------------- player ------------------------------//
+Route::get('/home', [App\Http\Controllers\PlayerController::class, 'index'])->name('player');
+
+Route::get('change/password', [App\Http\Controllers\PlayerController::class, 'changePasswordView'])->name('change/password');
+Route::post('change/password/db', [App\Http\Controllers\PlayerController::class, 'changePasswordDB'])->name('change/password/db');
+
+
+// ----------------------------- operator ------------------------------//
+Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])->name('home')->middleware(['auth','isOperators']);
+
+
+// ----------------------------- agent ------------------------------//
+Route::get('/dashboard', [App\Http\Controllers\AgentController::class, 'dashboard'])->name('home');
+Route::get('/summary_report', [App\Http\Controllers\AgentController::class, 'summaryReport'])->name('summary_report');
+Route::get('/load_logs', [App\Http\Controllers\AgentController::class, 'loadLogs'])->name('load_logs');
+Route::get('/commission_logs', [App\Http\Controllers\AgentController::class, 'commissionLogs'])->name('commission_logs');
+Route::get('/commission_withdrawal', [App\Http\Controllers\AgentController::class, 'commissionWithdrawal'])->name('commission_withdrawal');
+
+
+// ----------------------------- sidebar ------------------------------//
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/back', [App\Http\Controllers\HomeController::class, 'backPage'])->name('back');
+
+
+
+// ----------------------------- lock screen --------------------------------//
+Route::get('lock_screen', [App\Http\Controllers\LockScreen::class, 'lockScreen'])->middleware('auth')->name('lock_screen');
+Route::post('unlock', [App\Http\Controllers\LockScreen::class, 'unlock'])->name('unlock');
 
 // ----------------------------- forget password ----------------------------//
 Route::get('forget-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'getEmail'])->name('forget-password');
@@ -81,8 +87,8 @@ Route::get('delete_user/{id}', [App\Http\Controllers\UserManagementController::c
 Route::get('activity/log', [App\Http\Controllers\UserManagementController::class, 'activityLog'])->middleware('auth')->name('activity/log');
 Route::get('activity/login/logout', [App\Http\Controllers\UserManagementController::class, 'activityLogInLogOut'])->middleware('auth')->name('activity/login/logout');
 
-Route::get('change/password', [App\Http\Controllers\UserManagementController::class, 'changePasswordView'])->middleware('auth')->name('change/password');
-Route::post('change/password/db', [App\Http\Controllers\UserManagementController::class, 'changePasswordDB'])->name('change/password/db');
+// Route::get('change/password', [App\Http\Controllers\UserManagementController::class, 'changePasswordView'])->middleware('auth')->name('change/password');
+// Route::post('change/password/db', [App\Http\Controllers\UserManagementController::class, 'changePasswordDB'])->name('change/password/db');
 
 // ----------------------------- form staff ------------------------------//
 Route::get('form/staff/new', [App\Http\Controllers\FormController::class, 'index'])->middleware('auth')->name('form/staff/new');

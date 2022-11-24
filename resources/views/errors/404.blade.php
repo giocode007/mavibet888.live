@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>soengsouy.com</title>
+    <title>mavibet888.com</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/bootstrap.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -18,7 +18,7 @@
                 <div class="text-center">
                     <h1 class="error-title">NOT FOUND</h1>
                     <p class='fs-5 text-gray-600'>The page you are looking not found.</p>
-                    <a href="{{ route('home') }}" class="btn btn-lg btn-outline-primary mt-3">Go Home</a>
+                    <a href="{{ route('back') }}" class="btn btn-lg btn-outline-primary mt-3">Go Home</a>
                 </div>
             </div>
         </div>

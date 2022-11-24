@@ -13,20 +13,20 @@ class CreateRoleTypeUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('role_type_users', function (Blueprint $table) {
+        Schema::create('role_type', function (Blueprint $table) {
             $table->id();
-            $table->string('role_type')->nullable();
+            $table->string('role_name')->nullable();
             $table->timestamps();
         });
 
-        DB::table('role_type_users')->insert([
-            ['role_type' => 'Admin'],
-            ['role_type' => 'Operator'],
-            ['role_type' => 'Declarator'],
-            ['role_type' => 'Sub_Operator'],
-            ['role_type' => 'Master_Agent'],
-            ['role_type' => 'Gold_Agent'],
-            ['role_type' => 'Player']
+        DB::table('role_type')->insert([
+            ['role_name' => 'Admin'],
+            ['role_name' => 'Operator'],
+            ['role_name' => 'Declarator'],
+            ['role_name' => 'Sub_Operator'],
+            ['role_name' => 'Master_Agent'],
+            ['role_name' => 'Gold_Agent'],
+            ['role_name' => 'Player']
         ]);
     }
 
@@ -37,6 +37,6 @@ class CreateRoleTypeUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_type_users');
+        Schema::dropIfExists('role_type');
     }
 }

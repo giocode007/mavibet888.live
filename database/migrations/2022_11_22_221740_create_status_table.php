@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserTypesTable extends Migration
+class CreateStatusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateUserTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_status', function (Blueprint $table) {
+        Schema::create('status', function (Blueprint $table) {
             $table->id();
-            $table->string('status_name')->nullable();
+            $table->string('status_type')->nullable();
             $table->timestamps();
         });
 
-        DB::table('user_status')->insert([
-            ['status_name' => 'Active'],
-            ['status_name' => 'Disable']
+        DB::table('status_tbl')->insert([
+            ['status_type' => 'Pending'],
+            ['status_type' => 'Active'],
+            ['status_type' => 'Disable'],
         ]);
     }
 
@@ -32,6 +33,6 @@ class CreateUserTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_types');
+        Schema::dropIfExists('status');
     }
 }

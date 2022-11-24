@@ -20,7 +20,7 @@ class UserManagementController extends Controller
     {
         if (Auth::user()->role_name=='Admin')
         {
-            $data = DB::table('users')->get();
+            $data = DB::table('users_tbl')->get();
             return view('usermanagement.user_control',compact('data'));
         }
         else
@@ -34,9 +34,9 @@ class UserManagementController extends Controller
     {  
         if (Auth::user()->role_name=='Admin')
         {
-            $data = DB::table('users')->where('id',$id)->get();
-            $roleName = DB::table('role_type_users')->get();
-            $userStatus = DB::table('user_types')->get();
+            $data = DB::table('users_tbl')->where('id',$id)->get();
+            $roleName = DB::table('role_type_users_tbl')->get();
+            $userStatus = DB::table('status_tbl')->get();
             return view('usermanagement.view_users',compact('data','roleName','userStatus'));
         }
         else
@@ -53,7 +53,7 @@ class UserManagementController extends Controller
     // activity log
     public function activityLogInLogOut()
     {
-        $activityLog = DB::table('activity_logs')->get();
+        $activityLog = DB::table('activity_logs_tbl')->get();
         return view('usermanagement.activity_log',compact('activityLog'));
     }
 
@@ -76,7 +76,7 @@ class UserManagementController extends Controller
         $request->validate([
             'name'      => 'required|string|max:255',
             'image'     => 'required|image',
-            'email'     => 'required|string|email|max:255|unique:users',
+            'email'     => 'required|string|email|max:255|unique:users_tbl',
             'phone'     => 'required|min:11|numeric',
             'role_name' => 'required|string|max:255',
             'password'  => 'required|string|min:8|confirmed',

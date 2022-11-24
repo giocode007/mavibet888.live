@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -22,48 +23,23 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        $staff = DB::table('staff')->count();
-        $users = DB::table('users')->count();
-        $user_activity_logs = DB::table('user_activity_logs')->count();
-        $activity_logs = DB::table('activity_logs')->count();
-        return view('home',compact('staff','users','user_activity_logs','activity_logs'));
-    }
+    
 
-    public function summaryReport()
+    public function backPage()
     {
-        $staff = DB::table('staff')->count();
-        $users = DB::table('users')->count();
-        $user_activity_logs = DB::table('user_activity_logs')->count();
-        $activity_logs = DB::table('activity_logs')->count();
-        return view('summary_report',compact('staff','users','user_activity_logs','activity_logs'));
-    }
-
-    public function loadLogs()
-    {
-        $staff = DB::table('staff')->count();
-        $users = DB::table('users')->count();
-        $user_activity_logs = DB::table('user_activity_logs')->count();
-        $activity_logs = DB::table('activity_logs')->count();
-        return view('load_logs',compact('staff','users','user_activity_logs','activity_logs'));
-    }
-
-    public function commissionLogs()
-    {
-        $staff = DB::table('staff')->count();
-        $users = DB::table('users')->count();
-        $user_activity_logs = DB::table('user_activity_logs')->count();
-        $activity_logs = DB::table('activity_logs')->count();
-        return view('commission_logs',compact('staff','users','user_activity_logs','activity_logs'));
-    }
-
-    public function commissionWithdrawal()
-    {
-        $staff = DB::table('staff')->count();
-        $users = DB::table('users')->count();
-        $user_activity_logs = DB::table('user_activity_logs')->count();
-        $activity_logs = DB::table('activity_logs')->count();
-        return view('commission_withdrawal',compact('staff','users','user_activity_logs','activity_logs'));
+        if (Auth::user()->role_type=='Operator' || Auth::user()->role_type=='Declarator')
+        {
+            return redirect()->intended('/admin');
+        }
+        else if (Auth::user()->role_type == 'Admin' ||
+                    Auth::user()->role_type == 'Sub_Operator' || 
+                        Auth::user()->role_type == 'Master_Agent' ||
+                            Auth::user()->role_type == 'Gold_Agent')
+        {
+            return redirect()->intended('/dashboard');
+        }
+        else{
+            return redirect()->intended('/home');
+        }
     }
 }
