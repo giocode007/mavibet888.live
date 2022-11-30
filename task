@@ -1,0 +1,70 @@
+Tables{
+        users{
+            id,
+            first_name,
+            last_name,
+            user_name,
+            current_balance,
+            current_commission,
+            commission_percent,
+            email,
+            phone_number,
+            agent_code,
+            player_code,
+            status,
+            role_type,
+            avatar,
+        }
+
+        activity_logs{
+            id,
+            user_id->id(users),
+            description,
+            date_time,
+        }
+
+        bettings{
+            id,
+            user_id->id(users),
+            event_id->id(events),
+            amount,
+            bet_type,
+            bet_date_time,
+            status,
+            result,
+            result_date_time,
+        }
+
+        events{
+            id,
+            user_id->id(users),
+            event_name,
+            date_time,
+            location,
+            status,
+            video_url,
+            palasada,
+        }
+
+        transactions_history{
+            id,
+            user_id->id(users),
+            transactions_type,
+            amount,
+            status,
+            note,
+            from,
+            to,
+            request_date_time,
+            approved_date_time,
+            approved_by,
+        }
+
+        fights{
+            id,
+            event_id->id(events)
+            result,
+            status,
+            declared_by,
+        }
+}

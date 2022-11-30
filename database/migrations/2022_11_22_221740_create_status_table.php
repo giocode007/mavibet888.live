@@ -19,7 +19,7 @@ class CreateStatusTable extends Migration
             $table->timestamps();
         });
 
-        DB::table('status_tbl')->insert([
+        DB::table('status')->insert([
             ['status_type' => 'Pending'],
             ['status_type' => 'Active'],
             ['status_type' => 'Disable'],

@@ -44,7 +44,15 @@ Route::post('change/password/db', [App\Http\Controllers\PlayerController::class,
 
 
 // ----------------------------- operator ------------------------------//
-Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])->name('home')->middleware(['auth','isOperators']);
+Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])->name('admin');
+// ----------------------------- event ------------------------------//
+// Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
+// Route::get('/events/create', [App\Http\Controllers\EventController::class, 'create'])->name('events/create');
+// Route::post('/events/save', [App\Http\Controllers\EventController::class, 'save'])->name('events/save');
+// Route::get('/events/edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('events/edit');
+// Route::post('form/view/update', [App\Http\Controllers\EventController::class, 'viewUpdate'])->name('form/view/update');
+Route::resource('/events', App\Http\Controllers\EventController::class);
+
 
 
 // ----------------------------- agent ------------------------------//

@@ -15,8 +15,9 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained();
             $table->string('event_name');
-            $table->string('date_of_fight');
+            $table->string('fight_date_time');
             $table->string('location');
             $table->string('status');
             $table->string('video_code')->nullable();

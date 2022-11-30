@@ -520,7 +520,9 @@
     box-shadow: 0 0 30px rgba(0, 0, 0, .03)
 }
 
-.dropdown-item {
+.dropdown-item:hover {
+    color:white;
+    background: #393939;
     transition: all .5s
 }
 
@@ -1141,7 +1143,7 @@
 }
 
 .navbar.navbar-header .dropdown>a {
-    color: #6c757d;
+    color: #7d6c6c;
     font-weight: 600
 }
 

@@ -57,7 +57,7 @@
                                         <div class="form-group has-icon-left">
                                             <div class="position-relative">
                                                 <input type="text" class="form-control"
-                                                    placeholder="Name" id="first-name-icon" name="fullName" value="{{ $data[0]->name }}">
+                                                    placeholder="Name" id="first-name-icon" name="fullName" value="{{ $data[0]->user_name }}">
                                                 <div class="form-control-icon">
                                                     <i class="bi bi-person"></i>
                                                 </div>
@@ -121,7 +121,7 @@
                                                         {{ $data[0]->status }}
                                                     </option>
                                                     @foreach ($userStatus as $key => $value)
-                                                    <option value="{{ $value->type_name }}"> {{ $value->type_name }}</option>
+                                                    <option value="{{ $value->status_type }}"> {{ $value->status_type }}</option>
                                                     @endforeach  
                                                 </select>
                                                 <div class="form-control-icon">
@@ -139,11 +139,11 @@
                                         <div class="form-group position-relative has-icon-left mb-4">
                                             <fieldset class="form-group">
                                                 <select class="form-select" name="role_name" id="role_name">
-                                                    <option value="{{ $data[0]->role_name }}" {{ ( $data[0]->role_name == $data[0]->role_name) ? 'selected' : ''}}> 
-                                                        {{ $data[0]->role_name }}
+                                                    <option value="{{ $data[0]->role_type }}" {{ ( $data[0]->role_type == $data[0]->role_type) ? 'selected' : ''}}> 
+                                                        {{ $data[0]->role_type }}
                                                     </option>
                                                     @foreach ($roleName as $key => $value)
-                                                    <option value="{{ $value->role_type }}"> {{ $value->role_type }}</option>
+                                                    <option value="{{ $value->role_name }}"> {{ $value->role_name }}</option>
                                                     @endforeach  
                                                 </select>
                                                 <div class="form-control-icon">

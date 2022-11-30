@@ -34,7 +34,7 @@ class RegisterController extends Controller
             $current_balance = 0;
             $current_commission = 0;
             $commission_percent = 0.0;
-            $profile_image = 'photo_defaults.jpg';
+            $profile_image = 'player_defaults.jpg';
             $role = 'Player';
             $status = 'Pending';
 

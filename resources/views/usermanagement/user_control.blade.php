@@ -51,7 +51,7 @@
                             @foreach ($data as $key => $item)
                                 <tr>
                                     <td class="id">{{ ++$key }}</td>
-                                    <td class="name">{{ $item->name }}</td>
+                                    <td class="name">{{ $item->user_name }}</td>
                                     <td class="name">
                                         <div class="avatar avatar-xl">
                                             <img src="{{ URL::to('/images/'. $item->avatar) }}" alt="{{ $item->avatar }}">
@@ -68,14 +68,14 @@
                                     @if($item->status ==null)
                                     <td class="status"><span class="badge bg-danger">{{ $item->status }}</span></td>
                                     @endif
-                                    @if($item->role_name =='Admin')
-                                    <td class="role_name"><span  class="badge bg-success">{{ $item->role_name }}</span></td>
+                                    @if($item->role_type =='Admin')
+                                    <td class="role_name"><span  class="badge bg-success">{{ $item->role_type }}</span></td>
                                     @endif
-                                    @if($item->role_name =='Super Admin')
-                                    <td class="role_name"><span  class="badge bg-info">{{ $item->role_name }}</span></td>
+                                    @if($item->role_type =='Super Admin')
+                                    <td class="role_name"><span  class="badge bg-info">{{ $item->role_type }}</span></td>
                                     @endif
-                                    @if($item->role_name =='Normal User')
-                                    <td class="role_name"><span  class=" badge bg-warning">{{ $item->role_name }}</span></td>
+                                    @if($item->role_type =='Normal User')
+                                    <td class="role_name"><span  class=" badge bg-warning">{{ $item->role_type }}</span></td>
                                     @endif
                                     <td class="text-center">
                                         <a href="{{ route('user/add/new') }}">

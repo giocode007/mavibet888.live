@@ -18,31 +18,21 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->role_name=='Admin')
-        {
-            $data = DB::table('users_tbl')->get();
+        
+            $data = DB::table('users')->get();
             return view('usermanagement.user_control',compact('data'));
-        }
-        else
-        {
-            return redirect()->route('home');
-        }
+       
         
     }
     // view detail 
     public function viewDetail($id)
     {  
-        if (Auth::user()->role_name=='Admin')
-        {
-            $data = DB::table('users_tbl')->where('id',$id)->get();
-            $roleName = DB::table('role_type_users_tbl')->get();
-            $userStatus = DB::table('status_tbl')->get();
+       
+            $data = DB::table('users')->where('id',$id)->get();
+            $roleName = DB::table('role_type')->get();
+            $userStatus = DB::table('status')->get();
             return view('usermanagement.view_users',compact('data','roleName','userStatus'));
-        }
-        else
-        {
-            return redirect()->route('home');
-        }
+       
     }
     // use activity log
     public function activityLog()

@@ -23,12 +23,12 @@
                         <img src="assets/images/samples/motorcycle.jpg" class="card-img-top img-fluid"
                             alt="singleminded">
                         <div class="card-body">
-                            <h3 class="card-title font-bold text-black">Event Name</h3>
+                            <h3 class="card-title font-bold text-black">{{ $event->event_name }}</h3>
                             <p class="card-text font-bold text-black">
-                                Friday, November 25, 2022
+                                {{ \Carbon\Carbon::parse($event->fight_date_time)->isoFormat('dddd, MMMM DD, Y') }}
                             </p>
                             <p class="card-text font-bold text-black">
-                                Japan
+                                {{ $event->location }}
                             </p>
                             <div class="buttons">
                                 <a href="#" class="btn btn-lg btn-outline-warning border-2">

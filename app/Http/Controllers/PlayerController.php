@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,7 +18,12 @@ class PlayerController extends Controller
     //Home
     public function index()
     {
-        return view('players.home');
+        $events = DB::table('events')->get();
+        foreach($events as $event){
+            if($event->status == '1'){
+                return view('players.home',compact('event'));
+            }
+        }
     }
 
 

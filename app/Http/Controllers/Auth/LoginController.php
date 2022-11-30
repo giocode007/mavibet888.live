@@ -64,16 +64,18 @@ class LoginController extends Controller
         $username    = $request->user_name;
         $password = $request->password;
         
-        $dt         = Carbon::now();
-        $todayDate  = $dt->toDayDateTimeString();
-
-        $activityLog = [
-            'user_name'        => $username,
-            'description' => 'has log in',
-            'date_time'   => $todayDate,
-        ];
         
         if (Auth::attempt(['user_name'=>$username,'password'=>$password] )) {
+
+            $dt         = Carbon::now();
+            $todayDate  = $dt->toDayDateTimeString();
+    
+            $activityLog = [
+                'user_id'        => Auth::user()->id,
+                'description' => 'has log in',
+                'date_time'   => $todayDate,
+            ];
+
             DB::table('activity_logs')->insert($activityLog);
             Toastr::success('Login successfully :)','Success');
 
@@ -107,13 +109,13 @@ class LoginController extends Controller
         Session::put('user', $user);
         $user=Session::get('user');
 
-        $username       = $user->user_name;
+        $userId       = $user->id;
         $dt         = Carbon::now();
         $todayDate  = $dt->toDayDateTimeString();
 
         $activityLog = [
 
-            'user_name'        => $username,
+            'user_id'        => $userId,
             'description' => 'has logged out',
             'date_time'   => $todayDate,
         ];
