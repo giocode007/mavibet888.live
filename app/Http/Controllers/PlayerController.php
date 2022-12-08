@@ -24,6 +24,8 @@ class PlayerController extends Controller
                 return view('players.home',compact('event'));
             }
         }
+
+        return view('players.home');
     }
 
 

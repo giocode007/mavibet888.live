@@ -1,13 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LockScreen;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\PhotosController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\FormController;
 use App\Http\Controllers\UserManagementController;
-use App\Http\Controllers\LockScreen;
+
+use App\Events\ChatMessageEvent;
+use Illuminate\Support\Facades\Route;
+
+
 
 
 /*
@@ -52,6 +56,9 @@ Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])-
 // Route::get('/events/edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('events/edit');
 // Route::post('form/view/update', [App\Http\Controllers\EventController::class, 'viewUpdate'])->name('form/view/update');
 Route::resource('/events', App\Http\Controllers\EventController::class);
+
+
+// ----------------------------- betting ------------------------------//
 
 
 
@@ -105,3 +112,25 @@ Route::get('form/view/detail', [App\Http\Controllers\FormController::class, 'vie
 Route::get('form/view/detail/{id}', [App\Http\Controllers\FormController::class, 'viewDetail'])->middleware('auth');
 Route::post('form/view/update', [App\Http\Controllers\FormController::class, 'viewUpdate'])->name('form/view/update');
 Route::get('delete/{id}', [App\Http\Controllers\FormController::class, 'viewDelete'])->middleware('auth');
+
+
+
+if(\Illuminate\Support\Facades\App::environment('local')){
+
+    Route::get('/playground', function(){
+
+        event(new ChatMessageEvent());
+    
+        return null;
+    });
+
+    Route::get('/ws', function(){
+        return view('websocket');
+    });
+
+    Route::post('/chat-message', function(\Illuminate\Http\Request $request){
+        event(new ChatMessageEvent($request->message, auth()->user()));
+        return null;
+    });
+}
+

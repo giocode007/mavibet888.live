@@ -93,7 +93,6 @@ class LoginController extends Controller
             else{
                 return redirect()->intended('/home');
             }
-            
 
         }
         else{
