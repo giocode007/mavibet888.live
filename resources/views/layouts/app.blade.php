@@ -24,6 +24,7 @@
 </style>
 
 <body>
+    <div id="app"></div>
    @yield('content')
 
    <footer>
@@ -33,5 +34,7 @@
             </div>
         </div>
    </footer>
+
+
 </body>
 </html>

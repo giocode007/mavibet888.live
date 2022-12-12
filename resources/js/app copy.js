@@ -75,7 +75,10 @@ function login(username, password){
                 'password': password
             })
         });
-    });
+    }).then(() => {
+        document.getElementById('section-login').classList.add('hide');
+        document.getElementById('section-chat').classList.remove('hide');
+    })
 }
 
 let usersOnline = [];
@@ -84,14 +87,6 @@ let usersOnline = [];
 //     const names = username.split(' ');
 //     return names.map((name) => name[0]).join("").toUpperCase();
 // }
-
-function goTo(userRole){
-    if(userRole == 'Operator'){
-        window.location.replace("/admin");
-    }else{
-        window.location.replace("/home");
-    }
-}
 
 function renderAvatars(){
     avatars.textContent = "";
@@ -147,12 +142,6 @@ document.getElementById('form-login').addEventListener('submit', function(event)
                 usersOnline = [...users];
                 renderAvatars();
                 console.log({users});
-                users.forEach(element => {
-                    if(userName == element.user_name){
-                        goTo(element.role_type);
-                    }
-                });
-
             })
             .joining((user) => {
                 console.log({user}, 'Joined');

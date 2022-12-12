@@ -1906,9 +1906,6 @@ function login(username, password) {
         'password': password
       })
     });
-  }).then(function () {
-    document.getElementById('section-login').classList.add('hide');
-    document.getElementById('section-chat').classList.remove('hide');
   });
 }
 var usersOnline = [];
@@ -1918,6 +1915,13 @@ var usersOnline = [];
 //     return names.map((name) => name[0]).join("").toUpperCase();
 // }
 
+function goTo(userRole) {
+  if (userRole == 'Operator') {
+    window.location.replace("/admin");
+  } else {
+    window.location.replace("/home");
+  }
+}
 function renderAvatars() {
   avatars.textContent = "";
   usersOnline.forEach(function (user) {
@@ -1961,6 +1965,11 @@ document.getElementById('form-login').addEventListener('submit', function (event
       renderAvatars();
       console.log({
         users: users
+      });
+      users.forEach(function (element) {
+        if (userName == element.user_name) {
+          goTo(element.role_type);
+        }
       });
     }).joining(function (user) {
       console.log({

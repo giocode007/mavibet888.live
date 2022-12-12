@@ -133,7 +133,6 @@
     <script src="{{ URL::to('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ URL::to('assets/vendors/simple-datatables/simple-datatables.js') }}"></script>
 
-    <script src="{{ mix('js/app.js') }}"></script>
 @stack('scripts')
 </body>
 

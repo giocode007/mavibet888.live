@@ -59,6 +59,7 @@ Route::resource('/events', App\Http\Controllers\EventController::class);
 
 
 // ----------------------------- betting ------------------------------//
+Route::get('/arena', [App\Http\Controllers\ArenaController::class, 'index'])->name('arena');
 
 
 

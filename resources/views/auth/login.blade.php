@@ -14,10 +14,10 @@
                     @endif
                     <br>
                     
-                    <form method="POST" action="{{ route('login') }}" class="md-float-material">
+                    <form id="form-login" method="POST" action="{{ route('login') }}" class="md-float-material">
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-lg @error('user_name') is-invalid @enderror" name="user_name" value="{{ old('user_name') }}" placeholder="Enter Username">
+                            <input id="input-username" type="text" class="form-control form-control-lg @error('user_name') is-invalid @enderror" name="user_name" value="{{ old('user_name') }}" placeholder="Enter Username">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
@@ -28,7 +28,7 @@
                             @enderror
                         </div>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" name="password" placeholder="Enter Password">
+                            <input id="input-password" type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" name="password" placeholder="Enter Password">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
@@ -38,7 +38,7 @@
                                 </span>
                             @enderror
                         </div>
-                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
                         <p class="auth-subtitle">Don't have an account? <a href="{{route('register')}}"
