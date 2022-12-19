@@ -16,16 +16,26 @@
     <link rel="stylesheet" href="{{ URL::to('assets/vendors/simple-datatables/style.css') }}">
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 
     {{-- message toastr --}}
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css"> 
-    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
     <link rel="stylesheet" href="{{ URL::to('assets/css/app-player.css') }}">
-
+    <style>
+        .blink {
+            animation: blinker 1.5s linear infinite;
+            color: red;
+            font-family: sans-serif;
+        }
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
     @stack('style')
 </head>
 
@@ -132,7 +142,6 @@
     <script src="{{ URL::to('assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ URL::to('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ URL::to('assets/vendors/simple-datatables/simple-datatables.js') }}"></script>
-
 @stack('scripts')
 </body>
 

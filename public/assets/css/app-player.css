@@ -1,3 +1,7 @@
+.hide{
+    display: none;
+}
+
 .wrapper {
     display: grid;
     grid-template-columns: repeat(4, [col] 25% ) ;
@@ -96,6 +100,21 @@
     padding: 10px;
     font-size: 100%;
     font-weight: 700;
+}
+
+.box-bet-closed {
+    border-radius: 10px;
+    background: #7d7d7d;
+    text-align: center;
+    color: #f9fafb;
+    padding: 10px;
+    font-size: 100%;
+    font-weight: 700;
+    height: fit-content;
+}
+
+.box-bet-closed:hover {
+    cursor: not-allowed;
 }
 
 .box-bet-meron {
@@ -1415,6 +1434,8 @@
     .sidebar-wrapper .sidebar-toggler.x {
         display: block
     }
+
+    
 }
 
 .nav-pills .nav-link.active {
@@ -1754,10 +1775,16 @@
         float: left;
         margin-bottom: .4rem
     }
+
+    .live-video {
+        height: 300px;
+    }
     
 }
 
 @media (max-width:540px) {
+    
+
     .bet-50 {
         grid-column: 1;
         grid-row: 1;

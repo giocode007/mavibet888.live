@@ -40,8 +40,8 @@ class EventController extends Controller
             'palasada' => $request->palasada,
             'user_id' => Auth::user()->id,
             'status' => $request->status,
-        ]);        
-
+        ]);  
+        
         return response()->json($event);
     }
 

@@ -13,18 +13,18 @@ class CreateTransactionsHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('transactions_history', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();  
             $table->string('transaction_type');
             $table->float('amount');
             $table->string('status');
             $table->string('note');
-            $table->string('from');
-            $table->string('to');
-            $table->string('request_date_time');
-            $table->string('approved_date_time');
-            $table->string('approve_by');
+            $table->string('from')->nullable();
+            $table->string('to')->nullable();
+            $table->string('request_date_time')->nullable();
+            $table->string('approved_date_time')->nullable();
+            $table->string('approve_by')->nullable();
             $table->timestamps();
         });
     }
@@ -36,6 +36,6 @@ class CreateTransactionsHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions_history');
+        Schema::dropIfExists('transactions');
     }
 }

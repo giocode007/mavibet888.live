@@ -1830,18 +1830,6 @@ __webpack_require__.r(__webpack_exports__);
   \*****************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -1849,154 +1837,160 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
  */
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-var axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-var form = document.getElementById('form');
-var inputMessage = document.getElementById('input-message');
-var listMessage = document.getElementById('list-messages');
-var inputUsername = document.getElementById('input-username');
-var inputPassword = document.getElementById('input-password');
-var avatars = document.getElementById('avatars');
-var spanTyping = document.getElementById('span-typing');
-form.addEventListener('submit', function (event) {
-  event.preventDefault();
-  var userInput = inputMessage.value;
-  axios.post('/chat-message', {
-    message: userInput
-  });
-  inputMessage.value = "";
+var UserId = document.getElementById("userId").value;
+var channel = Echo.channel('bettings');
+channel.subscribe(function () {
+  console.log('subscribbed!');
 });
-function getCookie(name) {
-  var value = "; ".concat(document.cookie);
-  var parts = value.split("; ".concat(name, "="));
-  if (parts.length === 2) {
-    return parts.pop().split(';').shift();
+channel.listen('.player-bet', function (event) {
+  if (UserId != event.userId) {
+    var mr = 0;
+    var wr = 0;
+    var meronBet = document.getElementById("meronBet").innerHTML;
+    var walaBet = document.getElementById("walaBet").innerHTML;
+    mr = removeComma(meronBet) * event.meronPayout / 100;
+    wr = removeComma(walaBet) * event.walaPayout / 100;
+    console.log(mr, wr);
+    document.getElementById("spanMeronReward").textContent = number_format(Math.ceil(mr, 0));
+    document.getElementById("spanWalaReward").textContent = number_format(Math.ceil(wr, 0));
   }
-}
-function request(url, options) {
-  // get cookie
-  var csrfToken = getCookie('XSRF-TOKEN');
-  return fetch(url, _objectSpread({
-    headers: {
-      'content-type': 'application/json',
-      'accept': 'application/json',
-      'X-XSRF-TOKEN': decodeURIComponent(csrfToken)
-    },
-    credentials: 'include'
-  }, options));
-}
-function logout() {
-  return request('/logout', {
-    method: 'GET'
-  });
-}
-function login(username, password) {
-  return fetch('/sanctum/csrf-cookie', {
-    headers: {
-      'content-type': 'application/json',
-      'accept': 'application/json'
-    },
-    credentials: 'include'
-  }).then(function () {
-    return logout();
-  }).then(function () {
-    return request('/login', {
-      method: "POST",
-      body: JSON.stringify({
-        user_name: username,
-        'password': password
-      })
-    });
-  });
-}
-var usersOnline = [];
-
-// function userInitial(username){
-//     const names = username.split(' ');
-//     return names.map((name) => name[0]).join("").toUpperCase();
-// }
-
-function goTo(userRole) {
-  if (userRole == 'Operator') {
-    window.location.replace("/admin");
+  document.getElementById("totalMeronBet").textContent = number_format(event.allMeronBet);
+  document.getElementById("totalWalaBet").textContent = number_format(event.allWalaBet);
+  document.getElementById("totalDrawBet").textContent = number_format(event.allDrawBet);
+  document.getElementById("meronPayout").textContent = number_format(event.meronPayout, 1);
+  document.getElementById("walaPayout").textContent = number_format(event.walaPayout, 1);
+});
+var channel1 = Echo.channel('status');
+channel1.listen('.player-status', function (event) {
+  document.getElementById("spanStatus").textContent = event.status;
+  console.log();
+});
+var channel2 = Echo.channel('fights');
+channel2.listen('.player-fight', function (event) {
+  if (event.isOpen == 0) {
+    document.getElementById('isOpen').classList.add('bg-danger');
+    document.getElementById('isOpen').classList.remove('bg-success');
+    document.getElementById("isOpen").textContent = "CLOSE";
+    document.getElementById('meron').classList.add('hide');
+    document.getElementById('meron1').classList.remove('hide');
+    document.getElementById('wala').classList.add('hide');
+    document.getElementById('wala1').classList.remove('hide');
+    document.getElementById('draw').classList.add('hide');
+    document.getElementById('draw1').classList.remove('hide');
   } else {
-    window.location.replace("/home");
+    document.getElementById('isOpen').classList.remove('bg-danger');
+    document.getElementById('isOpen').classList.add('bg-success');
+    document.getElementById("isOpen").textContent = "OPEN";
+    document.getElementById('meron1').classList.add('hide');
+    document.getElementById('meron').classList.remove('hide');
+    document.getElementById('wala1').classList.add('hide');
+    document.getElementById('wala').classList.remove('hide');
+    document.getElementById('draw1').classList.add('hide');
+    document.getElementById('draw').classList.remove('hide');
   }
-}
-function renderAvatars() {
-  avatars.textContent = "";
-  usersOnline.forEach(function (user) {
-    var span = document.createElement('span');
-    // span.textContent = userInitial(user.user_name);
-    span.textContent = user.user_name;
-    span.classList.add('avatar');
-    avatars.append(span);
-  });
-}
-function addChatMessage(name, message) {
-  var color = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "black";
-  var li = document.createElement('li');
-  li.classList.add('d-flex', 'flex-col');
-  var span = document.createElement('span');
-  span.classList.add('message-author');
-  span.textContent = name;
-  var messageSpan = document.createElement('span');
-  messageSpan.textContent = message;
-  messageSpan.style.color = color;
-  li.append(span, messageSpan);
-  listMessage.append(li);
-}
-document.getElementById('form-login').addEventListener('submit', function (event) {
-  event.preventDefault();
-  var userName = inputUsername.value;
-  var userPassword = inputPassword.value;
-  login(userName, userPassword).then(function () {
-    var channel = Echo.join('presence.chat.1');
-    inputMessage.addEventListener('input', function (event) {
-      if (inputMessage.value.length === 0) {
-        channel.whisper('stop-typing');
-      } else {
-        channel.whisper('typing', {
-          userName: userName
-        });
-      }
-    });
-    channel.here(function (users) {
-      usersOnline = _toConsumableArray(users);
-      renderAvatars();
-      console.log({
-        users: users
-      });
-      users.forEach(function (element) {
-        if (userName == element.user_name) {
-          goTo(element.role_type);
-        }
-      });
-    }).joining(function (user) {
-      console.log({
-        user: user
-      }, 'Joined');
-      usersOnline.push(user);
-      renderAvatars();
-      addChatMessage(user.user_name, "has joined the room!");
-    }).leaving(function (user) {
-      console.log({
-        user: user
-      }, 'Leaving');
-      usersOnline = usersOnline.filter(function (userOnline) {
-        return userOnline.id !== user.id;
-      });
-      renderAvatars();
-      addChatMessage(user.user_name, "has left the room.", 'grey');
-    }).listen('.chat-message', function (event) {
-      var message = event.message;
-      addChatMessage(event.user.user_name, message);
-    }).listenForWhisper('typing', function (event) {
-      spanTyping.textContent = event.userName + ' is typing...';
-    }).listenForWhisper('stop-typing', function (event) {
-      spanTyping.textContent = "";
-    });
-  });
 });
+var channel3 = Echo.channel('result');
+channel3.listen('.player-result', function (event) {
+  if (event.isCurrentFight) {
+    console.log(event);
+    document.getElementById('spanResult').removeAttribute('class');
+    if (event.result == 'meron') {
+      document.getElementById('spanResult').classList.add('bg-danger');
+      console.log(document.getElementById('spanResult').id);
+    }
+    if (event.result == 'wala') {
+      document.getElementById('spanResult').classList.add('bg-primary');
+      document.getElementById('spanResult').value = "wala";
+    }
+    if (event.result == 'draw') {
+      document.getElementById('spanResult').classList.add('bg-success');
+      document.getElementById('spanResult').value = "draw";
+    }
+    if (event.result == 'cancel') {
+      document.getElementById('spanResult').classList.add('bg-light-secondary');
+      document.getElementById('spanResult').value = "cancel";
+    }
+    document.getElementById('spanResult').classList.add('p-1');
+    document.getElementById('spanResult').textContent = event.fightNumber + ' ' + event.result.toString().toUpperCase();
+  } else {
+    console.log(event);
+    document.getElementById('spanLastResult').removeAttribute('class');
+    if (event.result == 'meron') {
+      document.getElementById('spanLastResult').classList.add('bg-danger');
+      console.log(document.getElementById('spanLastResult').id);
+    }
+    if (event.result == 'wala') {
+      document.getElementById('spanLastResult').classList.add('bg-primary');
+      document.getElementById('spanLastResult').value = "wala";
+    }
+    if (event.result == 'draw') {
+      document.getElementById('spanLastResult').classList.add('bg-success');
+      document.getElementById('spanLastResult').value = "draw";
+    }
+    if (event.result == 'cancel') {
+      document.getElementById('spanLastResult').classList.add('bg-light-secondary');
+      document.getElementById('spanLastResult').value = "cancel";
+    }
+    document.getElementById('spanLastResult').classList.add('p-1');
+    document.getElementById('spanLastResult').textContent = event.fightNumber - 1 + ' ' + event.result.toString().toUpperCase();
+    document.getElementById('spanResult').removeAttribute('class');
+    document.getElementById('spanResult').classList.add('p-1');
+    document.getElementById('spanResult').textContent = event.fightNumber;
+  }
+});
+var channel4 = Echo.channel('balance');
+channel4.listen('.player-balance', function (event) {
+  if (UserId == event.userId) {
+    var totalBalance = 0;
+    var currentBalance = document.getElementById("current_balance").innerHTML;
+    currentBalance = currentBalance.slice(1);
+    totalBalance = parseInt(removeComma(currentBalance)) + parseInt(event.reward);
+    console.log(removeComma(currentBalance), parseInt(event.reward));
+    document.getElementById("current_balance").textContent = '$' + number_format(totalBalance);
+  }
+  document.getElementById("totalMeronBet").textContent = 0;
+  document.getElementById("totalWalaBet").textContent = 0;
+  document.getElementById("totalDrawBet").textContent = 0;
+  document.getElementById("meronPayout").textContent = 0;
+  document.getElementById("walaPayout").textContent = 0;
+  document.getElementById("meronBet").textContent = 0;
+  document.getElementById("spanMeronReward").textContent = 0;
+  document.getElementById("walaBet").textContent = 0;
+  document.getElementById("spanWalaReward").textContent = 0;
+  document.getElementById("draw-amount-bet").textContent = 0;
+});
+function removeComma(amount) {
+  if (amount != null) {
+    if (amount.toString().indexOf(',') > -1) {
+      amount = amount.toString().replace(',', '');
+    }
+    if (amount.toString().indexOf(',') > -1) {
+      amount = amount.toString().replace(',', '');
+    }
+  }
+  return parseInt(amount);
+}
+function number_format(number, decimals, dec_point, thousands_point) {
+  if (number == null || !isFinite(number)) {
+    throw new TypeError("number is not valid");
+  }
+  if (!decimals) {
+    var len = number.toString().split('.').length;
+    decimals = len > 1 ? len : 0;
+  }
+  if (!dec_point) {
+    dec_point = '.';
+  }
+  if (!thousands_point) {
+    thousands_point = ',';
+  }
+  number = parseFloat(number).toFixed(decimals);
+  number = number.replace(".", dec_point);
+  var splitNum = number.split(dec_point);
+  splitNum[0] = splitNum[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_point);
+  number = splitNum.join(dec_point);
+  return number;
+}
 window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"]);
 
 /**
@@ -2067,7 +2061,7 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "mavibet_key",
-  // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+  cluster: "mt1",
   forceTLS: false,
   wsHost: window.location.hostname,
   wsPort: 6001,

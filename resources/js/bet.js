@@ -158,7 +158,8 @@ function registerClientMethods(chatHub) {
     }; chatHub.client.changeFightNumber = function (fightNumber) { $("#lblGameInfoGameNumber").html(fightNumber); }; chatHub.client.systemMessageReceivedResetReOpen = function (userName, message, timeStamp) { ResetTotalBets(); ResetPersonalBets(); ResetOwnerName(); var userId = $('#hdUserId').val(); $.ajax({ cache: false, url: '/Arena/GetBalanceById', type: "GET", data: { uid: userId }, dataType: "json", success: function (balance) { SetPoints(balance); } }); AddMessageTimeStamp(userName, message, timeStamp); };
 }
 function WinningCalculation(amount, oddName, meronwala) {
-    var plasada = parseFloat($('#hdPlasadaPercentage').val()); var totalWinnings = 0; if (amount != null) { if (amount.toString().indexOf(',') > -1) { amount = amount.toString().replace(',', ''); } }
+    var plasada = parseFloat($('#hdPlasadaPercentage').val());
+    var totalWinnings = 0; if (amount != null) { if (amount.toString().indexOf(',') > -1) { amount = amount.toString().replace(',', ''); } }
     if (oddName != 'undefined') {
         if (amount > 0) {
             var n = oddName.toString().split('-'); var n1 = n[0]; var n2 = n[1]; if (meronwala == 'm') { totalWinnings = (amount * (n2 / n1)) - ((amount * (n2 / n1)) * plasada); }
@@ -356,26 +357,27 @@ function isNumber(evt) {
     return true;
 }
 function computePayout() {
-    var plasada = parseFloat($('#hdPlasadaPercentage').val()); 
-    
-    var totalBetMeron = RemoveCommaInNumber($('#tdTotalBetMeron-1').html()); 
-    var totalBetWala = RemoveCommaInNumber($('#tdTotalBetWala-1').html()); 
-    var meronPayout = 0; 
-    var walaPayout = 0; 
+    var plasada = parseFloat($('#hdPlasadaPercentage').val());
+
+    var totalBetMeron = RemoveCommaInNumber($('#tdTotalBetMeron-1').html());
+    var totalBetWala = RemoveCommaInNumber($('#tdTotalBetWala-1').html());
+    var meronPayout = 0;
+    var walaPayout = 0;
     if (totalBetMeron.length > 0 && totalBetWala.length > 0) {
         if (isNaN(parseInt(totalBetMeron))) { totalBetMeron = 0; }
         if (isNaN(parseInt(totalBetWala))) { totalBetWala = 0; }
-        var total = parseInt(totalBetMeron) + parseInt(totalBetWala); 
+        var total = parseInt(totalBetMeron) + parseInt(totalBetWala);
         if (total > 0) {
-            if (totalBetMeron > 0) { 
-                meronPayout = total / parseInt(totalBetMeron); 
-                meronPayout = meronPayout - (meronPayout * plasada); 
-                $('#tdPayOutMeron').html((meronPayout * 100).toFixed(1)); 
-                setPayoutBasketball('M'); 
+            if (totalBetMeron > 0) {
+                meronPayout = total / parseInt(totalBetMeron);
+                meronPayout = meronPayout - (meronPayout * plasada);
+                $('#tdPayOutMeron').html((meronPayout * 100).toFixed(1));
+                setPayoutBasketball('M');
             }
-            if (totalBetWala > 0) { 
-                walaPayout = total / parseInt(totalBetWala); 
-                walaPayout = walaPayout - (walaPayout * plasada); $('#tdPayOutWala').html((walaPayout * 100).toFixed(1)); setPayoutBasketball('W'); }
+            if (totalBetWala > 0) {
+                walaPayout = total / parseInt(totalBetWala);
+                walaPayout = walaPayout - (walaPayout * plasada); $('#tdPayOutWala').html((walaPayout * 100).toFixed(1)); setPayoutBasketball('W');
+            }
         }
     }
 }

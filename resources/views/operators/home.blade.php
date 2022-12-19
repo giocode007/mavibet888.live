@@ -32,7 +32,7 @@
                                     {{ $event->location }}
                                 </p>
                                 <div class="buttons">
-                                    <a href="{{ route('arena') }}" class="btn btn-lg btn-outline-warning border-2">
+                                    <a href="{{ url('arena/'.$event->id) }}" class="btn btn-lg btn-outline-warning border-2">
                                         <span class="text-black font-bold">Enter Event</span>
                                     </a>
                                 </div>

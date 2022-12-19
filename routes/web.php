@@ -1,15 +1,16 @@
 <?php
 
+use App\Events\BetUpdated;
+use App\Events\ChatMessageEvent;
 use App\Http\Controllers\LockScreen;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\PhotosController;
 use App\Http\Controllers\Auth\LoginController;
+
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserManagementController;
-
-use App\Events\ChatMessageEvent;
-use Illuminate\Support\Facades\Route;
 
 
 
@@ -58,10 +59,21 @@ Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])-
 Route::resource('/events', App\Http\Controllers\EventController::class);
 
 
-// ----------------------------- betting ------------------------------//
-Route::get('/arena', [App\Http\Controllers\ArenaController::class, 'index'])->name('arena');
+// ----------------------------- arena ------------------------------//
+Route::get('arena/{id}', [App\Http\Controllers\ArenaController::class, 'index']);
+Route::get('/changeStatus', [App\Http\Controllers\ArenaController::class, 'changeStatus'])->name('changeStatus');
+Route::get('/checkFight', [App\Http\Controllers\ArenaController::class, 'checkFight'])->name('checkFight');
+Route::get('/fightStatus', [App\Http\Controllers\ArenaController::class, 'fightStatus'])->name('fightStatus');
+Route::get('/fightResult', [App\Http\Controllers\ArenaController::class, 'fightResult'])->name('fightResult');
+Route::get('/resetAll', [App\Http\Controllers\ArenaController::class, 'resetAll'])->name('resetAll');
+Route::get('/checkResetAll', [App\Http\Controllers\ArenaController::class, 'checkResetAll'])->name('checkResetAll');
+Route::get('/goNext', [App\Http\Controllers\ArenaController::class, 'goNext'])->name('goNext');
+Route::get('/bet', [App\Http\Controllers\ArenaController::class, 'bet'])->name('bet');
+// Route::get('/bet', function() {
+//     event(new BetUpdated());
 
-
+//     return null;
+// })->name('bet');
 
 // ----------------------------- agent ------------------------------//
 Route::get('/dashboard', [App\Http\Controllers\AgentController::class, 'dashboard'])->name('home');

@@ -16,9 +16,13 @@ class CreateFightsTable extends Migration
         Schema::create('fights', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained();
-            $table->string('result');
+            $table->string('fight_number')->nullable();
+            $table->string('result')->nullable();
+            $table->string('payoutMeron')->nullable();
+            $table->string('payoutWala')->nullable();
+            $table->string('isOpen');
             $table->string('status');
-            $table->string('declared_by');
+            $table->string('declared_by')->nullable();
             $table->timestamps();
         });
     }
