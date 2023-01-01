@@ -14,12 +14,11 @@ class CreateBettingsTable extends Migration
     public function up()
     {
         Schema::create('bettings', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->foreignId('user_id')->constrained();  
             $table->integer('fight_id');  
             $table->integer('role_type');  
             $table->float('amount');
-            $table->float('current_balance');
             $table->string('bet_type');
             $table->string('bet_date_time');
             $table->string('status');

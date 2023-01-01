@@ -14,10 +14,13 @@ class CreateTransactionsHistoryTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->foreignId('user_id')->constrained(); 
-            $table->string('user_name');  
+            $table->integer('betting_id')->nullable();
+            $table->string('transaction_type');  
             $table->float('amount');
+            $table->float('current_balance')->nullable();
+            $table->float('current_commission')->nullable();
             $table->string('status');
             $table->string('note');
             $table->string('from')->nullable();
