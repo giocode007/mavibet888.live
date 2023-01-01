@@ -13,15 +13,12 @@ class CreateStatusTable extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('status')){
-            Schema::create('status', function (Blueprint $table) {
-                $table->id();
-                $table->string('status_type')->nullable();
-                $table->string('status')->nullable();
-                $table->timestamps();
-            });
-        }
-        
+        Schema::create('status', function (Blueprint $table) {
+            $table->id();
+            $table->string('status_type')->nullable();
+            $table->string('status')->nullable();
+            $table->timestamps();
+        });
 
         // DB::table('status')->insert([
         //     ['status_type' => 'BETTING IS NOW OPEN.'],

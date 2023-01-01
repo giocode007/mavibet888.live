@@ -13,7 +13,6 @@ class CreateActivityLogsTable extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('activity_logs')){
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->foreignId('user_id')->constrained();
@@ -22,7 +21,7 @@ class CreateActivityLogsTable extends Migration
             $table->string('description');
             $table->string('date_time');
             $table->timestamps();
-        });}
+        });
     }
 
     /**
