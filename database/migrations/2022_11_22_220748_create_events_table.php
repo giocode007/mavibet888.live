@@ -14,7 +14,7 @@ class CreateEventsTable extends Migration
     public function up()
     {
         Schema::create('events', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('event_name');
             $table->string('fight_date_time');

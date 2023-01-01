@@ -14,7 +14,7 @@ class CreateBettingsTable extends Migration
     public function up()
     {
         Schema::create('bettings', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->foreignId('user_id')->constrained();  
             $table->integer('fight_id');  
             $table->integer('role_type');  
