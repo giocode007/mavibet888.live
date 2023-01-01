@@ -17,6 +17,7 @@ class CreateBettingsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();  
             $table->integer('fight_id');  
+            $table->integer('role_type');  
             $table->float('amount');
             $table->float('current_balance');
             $table->string('bet_type');

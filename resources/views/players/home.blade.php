@@ -25,10 +25,10 @@
                             @if(!empty($event->event_name))
                             <div class="card-body">
                                 <h3 class="card-title font-bold text-black">{{ $event->event_name }}</h3>
-                                <p class="card-text font-bold text-black">
+                                <p class="card-text font-bold text-black text-sm">
                                     {{ \Carbon\Carbon::parse($event->fight_date_time)->isoFormat('dddd, MMMM DD, Y') }}
                                 </p>
-                                <p class="card-text font-bold text-black">
+                                <p class="card-text font-bold text-black text-sm">
                                     {{ $event->location }}
                                 </p>
                                 <div class="buttons">
@@ -42,11 +42,11 @@
 
                             @else
                             <div class="card-body">
-                                <h3 class="card-title font-bold text-black">NO EVENT YET</h3>
+                                <h3 class="card-title font-bold text-black text-sm">NO EVENT YET</h3>
                                 <p class="card-text font-bold text-black">
                                    Please wait......
                                 </p>
-                                <p class="card-text font-bold text-black">
+                                <p class="card-text font-bold text-black text-sm">
                                     Looking for events......
                                 </p>
                                 <div class="buttons">

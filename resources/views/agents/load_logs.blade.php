@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@push('style')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@endpush
 @section('menu')
 @extends('sidebar.load_logs')
 @endsection
@@ -10,266 +13,163 @@
         </a>
     </header>
     <div class="page-heading">
-        <h3 class="text-white">Profile Statistics</h3>
-    </div>
-    {{-- message --}}
-    {!! Toastr::message() !!}
-    <div class="page-content">
-        <section class="row">
-            <div class="col-12 col-lg-9">
-                {{-- Information Section --}}
-
-                <div class="row">
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon purple">
-                                            <i class="iconly-boldShow"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">Activity Log</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $activity_logs }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon blue">
-                                            <i class="iconly-boldProfile"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">User Activity log</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $user_activity_logs }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon green">
-                                            <i class="iconly-boldAdd-User"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">User Total</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $users }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon red">
-                                            <i class="iconly-boldBookmark"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">Saved Record</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $staff }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Graph of commision --}}
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Commision</h4>
-                            </div>
-                            <div class="card-body">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Announcement from admin --}}
-                <div class="row">
-                    <div class="col-12 col-xl-8">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Latest Announcement</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-lg">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Details</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img src="assets/images/faces/5.jpg">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Admin</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Congratulations on your commision!</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img src="assets/images/faces/5.jpg">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Admin</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Wow amazing agent! Can you make more player?</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="page-title">
+            <div class="row">
+                <div class="col-12 col-md-6 order-md-1 order-first">
+                    <h3 class="text-white">Load Logs</h3>
+                    <p class="text-subtitle text-muted">load logs information list</p>
                 </div>
             </div>
-
-            {{-- Profile modal readonly --}}
-            <div class="col-12 col-lg-3">
-                <div class="card" data-bs-toggle="modal" data-bs-target="#default">
-                    <div class="card-body py-4 px-5">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar avatar-xl">
-                                <img src="{{ URL::to('/images/'. Auth::user()->avatar) }}" alt="{{ Auth::user()->avatar }}">
-                            </div>
-                            <div class="ms-3 name">
-                                <h5 class="font-bold">{{ Auth::user()->first_name }} , {{ Auth::user()->last_name }}</h5>
-                                <h6 class="text-muted mb-0">{{ Auth::user()->user_name }}</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{-- user profile modal --}}
+        </div>
+        {{-- message --}}
+        {!! Toastr::message() !!}
+        <section class="section">
+            <div class="card">
                 <div class="card-body">
-                    <!--Basic Modal -->
-                    <div class="modal fade text-left" id="default" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-scrollable" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="myModalLabel1">User Profile</h5>
-                                    <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-body">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <label>Full Name</label>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group has-icon-left">
-                                                    <div class="position-relative">
-                                                        <input type="text" class="form-control" name="fullName" value="{{ Auth::user()->first_name }} , {{ Auth::user()->last_name }}" readonly>
-                                                        <div class="form-control-icon">
-                                                            <i class="bi bi-person"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Email Address</label>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group has-icon-left">
-                                                    <div class="position-relative">
-                                                        <input type="email" class="form-control" name="email" value="{{ Auth::user()->email ?? 'No email' }}" readonly>
-                                                        <div class="form-control-icon">
-                                                            <i class="bi bi-envelope"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Mobile Number</label>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group has-icon-left">
-                                                    <div class="position-relative">
-                                                        <input type="number" class="form-control" value="{{ Auth::user()->phone_number ?? 'No phone number'}}" readonly>
-                                                        <div class="form-control-icon">
-                                                            <i class="bi bi-phone"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                
-                                            <div class="col-md-4">
-                                                <label>Status</label>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group has-icon-left">
-                                                    <div class="position-relative">
-                                                        <input type="text" class="form-control" value="{{ Auth::user()->status }}" readonly>
-                                                        <div class="form-control-icon">
-                                                            <i class="bi bi-bag-check"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <label>Role Name</label>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group has-icon-left">
-                                                    <div class="position-relative">
-                                                        <input type="text" class="form-control" value="{{ Auth::user()->role_name }}" readonly>
-                                                        <div class="form-control-icon">
-                                                            <i class="bi bi-exclude"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary ml-1" data-bs-dismiss="modal">
-                                        <i class="bx bx-check d-block d-sm-none"></i>
-                                        <span class="d-none d-sm-block">Close</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <table class="table table-striped" id="table1">
+                        <thead>
+                            <tr>
+                                <th>Transaction</th>
+                                <th>Amount</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Current Balance</th>
+                                <th>Note</th>
+                                <th>Date</th>
+                            </tr>    
+                        </thead>
+                        <tbody id="event-crud">
+                            @foreach ($allTransactions as $transaction)
+                            <tr id="transaction_id_{{ $transaction['id'] }}">
+                                <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
+                                @if ($transaction['status'] == 1)
+                                <td class="name bg-success text-white">{{ $transaction['amount'] }}</td>
+                                @else
+                                <td class="name bg-danger text-white">{{ $transaction['amount'] }}</td>
+                                @endif
+                                <td class="name">{{ $transaction['from'] }}</td>
+                                <td class="name">{{ $transaction['to'] }}</td>
+                                <td class="name">{{ $transaction['current_balance'] }}</td>
+                                <td class="name">{{ $transaction['note'] }}</td>
+                                <td class="name">{{ $transaction['date'] }}</td>
+                            </tr>
+                            
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                {{-- end user profile modal --}}
-
             </div>
         </section>
     </div>
-
 </div>
+
+{{-- MODAL --}}
+<div class="modal fade w-100" id="ajax-crud-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="fightModal"></h4>
+        </div>
+        <div class="modal-body">
+            <form id="playerForm" name="playerForm" class="form-horizontal">
+               <input type="hidden" name="playerId" id="playerId">
+                <div class="form-group">
+                    <label for="amount" class="col-sm-2 control-label">Enter Amount</label>
+                    <div class="col-sm-12">
+                        <input type="number" class="form-control" id="amount" name="amount" value="" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="note" class="col-sm-2 control-label">Leave a note</label>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" id="note" name="note" value="" required="">
+                    </div>
+                </div>
+
+                
+
+                <div class="col-sm-offset-2 col-sm-10">
+                 <button type="submit" class="btn text-white" id="btn-save">
+                 </button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            
+        </div>
+    </div>
+    </div>
+    </div>
+
+@push('scripts')
+<script>
+    // Simple Datatable
+    let table1 = document.querySelector('#table1');
+    let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+
+<script>
+    $(document).ready(function () {
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      
+      $('body').on('click', '#deposit', function () {
+        $('#fightModal').html("DEPOSIT");
+        $('#ajax-crud-modal').modal('show');
+        $('#playerId').val($(this).data('id'));
+        $('#btn-save').val("deposit");
+        $('#btn-save').html("Deposit");
+        document.getElementById('btn-save').classList.add('bg-success');
+        document.getElementById('btn-save').classList.remove('bg-danger');
+     });
+
+     $('body').on('click', '#withdraw', function () {
+        $('#fightModal').html("WITHDRAW");
+        $('#ajax-crud-modal').modal('show');
+        $('#playerId').val($(this).data('id'));
+        $('#btn-save').val("withdraw");
+        $('#btn-save').html("Withdraw");
+        document.getElementById('btn-save').classList.add('bg-danger');
+        document.getElementById('btn-save').classList.remove('bg-success');
+     });
+
+    });
+   
+    if ($("#playerForm").length > 0) {
+        $("#playerForm").validate({
+   
+       submitHandler: function(form) {
+        $('#btn-save').html('Saving...');
+        var playerId = document.getElementById("playerId").value;
+        var amount = document.getElementById("amount").value;
+        var note = document.getElementById("note").value;
+        var saveValue = document.getElementById("btn-save").value;
+
+        $.ajax({
+            url: "{{ route('agentDepositWithdraw') }}",
+            type: "GET",
+            data: {playerId:playerId,amount:amount,note:note,saveValue:saveValue},
+            success: function (response) {
+                if(response.success){
+                    location.reload();
+                }else{
+                    $('#btn-save').html("Withdraw");
+                    alert('NOT ENOUGH POINT!');
+                }
+            },
+            error: function (response) {
+                console.log('Error:', response);
+            }
+        });
+      }
+    })
+  }
+     
+    
+  </script>
+@endpush
 @endsection

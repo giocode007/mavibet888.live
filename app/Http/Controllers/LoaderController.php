@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Hash;
 
 
 
-class OperatorController extends Controller
+class LoaderController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','isOperators']);
+        $this->middleware(['auth','isLoaders']);
     }
 
     public function index()
@@ -264,12 +264,13 @@ class OperatorController extends Controller
 
         $allTransactions = collect([]);
 
-        $transactionHistory = DB::table('transactions')->where('user_id', $agentId)->orderBy('id', 'desc')->get();
+        $transactionHistory = DB::table('transactions')->where('user_id', $agentId)
+        ->orWhere('approve_by', $selectedUser[0]->user_name)->orderBy('id', 'desc')->get();
 
         foreach($transactionHistory as $history){
 
-            if($history->transaction_type != 'commission' && $history->transaction_type != 'commission out'
-            && $history->transaction_type != 'commission get'){
+            if($history->transaction_type == 'deposit' || $history->transaction_type == 'withdraw'
+            || $history->transaction_type == 'convert'){
                 $user = DB::table('users')->select('user_name')
                 ->where('id',  $history->user_id)->get();
     
@@ -411,7 +412,7 @@ class OperatorController extends Controller
                     'amount' => $amount,
                     'current_commission' => $totalCommission,
                     'current_balance' => $totalBalance,
-                    'status' => 1,
+                    'status' => 3,
                     'note'     => $note,
                     'from' => Auth::user()->user_name,
                     'to' => $user[0]->user_name,
@@ -508,14 +509,13 @@ class OperatorController extends Controller
 
         $transactionHistory = DB::table('transactions')
         ->where('user_id', $userId)
+        ->orWhere('to', $selectedUser->user_name)
         ->orderBy('id', 'desc')
         ->get();
 
-
         foreach($transactionHistory as $history){
 
-            if($history->transaction_type == 'commission' || $history->transaction_type == 'commission out'
-            || $history->transaction_type == 'convert' || $history->transaction_type == 'commission get'){
+            if($history->transaction_type == 'commission' || $history->transaction_type == 'convert'){
 
                     if($history->status == 1){
                         $commissionHistory->push([
@@ -642,12 +642,14 @@ class OperatorController extends Controller
 
         for($i=0; $i<count($usersId); $i++){
 
-            if($usersId[$i]['role_type'] != 'Operator' && $usersId[$i]['role_type'] != 'Declarator'){
+            if($usersId[$i]['role_type'] != 'Operator'){
                 if(!in_array($usersId[$i], $usersRemoveDupicate)){
                     array_push($usersRemoveDupicate, $usersId[$i]);
                 }
             }
         }
+
+
 
         for($i=0; $i<count($usersRemoveDupicate); $i++){
 

@@ -27,10 +27,14 @@ class HomeController extends Controller
 
     public function backPage()
     {
-        if (Auth::user()->role_type=='Operator' || Auth::user()->role_type=='Declarator')
+        if (Auth::user()->role_type=='Operator' || Auth::user()->role_type == 'Loader')
         {
             return redirect()->intended('/admin');
         }
+        else if (Auth::user()->role_type=='Declarator')
+                {
+                    return redirect()->intended('/declarator');
+                }
         else if (Auth::user()->role_type == 'Admin' ||
                     Auth::user()->role_type == 'Sub_Operator' || 
                         Auth::user()->role_type == 'Master_Agent' ||

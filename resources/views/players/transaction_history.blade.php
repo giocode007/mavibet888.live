@@ -1,23 +1,15 @@
-@extends('layouts.master')
+@extends('layouts.player')
 @push('style')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
-@section('menu')
-@extends('sidebar.commission_logs')
-@endsection
 @section('content')
 <div id="main">
-    <header class="mb-3">
-        <a href="#" class="burger-btn d-block d-xl-none">
-            <i class="bi bi-justify fs-3"></i>
-        </a>
-    </header>
     <div class="page-heading">
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-first">
-                    <h3 class="text-white">Commission Logs</h3>
-                    <p class="text-subtitle text-muted">commission information list</p>
+                    <h3 class="text-white">Betting History </h3>
+                    <p class="text-subtitle text-muted">Betting information list</p>
                 </div>
             </div>
         </div>
@@ -33,24 +25,25 @@
                                 <th>Amount</th>
                                 <th>From</th>
                                 <th>To</th>
-                                <th>Current Commission</th>
+                                <th>Current Balance</th>
                                 <th>Note</th>
                                 <th>Date</th>
                             </tr>    
                         </thead>
                         <tbody id="event-crud">
-                            @foreach ($commissionHistory as $transaction)
-                            <tr id="commission_id_{{ $transaction['id'] }}">
+                            @foreach ($allTransactions as $transaction)
+                            <tr id="transaction_id_{{ $transaction['id'] }}">
                                 <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
-                                @if ($transaction['transaction_type'] == 'commission get'
-                                || $transaction['transaction_type'] == 'commission')
+                                @if($transaction['amount'] == 0)
+                                <td class="name text-center"> - </td>
+                                @elseif ($transaction['status'] == 1 || $transaction['status'] == 3)
                                 <td class="name bg-success text-white">{{ $transaction['amount'] }}</td>
-                                @else
+                                @elseif($transaction['status'] == 2 || $transaction['status'] == 4)
                                 <td class="name bg-danger text-white">{{ $transaction['amount'] }}</td>
                                 @endif
                                 <td class="name">{{ $transaction['from'] }}</td>
                                 <td class="name">{{ $transaction['to'] }}</td>
-                                <td class="name">{{ $transaction['current_commission'] }}</td>
+                                <td class="name">{{ $transaction['current_balance'] }}</td>
                                 <td class="name">{{ $transaction['note'] }}</td>
                                 <td class="name">{{ $transaction['date'] }}</td>
                             </tr>
@@ -87,8 +80,10 @@
                     </div>
                 </div>
 
+                
+
                 <div class="col-sm-offset-2 col-sm-10">
-                 <button type="submit" class="btn bg-warning text-white" id="btn-save">CONVERT
+                 <button type="submit" class="btn text-white" id="btn-save">
                  </button>
                 </div>
             </form>
@@ -99,7 +94,6 @@
     </div>
     </div>
     </div>
-
 
 @push('scripts')
 <script>
@@ -116,12 +110,24 @@
           }
       });
       
-      $('body').on('click', '#convert', function () {
-        $('#fightModal').html("Convert");
+      $('body').on('click', '#deposit', function () {
+        $('#fightModal').html("DEPOSIT");
         $('#ajax-crud-modal').modal('show');
         $('#playerId').val($(this).data('id'));
-        $('#btn-save').val("convert");
-        $('#btn-save').html("Convert");
+        $('#btn-save').val("deposit");
+        $('#btn-save').html("Deposit");
+        document.getElementById('btn-save').classList.add('bg-success');
+        document.getElementById('btn-save').classList.remove('bg-danger');
+     });
+
+     $('body').on('click', '#withdraw', function () {
+        $('#fightModal').html("WITHDRAW");
+        $('#ajax-crud-modal').modal('show');
+        $('#playerId').val($(this).data('id'));
+        $('#btn-save').val("withdraw");
+        $('#btn-save').html("Withdraw");
+        document.getElementById('btn-save').classList.add('bg-danger');
+        document.getElementById('btn-save').classList.remove('bg-success');
      });
 
     });
@@ -130,8 +136,7 @@
         $("#playerForm").validate({
    
        submitHandler: function(form) {
-        $('#btn-save').html('Converting...');
-
+        $('#btn-save').html('Saving...');
         var playerId = document.getElementById("playerId").value;
         var amount = document.getElementById("amount").value;
         var note = document.getElementById("note").value;
@@ -145,8 +150,8 @@
                 if(response.success){
                     location.reload();
                 }else{
-                    $('#btn-save').html("Convert");
-                    alert('INVALID INPUT!');
+                    $('#btn-save').html("Withdraw");
+                    alert('NOT ENOUGH POINT!');
                 }
             },
             error: function (response) {

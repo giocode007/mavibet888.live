@@ -23,6 +23,7 @@ class CreateFightsTable extends Migration
             $table->string('isOpen');
             $table->string('status');
             $table->string('declared_by')->nullable();
+            $table->string('result_date_time')->nullable();
             $table->timestamps();
         });
     }

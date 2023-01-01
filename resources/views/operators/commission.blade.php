@@ -1,23 +1,23 @@
-@extends('layouts.master')
+@extends('layouts.player')
 @push('style')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
-@section('menu')
-@extends('sidebar.commission_logs')
-@endsection
 @section('content')
 <div id="main">
-    <header class="mb-3">
-        <a href="#" class="burger-btn d-block d-xl-none">
-            <i class="bi bi-justify fs-3"></i>
-        </a>
-    </header>
     <div class="page-heading">
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-first">
-                    <h3 class="text-white">Commission Logs</h3>
+                    <h3 class="text-white">Commission History of <span class="text-warning">({{ Str::upper($selectedUser->user_name) }})</span></h3>
                     <p class="text-subtitle text-muted">commission information list</p>
+                </div>
+                <div class="col-12 col-md-6 order-md-2 order-last">
+                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#" onclick="history.back()">Agents</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Commissions</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
@@ -25,6 +25,13 @@
         {!! Toastr::message() !!}
         <section class="section">
             <div class="card">
+                @if ($selectedUser->role_type != 'Player')
+                <div class="d-flex card-header justify-content-between">
+                    <a href="javascript:void(0)" id="convert" data-id="{{ $selectedUser->id }}">
+                        <span class="p-3 badge bg-warning"><i class="icon-mid bi bi-plus-circle me-2"></i>CONVERT</span>
+                    </a>
+                </div>
+                @endif
                 <div class="card-body">
                     <table class="table table-striped" id="table1">
                         <thead>

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OperatorMiddleware
+class OpDecMiddleware
 {
     /**
      * Handle an incoming request.
@@ -20,7 +20,8 @@ class OperatorMiddleware
         if(Auth::check() && Auth::user()->status == 'Active'){
 
             if(Auth::user()->role_type == 'Operator' 
-                    || Auth::user()->role_type == 'Loader'){
+                    || Auth::user()->role_type == 'Declarator'
+                        || Auth::user()->role_type == 'Loader'){
                 return $next($request);
             }
             else{

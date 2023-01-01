@@ -15,8 +15,8 @@ class CreateTransactionsHistoryTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();  
-            $table->string('transaction_type');
+            $table->foreignId('user_id')->constrained(); 
+            $table->string('user_name');  
             $table->float('amount');
             $table->string('status');
             $table->string('note');

@@ -11,7 +11,7 @@
                     </div>
                     <div class="col-12 col-lg-6 order-md-2 order-last">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                            <h5 class="text-warning">Your Points: {{ Auth::user()->current_balance }}</h5>
+                            <h5 class="text-warning">Your Points: @money(Auth::user()->current_balance)</h5>
                         </nav>
                     </div>
                 </div>
@@ -25,10 +25,10 @@
                             @if(!empty($event->event_name))
                             <div class="card-body">
                                 <h3 class="card-title font-bold text-black">{{ $event->event_name }}</h3>
-                                <p class="card-text font-bold text-black">
+                                <p class="card-text font-bold text-black text-sm">
                                     {{ \Carbon\Carbon::parse($event->fight_date_time)->isoFormat('dddd, MMMM DD, Y') }}
                                 </p>
-                                <p class="card-text font-bold text-black">
+                                <p class="card-text font-bold text-black text-sm">
                                     {{ $event->location }}
                                 </p>
                                 <div class="buttons">
@@ -43,10 +43,10 @@
                             @else
                             <div class="card-body">
                                 <h3 class="card-title font-bold text-black">NO EVENT YET</h3>
-                                <p class="card-text font-bold text-black">
+                                <p class="card-text font-bold text-black text-sm">
                                    Please wait......
                                 </p>
-                                <p class="card-text font-bold text-black">
+                                <p class="card-text font-bold text-black text-sm">
                                     Looking for events......
                                 </p>
                                 <div class="buttons">

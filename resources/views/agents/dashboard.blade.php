@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">Agents</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $activity_logs }}</h6>
+                                        <h6 class="font-extrabold mb-0">{{ $agents }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -48,24 +48,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">Active Players</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $user_activity_logs }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon green">
-                                            <i class="iconly-boldAdd-User"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">Approval Players</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $users }}</h6>
+                                        <h6 class="font-extrabold mb-0">{{ $activePlayers }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +65,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">Deleted Players</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $staff }}</h6>
+                                        <h6 class="font-extrabold mb-0">{{ $disabledPlayers }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -104,70 +87,17 @@
                                     <div class="card-body">
                                         <h4 class="card-title text-white">Current Wallet</h4>
                                         <p class="card-text text-white">
-                                            Your points: 100.00</p>
-                                        <small class="text-white">Last updated 3 mins ago</small>
+                                            Your points: @money(Auth::user()->current_balance)</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="card bg-success">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <h4 class="card-title text-white">Current Commission (90%)</h4>
+                                        <h4 class="card-title text-white">Current Commission ({{ Auth::user()->commission_percent * 100 }}%)</h4>
                                         <p class="card-text text-white">
-                                            Your commission: 100.00</p>
-                                        <small class="text-white">Last updated 3 mins ago</small>
+                                            Your commission:  @money(Auth::user()->current_commission)</p>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Announcement from admin --}}
-                <div class="row">
-                    <div class="col-12 col-xl-8">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Latest Announcement</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-lg">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Details</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img src="assets/images/faces/5.jpg">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Admin</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Congratulations on your commision!</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img src="assets/images/faces/5.jpg">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Admin</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Wow amazing agent! Can you make more player?</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -292,4 +222,28 @@
     </div>
 
 </div>
+
+@push('scripts')
+    <script>
+
+        $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            
+            $('body').on('click', '#copy-code', function () {
+                var copyText =  $(this).data('id');
+
+                // Copy the text inside the text field
+                navigator.clipboard.writeText(copyText);
+
+                // Alert the copied text
+                alert("Copied the text: " + copyText);
+            });
+
+        });
+  </script>
+@endpush
 @endsection

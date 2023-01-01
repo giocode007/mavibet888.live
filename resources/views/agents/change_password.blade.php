@@ -17,7 +17,7 @@
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <br>
-                    <form method="POST" action="{{ route('changePlayerProfileInfo') }}" class="md-float-material">
+                    <form method="POST" action="{{ route('agent/changeProfileInfo') }}" class="md-float-material">
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input type="text" class="form-control form-control-lg @error('last_name') is-invalid @enderror" name="last_name" value="{{ $data[0]->last_name }}" placeholder="Enter Your Last Name">

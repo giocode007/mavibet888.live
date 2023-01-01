@@ -36,11 +36,11 @@ class RegisterController extends Controller
             $commission_percent = 0.0;
             $profile_image = 'player_defaults.jpg';
             $role = 'Player';
-            $status = 'Pending';
+            $status = 'Disabled';
 
             $request->validate([
                 'agent_code'      => 'required',
-                'user_name'      => 'required|min:6|:users',
+                'user_name'      => 'required|min:6|unique:users',
                 'password'  => 'required|string|min:6|confirmed',
                 'password_confirmation' => 'required',
                 'last_name'      => 'required',

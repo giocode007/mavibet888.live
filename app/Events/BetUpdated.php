@@ -15,25 +15,39 @@ class BetUpdated implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private string $userId;
+    private string $userName;
+    private string $betOn;
+    private string $amount;
+    private string $roleType;
     private string $allMeronBet;
     private string $allWalaBet;
     private string $allDrawBet;
     private string $meronPayout;
     private string $walaPayout;
+    private string $allRealMeronBet;
+    private string $allRealWalaBet;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(string $userId, string $allMeronBet, string $allWalaBet, string $allDrawBet, string $meronPayout, string $walaPayout,)
+    public function __construct(string $userId, string $userName, string $betOn, string $amount, string $roleType, string $allMeronBet, 
+    string $allWalaBet, string $allDrawBet, string $meronPayout, string $walaPayout, 
+    string $allRealMeronBet, string $allRealWalaBet)
     {
         $this->userId = $userId;
+        $this->userName = $userName;
+        $this->betOn = $betOn;
+        $this->amount = $amount;
+        $this->roleType = $roleType;
         $this->allMeronBet = $allMeronBet;
         $this->allWalaBet = $allWalaBet;
         $this->allDrawBet = $allDrawBet;
         $this->meronPayout = $meronPayout;
         $this->walaPayout = $walaPayout;
+        $this->allRealMeronBet = $allRealMeronBet;
+        $this->allRealWalaBet = $allRealWalaBet;
     }
 
     /**
@@ -53,11 +67,17 @@ class BetUpdated implements ShouldBroadcast
     public function broadcastWith(){
         return [
             'userId' => $this->userId,
+            'userName' => $this->userName,
+            'betOn' => $this->betOn,
+            'amount' => $this->amount,
+            'roleType' => $this->roleType,
             'allMeronBet' => $this->allMeronBet,
             'allWalaBet' => $this->allWalaBet,
             'allDrawBet' => $this->allDrawBet,
             'meronPayout' => $this->meronPayout,
             'walaPayout' => $this->walaPayout,
+            'allRealMeronBet' => $this->allRealMeronBet,
+            'allRealWalaBet' => $this->allRealWalaBet,
         ];
     }
 

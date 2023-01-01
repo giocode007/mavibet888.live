@@ -65,5 +65,8 @@ class Kernel extends HttpKernel
         'isAgents' => \App\Http\Middleware\AgentMiddleware::class,
         'isPlayers' => \App\Http\Middleware\PlayerMiddleware::class,
         'isOperators' => \App\Http\Middleware\OperatorMiddleware::class,
+        'isDeclarators' => \App\Http\Middleware\DeclaratorMiddleware::class,
+        'isOpDec' => \App\Http\Middleware\OpDecMiddleware::class,
+        'isLoaders' => \App\Http\Middleware\LoaderMiddleware::class,
     ];
 }

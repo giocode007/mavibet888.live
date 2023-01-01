@@ -43,13 +43,37 @@ Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, '
 
 // ----------------------------- player ------------------------------//
 Route::get('/home', [App\Http\Controllers\PlayerController::class, 'index'])->name('player');
-
-Route::get('change/password', [App\Http\Controllers\PlayerController::class, 'changePasswordView'])->name('change/password');
-Route::post('change/password/db', [App\Http\Controllers\PlayerController::class, 'changePasswordDB'])->name('change/password/db');
-
+Route::get('profile/settings/{id}', [App\Http\Controllers\PlayerController::class, 'getProfile']);
+Route::post('changePlayerProfileInfo', [App\Http\Controllers\PlayerController::class, 'changeProfileInfo'])->name('changePlayerProfileInfo');
+Route::get('betting/history', [App\Http\Controllers\PlayerController::class, 'getPlayerBettingHistory'])->name('getPlayerBettingHistory');
+Route::get('transaction/history', [App\Http\Controllers\PlayerController::class, 'getPlayerTransactionHistory'])->name('getPlayerTransactionHistory');
 
 // ----------------------------- operator ------------------------------//
+Route::get('admin/players/{id}', [App\Http\Controllers\OperatorController::class, 'getPlayers']);
+Route::get('admin/getPlayerInfo', [App\Http\Controllers\OperatorController::class, 'getPlayerInfo'])->name('getPlayerInfo');
+Route::get('admin/updatePlayer', [App\Http\Controllers\OperatorController::class, 'updatePlayer'])->name('updatePlayer');
+Route::get('logs/{id}', [App\Http\Controllers\OperatorController::class, 'getLogs']);
+Route::get('profile/{id}', [App\Http\Controllers\OperatorController::class, 'getProfile']);
+Route::get('agents/list', [App\Http\Controllers\OperatorController::class, 'allAgents'])->name('allAgents');
+Route::get('players', [App\Http\Controllers\OperatorController::class, 'allPlayers'])->name('allPlayers');
+Route::post('changeProfileInfo', [App\Http\Controllers\OperatorController::class, 'changeProfileInfo'])->name('changeProfileInfo');
+Route::get('history/{id}', [App\Http\Controllers\OperatorController::class, 'getHistory']);
+Route::get('player/history/{id}', [App\Http\Controllers\OperatorController::class, 'getPlayerHistory']);
+Route::get('commission/{id}', [App\Http\Controllers\OperatorController::class, 'getCommission']);
+Route::get('agentDW', [App\Http\Controllers\OperatorController::class, 'agentDepositWithdraw'])->name('agentDepositWithdraw');
+Route::get('audit', [App\Http\Controllers\OperatorController::class, 'getAudit'])->name('getAudit');
+Route::post('audit/range', [App\Http\Controllers\OperatorController::class, 'computeProfit'])->name('computeProfit');
+Route::get('admin/agents', [App\Http\Controllers\OperatorController::class, 'getAgents'])->name('getAgents');
 Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])->name('admin');
+
+
+
+// ----------------------------- Declarator ------------------------------//
+Route::get('declarator/profile/{id}', [App\Http\Controllers\DeclaratorController::class, 'getProfile']);
+Route::post('declarator/changeProfileInfo', [App\Http\Controllers\DeclaratorController::class, 'changeProfileInfo'])->name('declarator/changeProfileInfo');
+Route::get('/declarator', [App\Http\Controllers\DeclaratorController::class, 'index'])->name('declarator');
+
+
 // ----------------------------- event ------------------------------//
 // Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
 // Route::get('/events/create', [App\Http\Controllers\EventController::class, 'create'])->name('events/create');
@@ -57,6 +81,12 @@ Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])-
 // Route::get('/events/edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('events/edit');
 // Route::post('form/view/update', [App\Http\Controllers\EventController::class, 'viewUpdate'])->name('form/view/update');
 Route::resource('/events', App\Http\Controllers\EventController::class);
+Route::get('events/{id}', [App\Http\Controllers\EventController::class, 'show']);
+Route::get('getFight', [App\Http\Controllers\EventController::class, 'getFight'])->name('getFight');
+Route::get('reverseFight', [App\Http\Controllers\EventController::class, 'reverseFight'])->name('reverseFight');
+Route::get('fightsbet/{id}', [App\Http\Controllers\EventController::class, 'showFightBet']);
+Route::get('fights/{id}', [App\Http\Controllers\EventController::class, 'showActiveFightBet']);
+
 
 
 // ----------------------------- arena ------------------------------//
@@ -66,8 +96,10 @@ Route::get('/checkFight', [App\Http\Controllers\ArenaController::class, 'checkFi
 Route::get('/fightStatus', [App\Http\Controllers\ArenaController::class, 'fightStatus'])->name('fightStatus');
 Route::get('/fightResult', [App\Http\Controllers\ArenaController::class, 'fightResult'])->name('fightResult');
 Route::get('/resetAll', [App\Http\Controllers\ArenaController::class, 'resetAll'])->name('resetAll');
-Route::get('/checkResetAll', [App\Http\Controllers\ArenaController::class, 'checkResetAll'])->name('checkResetAll');
+Route::get('/checkResult', [App\Http\Controllers\ArenaController::class, 'checkResult'])->name('checkResult');
+Route::get('/checkBet', [App\Http\Controllers\ArenaController::class, 'checkBet'])->name('checkBet');
 Route::get('/goNext', [App\Http\Controllers\ArenaController::class, 'goNext'])->name('goNext');
+Route::get('/refreshUsers', [App\Http\Controllers\ArenaController::class, 'refreshUsers'])->name('refreshUsers');
 Route::get('/bet', [App\Http\Controllers\ArenaController::class, 'bet'])->name('bet');
 // Route::get('/bet', function() {
 //     event(new BetUpdated());
@@ -77,10 +109,16 @@ Route::get('/bet', [App\Http\Controllers\ArenaController::class, 'bet'])->name('
 
 // ----------------------------- agent ------------------------------//
 Route::get('/dashboard', [App\Http\Controllers\AgentController::class, 'dashboard'])->name('home');
-Route::get('/summary_report', [App\Http\Controllers\AgentController::class, 'summaryReport'])->name('summary_report');
 Route::get('/load_logs', [App\Http\Controllers\AgentController::class, 'loadLogs'])->name('load_logs');
 Route::get('/commission_logs', [App\Http\Controllers\AgentController::class, 'commissionLogs'])->name('commission_logs');
-Route::get('/commission_withdrawal', [App\Http\Controllers\AgentController::class, 'commissionWithdrawal'])->name('commission_withdrawal');
+Route::get('agent/profile/{id}', [App\Http\Controllers\AgentController::class, 'getProfile']);
+Route::post('agent/changeProfileInfo', [App\Http\Controllers\AgentController::class, 'changeProfileInfo'])->name('agent/changeProfileInfo');
+Route::get('getPlayerInfo', [App\Http\Controllers\AgentController::class, 'getPlayerInfo'])->name('getAgengInfo');
+Route::get('updatePlayer', [App\Http\Controllers\AgentController::class, 'updatePlayer'])->name('updateAgent');
+Route::get('agents', [App\Http\Controllers\AgentController::class, 'getAgents'])->name('getMyAgents');
+Route::get('active/players', [App\Http\Controllers\AgentController::class, 'getActivePlayers'])->name('getActivePlayers');
+Route::get('deleted/players', [App\Http\Controllers\AgentController::class, 'getDeletedPlayers'])->name('getDeletedPlayers');
+Route::get('agents/agentDW', [App\Http\Controllers\AgentController::class, 'agentDepositWithdraw'])->name('agentCash');
 
 
 // ----------------------------- sidebar ------------------------------//
@@ -100,32 +138,6 @@ Route::post('forget-password', [App\Http\Controllers\Auth\ForgotPasswordControll
 // ----------------------------- reset password -----------------------------//
 Route::get('reset-password/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'getPassword']);
 Route::post('reset-password', [App\Http\Controllers\Auth\ResetPasswordController::class, 'updatePassword']);
-
-// ----------------------------- user profile ------------------------------//
-Route::get('profile_user', [App\Http\Controllers\UserManagementController::class, 'profile'])->name('profile_user');
-Route::post('profile_user/store', [App\Http\Controllers\UserManagementController::class, 'profileStore'])->name('profile_user/store');
-
-// ----------------------------- user userManagement -----------------------//
-Route::get('userManagement', [App\Http\Controllers\UserManagementController::class, 'index'])->middleware('auth')->name('userManagement');
-Route::get('user/add/new', [App\Http\Controllers\UserManagementController::class, 'addNewUser'])->middleware('auth')->name('user/add/new');
-Route::post('user/add/save', [App\Http\Controllers\UserManagementController::class, 'addNewUserSave'])->name('user/add/save');
-Route::get('view/detail/{id}', [App\Http\Controllers\UserManagementController::class, 'viewDetail'])->middleware('auth');
-Route::post('update', [App\Http\Controllers\UserManagementController::class, 'update'])->name('update');
-Route::get('delete_user/{id}', [App\Http\Controllers\UserManagementController::class, 'delete'])->middleware('auth');
-Route::get('activity/log', [App\Http\Controllers\UserManagementController::class, 'activityLog'])->middleware('auth')->name('activity/log');
-Route::get('activity/login/logout', [App\Http\Controllers\UserManagementController::class, 'activityLogInLogOut'])->middleware('auth')->name('activity/login/logout');
-
-// Route::get('change/password', [App\Http\Controllers\UserManagementController::class, 'changePasswordView'])->middleware('auth')->name('change/password');
-// Route::post('change/password/db', [App\Http\Controllers\UserManagementController::class, 'changePasswordDB'])->name('change/password/db');
-
-// ----------------------------- form staff ------------------------------//
-Route::get('form/staff/new', [App\Http\Controllers\FormController::class, 'index'])->middleware('auth')->name('form/staff/new');
-Route::post('form/save', [App\Http\Controllers\FormController::class, 'saveRecord'])->name('form/save');
-Route::get('form/view/detail', [App\Http\Controllers\FormController::class, 'viewRecord'])->middleware('auth')->name('form/view/detail');
-Route::get('form/view/detail/{id}', [App\Http\Controllers\FormController::class, 'viewDetail'])->middleware('auth');
-Route::post('form/view/update', [App\Http\Controllers\FormController::class, 'viewUpdate'])->name('form/view/update');
-Route::get('delete/{id}', [App\Http\Controllers\FormController::class, 'viewDelete'])->middleware('auth');
-
 
 
 if(\Illuminate\Support\Facades\App::environment('local')){

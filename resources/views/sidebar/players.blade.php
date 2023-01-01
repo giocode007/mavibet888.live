@@ -31,7 +31,7 @@
                         <span>Load Logs</span>
                     </a>
                 </li>
-                <li class="sidebar-item active">
+                <li class="sidebar-item">
                     <a href="{{ route('commission_logs') }}" class='sidebar-link'>
                         <i class="bi bi-calendar-week-fill"></i>
                         <span>Commision Logs</span>
@@ -39,7 +39,7 @@
                 </li>
 
                 <li class="sidebar-title">Player Controller</li>
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  active has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-diagram-3-fill"></i>
                         <span class="font-bold">Players</span>

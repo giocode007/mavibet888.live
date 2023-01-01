@@ -8,6 +8,59 @@ require('./bootstrap');
 
 const UserId = document.getElementById("userId").value;
 
+let usersOnline = [];
+let operatorId;
+let listMessage;
+
+const presenceChannel = Echo.join('presence.chat.1');
+
+presenceChannel.here((users) => {
+    usersOnline = [...users];
+    renderAvatars();
+    // console.log({users});
+})
+.joining((user) => {
+    // console.log({user}, 'Joined' ,usersOnline.length);
+    usersOnline.push(user);
+    renderAvatars();
+})
+.leaving((user) => {
+    // console.log({user}, 'Leaving');
+    usersOnline = usersOnline.filter((userOnline) => userOnline.id !== user.id);
+})
+
+function renderAvatars(){
+    usersOnline.forEach((user) => {
+        if(user.role_type == 'Operator' || user.role_type == 'Declarator'){
+            operatorId = user.id;
+        }
+    })
+}
+
+function addBet(name, message, color="white"){
+    listMessage = document.getElementById('list-messages');
+
+    const li = document.createElement('li');
+        
+    li.classList.add('d-flex', 'flex-col');
+
+    const span = document.createElement('span')
+    span.classList.add('message-author');
+    span.classList.add('text-warning');
+    span.textContent = name + " /";
+
+    const messageSpan = document.createElement('span');
+    messageSpan.textContent = message;
+
+    messageSpan.style.color = color;
+
+    li.append(span, messageSpan);
+
+    listMessage.append(li);
+}
+
+
+
 const channel = Echo.channel('bettings');
 
 channel.subscribe( () => {
@@ -16,7 +69,7 @@ channel.subscribe( () => {
 
 
 channel.listen('.player-bet', (event) => {
-    
+
     if(UserId != event.userId){
         var mr = 0;
         var wr = 0;
@@ -27,16 +80,29 @@ channel.listen('.player-bet', (event) => {
         mr = removeComma(meronBet) * event.meronPayout / 100;
         wr = removeComma(walaBet) * event.walaPayout / 100;
 
-        console.log(mr,wr);
         document.getElementById("spanMeronReward").textContent = number_format(Math.ceil(mr, 0));
         document.getElementById("spanWalaReward").textContent = number_format(Math.ceil(wr, 0));
+       
     }
+    
+    if(operatorId == UserId){
+
+        
+        addBet(event.userName , ' Bet on ' + event.betOn + ' = ' + event.amount);
+
+        document.getElementById("totalRealMeronBet").textContent= "( " +number_format(event.allRealMeronBet)+ " )";
+        document.getElementById("totalRealWalaBet").textContent= "( " +number_format(event.allRealWalaBet)+ " )";
+    }
+
+
+
 
     document.getElementById("totalMeronBet").textContent= number_format(event.allMeronBet);
     document.getElementById("totalWalaBet").textContent= number_format(event.allWalaBet);
     document.getElementById("totalDrawBet").textContent= number_format(event.allDrawBet);
     document.getElementById("meronPayout").textContent= number_format(event.meronPayout, 1);
     document.getElementById("walaPayout").textContent= number_format(event.walaPayout, 1);
+    
 
 });
 
@@ -45,8 +111,6 @@ const channel1 = Echo.channel('status');
 channel1.listen('.player-status', (event) => {
 
     document.getElementById("spanStatus").textContent = event.status;
-
-    console.log();
 
 })
 
@@ -83,14 +147,69 @@ const channel3 = Echo.channel('result');
 
 channel3.listen('.player-result', (event) => {
 
+    meronResult = 0;
+    walaResult = 0;
+    drawResult= 0;
+    cancelResult = 0;
+    result = [];
+    event.response.reduce(function (r, a) {
+        if (a.result !== r) {
+            result.push([]);
+        }
+        result[result.length - 1].push(a);
+        return a.result;
+    }, undefined);
+
+    var d = JSON.stringify(result, 0, 4);
+
+    var jsonParse = JSON.parse(d);
+    var html = '';
+    html += '<tr>';
+    jsonParse.forEach(function(el){
+        html += '<td>';
+            if(el[0].result == 'meron'){
+                html += '<p style="background: #EEEEEE; color: #ED5659; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">MERON</p>';
+            }else if(el[0].result == 'wala'){
+                html += '<p style="background: #EEEEEE; color: #1072BA; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">WALA</p>';
+            }else if(el[0].result == 'draw'){
+                html += '<p style="background: #EEEEEE; color: #198754; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">DRAW</p>';
+            }else if(el[0].result == 'cancel'){
+                html += '<p style="background: #EEEEEE; color: #999999; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">CANCEL</p>';
+            }
+
+            el.forEach(function(ele){
+                if(ele.result == 'meron'){
+                    meronResult++;
+                    html += '<button type="button" class="mx-3 btn trend_output btn_result" style="background: #ED5659;">'+ele.fight_number+'</button><br>';
+                }else if(ele.result == 'wala'){
+                    walaResult++;
+                    html += '<button type="button" class="mx-2 btn trend_output btn_result" style="background: #1072BA;">'+ele.fight_number+'</button><br>';
+                }else if(ele.result == 'draw'){
+                    drawResult++;
+                    html += '<button type="button" class="mx-2 btn trend_output btn_result" style="background: #198754;">'+ele.fight_number+'</button><br>';
+                }else if(ele.result == 'cancel'){
+                    cancelResult++;
+                    html += '<button type="button" class="mx-3 btn trend_output btn_result" style="background: #999999;">'+ele.fight_number+'</button><br>';
+                }
+            })
+            html += '</td>';
+    })
+
+    $('#result-meron').html(meronResult);
+    $('#result-wala').html(walaResult);
+    $('#result-draw').html(drawResult);
+    $('#result-cancel').html(cancelResult);
+
+    html += '</tr>';
+
+    $('#display_trade_group').html(html);
+
     if(event.isCurrentFight){
-        console.log(event);
 
         document.getElementById('spanResult').removeAttribute('class');
     
     if(event.result == 'meron'){
         document.getElementById('spanResult').classList.add('bg-danger');
-        console.log( document.getElementById('spanResult').id);
     }
     if(event.result == 'wala'){
         document.getElementById('spanResult').classList.add('bg-primary');
@@ -111,13 +230,11 @@ channel3.listen('.player-result', (event) => {
         document.getElementById('spanResult').classList.add('p-1');
         document.getElementById('spanResult').textContent = event.fightNumber + ' ' + event.result.toString().toUpperCase();
     }else{
-        console.log(event);
 
         document.getElementById('spanLastResult').removeAttribute('class');
     
         if(event.result == 'meron'){
             document.getElementById('spanLastResult').classList.add('bg-danger');
-            console.log( document.getElementById('spanLastResult').id);
         }
         if(event.result == 'wala'){
             document.getElementById('spanLastResult').classList.add('bg-primary');
@@ -132,16 +249,17 @@ channel3.listen('.player-result', (event) => {
         if(event.result == 'cancel'){
             document.getElementById('spanLastResult').classList.add('bg-light-secondary');
             document.getElementById('spanLastResult').value = "cancel";
-
         }
         
             document.getElementById('spanLastResult').classList.add('p-1');
-            document.getElementById('spanLastResult').textContent = (event.fightNumber - 1) + ' ' + event.result.toString().toUpperCase();
+            document.getElementById('spanLastResult').textContent = (event.lastFightNumber) + ' ' + event.result.toString().toUpperCase();
 
             document.getElementById('spanResult').removeAttribute('class');
 
             document.getElementById('spanResult').classList.add('p-1');
             document.getElementById('spanResult').textContent = event.fightNumber;
+
+            document.getElementById("fightId").value = event.fightId;
     }
 
 
@@ -161,20 +279,30 @@ channel4.listen('.player-balance', (event) => {
 
         totalBalance = parseInt(removeComma(currentBalance)) + parseInt(event.reward);
 
-        console.log(removeComma(currentBalance) , parseInt(event.reward));
         document.getElementById("current_balance").textContent = '$'+ number_format(totalBalance);
     }
 
     document.getElementById("totalMeronBet").textContent= 0;
     document.getElementById("totalWalaBet").textContent= 0;
     document.getElementById("totalDrawBet").textContent= 0;
-    document.getElementById("meronPayout").textContent= 0;
-    document.getElementById("walaPayout").textContent= 0;
+    document.getElementById("meronPayout").textContent= 0.0;
+    document.getElementById("walaPayout").textContent= 0.0;
     document.getElementById("meronBet").textContent= 0;
     document.getElementById("spanMeronReward").textContent= 0;
     document.getElementById("walaBet").textContent= 0;
     document.getElementById("spanWalaReward").textContent= 0;
     document.getElementById("draw-amount-bet").textContent= 0;
+})
+
+const channel5 = Echo.channel('refresh');
+
+channel5.listen('.player-refresh', (event) => {
+
+    if(UserId != event.userId){
+        location.reload();
+    }else{
+        window.location.href = '/events';
+    }
 })
 
 

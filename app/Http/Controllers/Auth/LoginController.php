@@ -65,35 +65,47 @@ class LoginController extends Controller
         $password = $request->password;
         
         
-        if (Auth::attempt(['user_name'=>$username,'password'=>$password] )) {
-
-            $dt         = Carbon::now();
-            $todayDate  = $dt->toDayDateTimeString();
+        if (Auth::attempt(['user_name'=>$username,'password'=>$password])) {
+            if(Auth::user()->status == 'Active'){
+                $dt         = Carbon::now('Asia/Manila');
+                $todayDate  = $dt->toDayDateTimeString();
+        
+                $activityLog = [
+                    'user_id'        => Auth::user()->id,
+                    'status'        => 1,
+                    'description' => 'has log in IP : ' . $request->ip(),
+                    'date_time'   => $todayDate,
+                ];
     
-            $activityLog = [
-                'user_id'        => Auth::user()->id,
-                'description' => 'has log in',
-                'date_time'   => $todayDate,
-            ];
-
-            DB::table('activity_logs')->insert($activityLog);
-            Toastr::success('Login successfully :)','Success');
-
-            if (Auth::user()->role_type=='Operator' || Auth::user()->role_type=='Declarator')
-            {
-                return redirect()->intended('/admin');
+                DB::table('activity_logs')->insert($activityLog);
+                Toastr::success('Login successfully :)','Success');
+    
+                if (Auth::user()->role_type=='Operator' || Auth::user()->role_type == 'Loader')
+                    {
+                        return redirect()->intended('/admin');
+                    }
+                else if (Auth::user()->role_type=='Declarator')
+                {
+                    return redirect()->intended('/declarator');
+                }
+                else if (Auth::user()->role_type == 'Admin' ||
+                            Auth::user()->role_type == 'Sub_Operator' || 
+                                Auth::user()->role_type == 'Master_Agent' ||
+                                    Auth::user()->role_type == 'Gold_Agent')
+                {
+                    return redirect()->intended('/dashboard');
+                }
+                else{
+                    return redirect()->intended('/home');
+                }
+            }else{
+                $user = Auth::User();
+                Session::put('user', $user);
+                $user=Session::get('user');
+                Auth::logout();
+                Toastr::error('fail, WRONG USERNAME OR PASSWORD :)','Error');
+                return redirect('login');
             }
-            else if (Auth::user()->role_type == 'Admin' ||
-                        Auth::user()->role_type == 'Sub_Operator' || 
-                            Auth::user()->role_type == 'Master_Agent' ||
-                                Auth::user()->role_type == 'Gold_Agent')
-            {
-                return redirect()->intended('/dashboard');
-            }
-            else{
-                return redirect()->intended('/home');
-            }
-
         }
         else{
             Toastr::error('fail, WRONG USERNAME OR PASSWORD :)','Error');
@@ -109,12 +121,13 @@ class LoginController extends Controller
         $user=Session::get('user');
 
         $userId       = $user->id;
-        $dt         = Carbon::now();
+        $dt         = Carbon::now('Asia/Manila');
         $todayDate  = $dt->toDayDateTimeString();
 
         $activityLog = [
 
             'user_id'        => $userId,
+            'status'        => 1,
             'description' => 'has logged out',
             'date_time'   => $todayDate,
         ];

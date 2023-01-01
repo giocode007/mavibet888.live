@@ -14,7 +14,11 @@
                 <div class="col-12 col-md-6 order-md-2 order-last">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
+                            @if (Auth::user()->role_type == 'Operator')
+                                <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
+                            @elseif (Auth::user()->role_type == 'Declarator')
+                                <li class="breadcrumb-item"><a href="{{ route('declarator') }}">Home</a></li>
+                            @endif
                             <li class="breadcrumb-item active" aria-current="page">View</li>
                         </ol>
                     </nav>
@@ -50,23 +54,31 @@
                                     @if ($event->status == 0)
                                     <td class="email bg-secondary text-center font-bold text-white">Pending</td>
                                     @elseif ($event->status == 1)
-                                    <td class="email bg-warning text-center font-bold text-white">OnGoing</td>
+                                    <td class="email bg-warning text-center font-bold"><a href="{{ url('arena/'.$event->id) }}" class="text-white">OnGoing</a></td>
                                     @else
                                     <td class="email bg-success text-center font-bold text-white">Completed</td>
                                     @endif
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" id="edit-post" data-id="{{ $event->id }}">
+                                        <a href="javascript:void(0)" id="edit-event" data-id="{{ $event->id }}">
                                             <span class="badge bg-info p-2">EDIT</span>
                                         </a>
-                                        <a href="{{ route('form/staff/new') }}">
+                                        <a href="{{ url('events/'.$event->id) }}" id="show-event" data-id="{{ $event->id }}">
                                             <span class="badge bg-danger p-2">GAMES</span>
                                         </a>
-                                        <a href="{{ route('form/staff/new') }}">
-                                            <span class="badge bg-warning p-2">ONLINE</span>
+                                        @if ($event->status == 0)
+                                        <a href="javascript:void(0)">
+                                            <span class="badge bg-light-secondary p-2">BETS</span>
                                         </a>
-                                        <a href="{{ url('form/view/detail/'.$event->id) }}">
+                                        @elseif ($event->status == 1)
+                                        <a href="{{ url('fights/'.$event->id) }}">
                                             <span class="badge bg-success p-2">BETS</span>
-                                        </a>    
+                                        </a>
+                                        @else
+                                        <a href="javascript:void(0)">
+                                            <span class="badge bg-light-secondary p-2">BETS</span>
+                                        </a>
+                                        @endif
+                                            
                                         {{-- <a href="javascript:void(0)" id="delete-post" data-id="{{ $event->id }}"><span class="badge bg-danger"><i class="bi bi-trash"></i></span></a> --}}
                                     </td>
                                 </tr>
@@ -167,12 +179,12 @@
           $('#ajax-crud-modal').modal('show');
       });
    
-      $('body').on('click', '#edit-post', function () {
+      $('body').on('click', '#edit-event', function () {
         var event_id = $(this).data('id');
 
         $.get('events/'+event_id+'/edit', function (data) {
-           $('#eventModal').html("Edit post");
-            $('#btn-save').val("edit-post");
+           $('#eventModal').html("Edit Event");
+            $('#btn-save').val("edit-event");
             $('#ajax-crud-modal').modal('show');
             $('#event_id').val(data.id);
             $('#event_name').val(data.event_name);
@@ -183,6 +195,8 @@
             $('#palasada').val(data.palasada);  
         })
      });
+
+     
 
       $('body').on('click', '.delete-post', function () {
           var event_id = $(this).data("id");
@@ -215,42 +229,6 @@
             dataType: 'json',
             success: function (data) {
                 window.location = "/events";
-                
-                // var td;
-                // if(data.status == 0){
-                //     td += '<td class="email bg-secondary text-center font-bold text-white">Pending</td>';
-                // }else if(data.status == 1){
-                //     td += '<td class="email bg-warning text-center font-bold text-white">OnGoing</td>';
-                // }else{
-                //     td += '<td class="email bg-success text-center font-bold text-white">Completed</td>';
-                // }
-
-                // var event;
-                //     event += '<tr id="event_id_' + data.id + '"><td>' 
-                //             + data.event_name + '</td><td>' 
-                //             + data.fight_date_time + '</td><td>' 
-                //             + data.location + '</td>' 
-                //             + td;
-                //     event += '<td class="text-center"><a href="javascript:void(0)" id="edit-post" data-id="' 
-                //             + data.id + '"><span class="badge bg-info p-2">EDIT</span></a>';
-                //     event += '<a href="javascript:void(0)" class="p-1" id="edit-post" data-id="' 
-                //             + data.id + '"><span class="badge bg-danger p-2">GAMES</span></a>';
-                //     event += '<a href="javascript:void(0)" class="p-1" id="edit-post" data-id="' 
-                //             + data.id + '"><span class="badge bg-warning p-2">ONLINE</span></a>';
-                //     event += '<a href="javascript:void(0)" id="edit-post" data-id="' 
-                //             + data.id + '"><span class="badge bg-success p-2">BETS</span></a></td></tr>';
-                           
-                // if (actionType == "create-post") {
-                //     $('#event-crud').prepend(event);
-                // } else {
-
-                //     $("#event_id_" + data.id).replaceWith(event);
-                // }
-   
-                // $('#eventForm').trigger("reset");
-                // $('#ajax-crud-modal').modal('hide');
-                // $('#btn-save').html('Save Changes');
-                
             },
             error: function (data) {
                 console.log('Error:', data);

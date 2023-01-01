@@ -14,9 +14,12 @@ class ResultUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    private string $fightId;
     private string $result;
+    private string $lastFightNumber;
     private string $fightNumber;
     private string $isCurrentFight;
+    private $response = [];
 
 
     /**
@@ -24,11 +27,14 @@ class ResultUpdated implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(string $result, string $fightNumber, string $isCurrentFight)
+    public function __construct(string $fightId, string $result, string $lastFightNumber, string $fightNumber, string $isCurrentFight, $response)
     {
+        $this->fightId = $fightId;
         $this->result = $result;
+        $this->lastFightNumber = $lastFightNumber;
         $this->fightNumber = $fightNumber;
         $this->isCurrentFight = $isCurrentFight;
+        $this->response = $response;
     }
 
     /**
@@ -47,9 +53,12 @@ class ResultUpdated implements ShouldBroadcast
 
     public function broadcastWith(){
         return [
+            'fightId' => $this->fightId,
             'result' => $this->result,
+            'lastFightNumber' => $this->lastFightNumber,
             'fightNumber' => $this->fightNumber,
             'isCurrentFight' => $this->isCurrentFight,
+            'response' => $this->response,
         ];
     }
 }
