@@ -29,8 +29,7 @@ class RegisterController extends Controller
 
     public function storeUser(Request $request)
     {   
-        if(DB::table('users')->where('player_code', $request->agent_code)->exists())
-        {
+        
             $current_balance = 0;
             $current_commission = 0;
             $commission_percent = 0.0;
@@ -78,7 +77,6 @@ class RegisterController extends Controller
 
             Toastr::success('Create new account successfully :)','Success');
             return redirect('login');
-        }
         
         return back()->withErrors(['agent_code' => 'Code not exist'])->withInput();
     }
