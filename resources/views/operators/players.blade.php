@@ -110,6 +110,9 @@
     </div>
 </div>
 
+
+
+
 {{-- MODAL --}}
 <div class="modal fade w-100" id="ajax-crud-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
