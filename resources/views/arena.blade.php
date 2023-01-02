@@ -93,6 +93,8 @@
                                 <button id="resetting" class="hide bg-warning p-2 font-bold"><span class="spinner-border spinner-border-sm" role="status"
                                     aria-hidden="true"></span> RESETTING...</button>
                                 <button id="go-next" class="hide bg-info p-2 font-bold">GO NEXT</button>
+                                <button id="nexting" class="hide bg-info p-2 font-bold"><span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span> LOADING...</button>
                             </div>
                         </div>
 
@@ -107,6 +109,8 @@
                                 <button id="resetting" class="hide bg-warning p-2 font-bold"><span class="spinner-border spinner-border-sm" role="status"
                                     aria-hidden="true"></span> RESETTING...</button>
                                 <button id="go-next" class="hide bg-info p-2 font-bold">GO NEXT</button>
+                                <button id="nexting" class="hide bg-info p-2 font-bold"><span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span> LOADING...</button>
                             </div>
                         </div>
 
@@ -396,12 +400,17 @@ $(document).ready(function () {
         var eventId = document.getElementById("eventId").value;
         var actions = 'goNext';
 
+        document.getElementById('go-next').classList.add('hide');
+        document.getElementById('nexting').classList.remove('hide');
 
         $.ajax({
         url: "{{ url('goNext') }}",
         type: "GET",
         data: {id:id,eventId:eventId,actions:actions},  
             success: function (response) {
+
+                document.getElementById('go-next').classList.remove('hide');
+                document.getElementById('nexting').classList.add('hide');
 
                 document.getElementById('nextFight').classList.remove('d-flex');
                 document.getElementById('nextFight').classList.add('hide');
