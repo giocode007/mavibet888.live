@@ -2165,10 +2165,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "mavibet_key",
   cluster: "mt1",
-  forceTLS: true,
-  disableStats: true,
-  // wsHost: window.location.hostname,
-  wsHost: "127.0.0.1",
+  forceTLS: false,
+  wsHost: window.location.hostname,
   wsPort: 6001,
   encrypted: false,
   enabledTransports: ['ws', 'wss']
