@@ -23,8 +23,8 @@
     <link rel="shortcut icon" href="{{ URL::to('assets/images/favicon.svg') }}" type="image/x-icon">
 
      {{-- message toastr --}}
-     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css"> 
-     <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+     <link rel="stylesheet" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css"> 
+     <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
 </head>
 <style>
