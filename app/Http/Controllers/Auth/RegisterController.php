@@ -47,19 +47,6 @@ class RegisterController extends Controller
                 'first_name'      => 'required',
             ]);
 
-            // $request->validate([
-            //     'name' => 'required|string|max:255',
-            //     'role_name' => 'required|string|max:255',
-            //     'email' => 'required|string|email|max:255|unique:users',
-            //     'password' => ['required', 'confirmed', Password::min(8)
-            //             ->mixedCase()
-            //             ->letters()
-            //             ->numbers()
-            //             ->symbols()
-            //             ->uncompromised(),
-            //     'password_confirmation' => 'required',
-            //     ],
-            // ]);
             
             User::create([
                 'agent_code'      => $request->agent_code,

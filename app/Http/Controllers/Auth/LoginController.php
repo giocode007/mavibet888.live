@@ -35,6 +35,7 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
 
+    
     /**
      * Create a new controller instance.
      *
@@ -48,6 +49,7 @@ class LoginController extends Controller
             'unlock'
         ]);
     }
+    
 
     public function login(Request $request)
     {
@@ -66,6 +68,9 @@ class LoginController extends Controller
         
         
         if (Auth::attempt(['user_name'=>$username,'password'=>$password])) {
+
+            Auth::logoutOtherDevices(request('password'));
+
             if(Auth::user()->status == 'Active'){
                 $dt         = Carbon::now('Asia/Manila');
                 $todayDate  = $dt->toDayDateTimeString();
