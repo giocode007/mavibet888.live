@@ -69,8 +69,6 @@ class LoginController extends Controller
         
         if (Auth::attempt(['user_name'=>$username,'password'=>$password])) {
 
-            Auth::logoutOtherDevices(request('password'));
-
             if(Auth::user()->status == 'Active'){
                 $dt         = Carbon::now('Asia/Manila');
                 $todayDate  = $dt->toDayDateTimeString();
@@ -125,20 +123,24 @@ class LoginController extends Controller
         Session::put('user', $user);
         $user=Session::get('user');
 
-        $userId       = $user->id;
-        $dt         = Carbon::now('Asia/Manila');
-        $todayDate  = $dt->toDayDateTimeString();
+        if(Auth::User() != null){
+            $userId       = $user->id;
+            $dt         = Carbon::now('Asia/Manila');
+            $todayDate  = $dt->toDayDateTimeString();
+    
+            $activityLog = [
+    
+                'user_id'        => $userId,
+                'status'        => 1,
+                'description' => 'has logged out',
+                'date_time'   => $todayDate,
+            ];
+            
+            DB::table('activity_logs')->insert($activityLog);
+            Auth::logout();
+        }
 
-        $activityLog = [
-
-            'user_id'        => $userId,
-            'status'        => 1,
-            'description' => 'has logged out',
-            'date_time'   => $todayDate,
-        ];
         
-        DB::table('activity_logs')->insert($activityLog);
-        Auth::logout();
         Toastr::success('Logout successfully :)','Success');
         return redirect('login');
     }

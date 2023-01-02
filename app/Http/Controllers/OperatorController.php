@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -136,6 +137,11 @@ class OperatorController extends Controller
                 ]);
             }
         }else{
+
+            if($playerStatus == 'Disabled'){
+                
+            }
+
             $request->validate([
                 'agentCode'      => 'exists:users,player_code',
             ]);
