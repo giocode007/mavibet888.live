@@ -20,7 +20,7 @@
             <div class="mx-auto col-xl-3 col-md-6 col-sm-8 col-10 mt-10">
                 <div class="card">
                     <div class="card-content">
-                        <img src="assets/images/samples/motorcycle.jpg" class="card-img-top img-fluid"
+                        <img src="assets/images/samples/arena_poster.jpeg" class="card-img-top img-fluid"
                             alt="singleminded">
                             @if(!empty($event->event_name))
                             <div class="card-body">
