@@ -20,7 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 
     {{-- message toastr --}}
-    <link rel="stylesheet" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css"> 
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css"> 
     <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
     <link rel="stylesheet" href="{{ URL::to('assets/css/app-player.css') }}">
