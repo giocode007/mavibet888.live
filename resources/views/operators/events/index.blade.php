@@ -101,6 +101,7 @@
         <div class="modal-body">
             <form id="eventForm" name="eventForm" class="form-horizontal">
                <input type="hidden" name="event_id" id="event_id">
+               <input type="hidden" name="action_type" id="action_type">
                 <div class="form-group">
                     <label for="event_name" class="col-sm-2 control-label">EVENT NAME</label>
                     <div class="col-sm-12">
@@ -145,6 +146,13 @@
                     </div>
                 </div>
 
+                <div id="fightNumber" class="form-group">
+                    <label for="name" class="col-sm-2 control-label">START FROM FIGHT #</label>
+                    <div class="col-sm-12">
+                        <input type="number" class="form-control" id="fight_number" name="fight_number" value="1" required="">
+                    </div>
+                </div>
+
                 <div class="col-sm-offset-2 col-sm-10">
                  <button type="submit" class="btn btn-primary" id="btn-save" value="create">Save
                  </button>
@@ -173,7 +181,9 @@
           }
       });
       $('#create-new-post').click(function () {
+        document.getElementById('fightNumber').classList.remove('hide');
           $('#btn-save').val("create-post");
+          $('#action_type').val("create");
           $('#eventForm').trigger("reset");
           $('#eventModal').html("Add new event");
           $('#ajax-crud-modal').modal('show');
@@ -183,8 +193,10 @@
         var event_id = $(this).data('id');
 
         $.get('events/'+event_id+'/edit', function (data) {
+            document.getElementById('fightNumber').classList.add('hide');
            $('#eventModal').html("Edit Event");
             $('#btn-save').val("edit-event");
+            $('#action_type').val("edit");
             $('#ajax-crud-modal').modal('show');
             $('#event_id').val(data.id);
             $('#event_name').val(data.event_name);

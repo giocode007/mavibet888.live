@@ -27,6 +27,7 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
+
         $event = Event::updateOrCreate([
             'id' => $request->event_id
         ],
@@ -51,6 +52,21 @@ class EventController extends Controller
         ];
 
         DB::table('activity_logs')->insert($activityLog);
+
+        if($request->action_type == 'create'){
+            $activeEvent =  DB::table('events')->select('id')->orderBy('id', 'desc')->first();
+
+            $transaction = Fight::Create(
+                [
+                    'event_id' => $activeEvent->id,
+                    'fight_number' => $request->fight_number,
+                    'payoutMeron' => 0,
+                    'payoutWala' => 0,
+                    'isOpen' => 0,
+                    'status' => 1,
+                ]);  
+                         
+        }
 
         return response()->json($event);
     }

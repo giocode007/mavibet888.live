@@ -270,12 +270,23 @@ class OperatorController extends Controller
 
         $allTransactions = collect([]);
 
-        $transactionHistory = DB::table('transactions')->where('user_id', $agentId)->orderBy('id', 'desc')->get();
+        if(Auth::user()->role_type != 'Operator'){
+            $transactionHistory = DB::table('transactions')
+            ->where('user_id', $agentId)
+            ->orderBy('id', 'desc')->get();
+        }else{
+            $transactionHistory = DB::table('transactions')
+            ->where('user_id', $agentId)
+            ->orWhere('approve_by', $selectedUser[0]->user_name)
+            ->orderBy('id', 'desc')->get();
+        }
+        
 
         foreach($transactionHistory as $history){
 
             if($history->transaction_type != 'commission' && $history->transaction_type != 'commission out'
-            && $history->transaction_type != 'commission get'){
+            && $history->transaction_type != 'commission get' && $history->transaction_type != 'betting'
+            && $history->transaction_type != 'result'){
                 $user = DB::table('users')->select('user_name')
                 ->where('id',  $history->user_id)->get();
     

@@ -30,22 +30,6 @@ class ArenaController extends Controller
         $activeFight = DB::table('fights')->where('event_id', $id)->count();
         $activeEventAndFight = DB::table('fights')->where('event_id', $id)->where('status', 0)->count();
 
-        if(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator'){
-
-            if(DB::table('fights')->where('event_id', $id)->count() == 0){
-                $transaction = Fight::Create(
-                    [
-                        'event_id' => $id,
-                        'fight_number' => 1,
-                        'payoutMeron' => 0,
-                        'payoutWala' => 0,
-                        'isOpen' => 0,
-                        'status' => 0,
-                    ]);  
-            }  
-                     
-        }
-
         if($activeEventAndFight == 0){
             $lastFight = DB::table('fights')->select('id')->where('event_id', $id)->orderBy('id', 'desc')->first();
 
