@@ -27,9 +27,11 @@
             <div class="card">
                 @if ($selectedUser->role_type != 'Player')
                 <div class="d-flex card-header justify-content-between">
-                    <a href="javascript:void(0)" id="convert" data-id="{{ $selectedUser->id }}">
-                        <span class="p-3 badge bg-warning"><i class="icon-mid bi bi-plus-circle me-2"></i>CONVERT</span>
-                    </a>
+                    @if (Auth::user()->role_type == 'Operator')
+                        <a href="javascript:void(0)" id="convert" data-id="{{ $selectedUser->id }}">
+                            <span class="p-3 badge bg-warning"><i class="icon-mid bi bi-plus-circle me-2"></i>CONVERT</span>
+                        </a>
+                    @endif
                 </div>
                 @endif
                 <div class="card-body">

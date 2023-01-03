@@ -60,6 +60,7 @@
                                     <td class="name">@comma($agent->current_balance)</td>
                                     <td class="name">@comma($agent->current_commission)</td>
 
+                                    @if (Auth::user()->role_type == 'Operator')
                                     <td class="text-center">
                                         <a href="javascript:void(0)" id="edit-player" data-id="{{ $agent->id }}">
                                             <span class="badge bg-info p-2">EDIT</span>
@@ -70,13 +71,30 @@
                                         <a href="{{ url('commission/'.$agent->id) }}">
                                             <span class="badge bg-primary p-2">COMM</span>
                                         </a>
-                                        <a href="{{ url('players/'.$agent->player_code) }}">
+                                        <a href="{{ url('admin/players/'.$agent->player_code) }}">
                                             <span class="badge bg-success p-2">PLAYERS</span>
                                         </a>
                                         <a href="{{ url('logs/'.$agent->id) }}">
                                             <span class="badge bg-light-secondary p-2">LOGS</span>
                                         </a>
                                     </td>
+                                    @else
+                                    <td class="text-center">
+                                        <a href="{{ url('history/'.$agent->id) }}">
+                                            <span class="badge bg-warning p-2">HISTORY</span>
+                                        </a>
+                                        <a href="{{ url('commission/'.$agent->id) }}">
+                                            <span class="badge bg-primary p-2">COMM</span>
+                                        </a>
+                                        <a href="{{ url('admin/players/'.$agent->player_code) }}">
+                                            <span class="badge bg-success p-2">PLAYERS</span>
+                                        </a>
+                                        <a href="{{ url('logs/'.$agent->id) }}">
+                                            <span class="badge bg-light-secondary p-2">LOGS</span>
+                                        </a>
+                                    </td>
+                                    @endif
+                                    
                                 </tr>
                             @endforeach
                         </tbody>

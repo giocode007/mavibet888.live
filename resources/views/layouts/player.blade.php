@@ -54,7 +54,7 @@
                             <a class="font-bold text-white" href="{{ route('declarator') }}"> Home</a>
                             @endif
                             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                                @if (Auth::user()->role_type=='Operator' || Auth::user()->role_type == 'Loader' )
+                                @if (Auth::user()->role_type=='Operator')
                                 <li class="nav-item dropdown me-3">
                                     <a class="nav-link active dropdown-toggle" href="#" data-bs-toggle="dropdown"
                                         aria-expanded="false">
@@ -76,8 +76,7 @@
                                         </li>
                                     </ul>
                                 </li> 
-                                @endif
-                                @if (Auth::user()->role_type=='Declarator')
+                                @elseif (Auth::user()->role_type=='Declarator')
                                 <li class="nav-item dropdown me-3">
                                     <a class="nav-link active dropdown-toggle" href="#" data-bs-toggle="dropdown"
                                         aria-expanded="false">
@@ -89,6 +88,21 @@
                                         </li>
                                         <li><a class="dropdown-item" href="/events"><i class="icon-mid bi bi-file-earmark-text me-2"></i>
                                             Events</a></li>
+                                    </ul>
+                                </li> 
+                                @elseif (Auth::user()->role_type == 'Loader' )
+                                <li class="nav-item dropdown me-3">
+                                    <a class="nav-link active dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <span class="text-white font-bold">LOADER</span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                        <li>
+                                            <h6 class="dropdown-header">Loader Reports</h6>
+                                        </li>
+                                        <li><a class="dropdown-item" href="{{ route('getAgents') }}"><i class="icon-mid bi bi-people-fill me-2"></i>
+                                            Users</a></li>
+                                        <hr class="dropdown-divider">
                                     </ul>
                                 </li> 
                                 @endif

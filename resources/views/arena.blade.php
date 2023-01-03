@@ -10,6 +10,7 @@
             <h5 class="text-warning"><a href="{{ url('events/'.$event[0]->id) }}">
                 {{ \Carbon\Carbon::parse($event[0]->fight_date_time)->isoFormat('dddd') }} {{ $event[0]->event_name }} - 
                 {{ \Carbon\Carbon::parse($event[0]->fight_date_time)->isoFormat('MM/DD/Y') }}</a>
+                ONLINE:<span id="onlineUsers"> 0 </span>
             </h5>
             @endif
         </div>

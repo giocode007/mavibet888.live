@@ -57,48 +57,86 @@
                                     @endif
                                     <td class="name">{{ $player->current_balance }}</td>
                                     <td class="name">{{ $player->current_commission }}</td>
-                                    @if ($player->role_type == 'Player')
-                                    <td class="text-center">
-                                        <a href="javascript:void(0)" id="edit-player" data-id="{{ $player->id }}">
-                                            <span class="badge bg-info p-2">EDIT</span>
-                                        </a>
-                                        <a href="{{ url('player/history/'.$player->id) }}">
-                                            <span class="badge bg-warning p-2">HISTORY</span>
-                                        </a>
-                                        <a href="{{ url('logs/'.$player->id) }}">
-                                            <span class="badge bg-light-secondary p-2">LOGS</span>
-                                        </a>
-                                    </td>
-                                    @elseif ($player->role_type == 'Declarator' || $player->role_type == 'Loader')
-                                    <td class="text-center">
-                                        <a href="javascript:void(0)" id="edit-player" data-id="{{ $player->id }}">
-                                            <span class="badge bg-info p-2">EDIT</span>
-                                        </a>
-                                        <a href="{{ url('history/'.$player->id) }}">
-                                            <span class="badge bg-warning p-2">HISTORY</span>
-                                        </a>
-                                        <a href="{{ url('logs/'.$player->id) }}">
-                                            <span class="badge bg-light-secondary p-2">LOGS</span>
-                                        </a>
-                                    </td>
+                                    @if (Auth::user()->role_type == 'Operator')
+                                        @if ($player->role_type == 'Player')
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" id="edit-player" data-id="{{ $player->id }}">
+                                                <span class="badge bg-info p-2">EDIT</span>
+                                            </a>
+                                            <a href="{{ url('player/history/'.$player->id) }}">
+                                                <span class="badge bg-warning p-2">HISTORY</span>
+                                            </a>
+                                            <a href="{{ url('logs/'.$player->id) }}">
+                                                <span class="badge bg-light-secondary p-2">LOGS</span>
+                                            </a>
+                                        </td>
+                                        @elseif ($player->role_type == 'Declarator' || $player->role_type == 'Loader')
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" id="edit-player" data-id="{{ $player->id }}">
+                                                <span class="badge bg-info p-2">EDIT</span>
+                                            </a>
+                                            <a href="{{ url('history/'.$player->id) }}">
+                                                <span class="badge bg-warning p-2">HISTORY</span>
+                                            </a>
+                                            <a href="{{ url('logs/'.$player->id) }}">
+                                                <span class="badge bg-light-secondary p-2">LOGS</span>
+                                            </a>
+                                        </td>
+                                        @else
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" id="edit-player" data-id="{{ $player->id }}">
+                                                <span class="badge bg-info p-2">EDIT</span>
+                                            </a>
+                                            <a href="{{ url('history/'.$player->id) }}">
+                                                <span class="badge bg-warning p-2">HISTORY</span>
+                                            </a>
+                                            <a href="{{ url('commission/'.$player->id) }}">
+                                                <span class="badge bg-primary p-2">COMM</span>
+                                            </a>
+                                            <a href="{{ url('admin/players/'.$player->player_code) }}">
+                                                <span class="badge bg-success p-2">PLAYERS</span>
+                                            </a>
+                                            <a href="{{ url('logs/'.$player->id) }}">
+                                                <span class="badge bg-light-secondary p-2">LOGS</span>
+                                            </a>
+                                        </td>
+                                        @endif
+                                    
                                     @else
-                                    <td class="text-center">
-                                        <a href="javascript:void(0)" id="edit-player" data-id="{{ $player->id }}">
-                                            <span class="badge bg-info p-2">EDIT</span>
-                                        </a>
-                                        <a href="{{ url('history/'.$player->id) }}">
-                                            <span class="badge bg-warning p-2">HISTORY</span>
-                                        </a>
-                                        <a href="{{ url('commission/'.$player->id) }}">
-                                            <span class="badge bg-primary p-2">COMM</span>
-                                        </a>
-                                        <a href="{{ url('admin/players/'.$player->player_code) }}">
-                                            <span class="badge bg-success p-2">PLAYERS</span>
-                                        </a>
-                                        <a href="{{ url('logs/'.$player->id) }}">
-                                            <span class="badge bg-light-secondary p-2">LOGS</span>
-                                        </a>
-                                    </td>
+                                    @if ($player->role_type == 'Player')
+                                        <td class="text-center">
+                                            <a href="{{ url('player/history/'.$player->id) }}">
+                                                <span class="badge bg-warning p-2">HISTORY</span>
+                                            </a>
+                                            <a href="{{ url('logs/'.$player->id) }}">
+                                                <span class="badge bg-light-secondary p-2">LOGS</span>
+                                            </a>
+                                        </td>
+                                        @elseif ($player->role_type == 'Declarator' || $player->role_type == 'Loader')
+                                        <td class="text-center">
+                                            <a href="{{ url('history/'.$player->id) }}">
+                                                <span class="badge bg-warning p-2">HISTORY</span>
+                                            </a>
+                                            <a href="{{ url('logs/'.$player->id) }}">
+                                                <span class="badge bg-light-secondary p-2">LOGS</span>
+                                            </a>
+                                        </td>
+                                        @else
+                                        <td class="text-center">
+                                            <a href="{{ url('history/'.$player->id) }}">
+                                                <span class="badge bg-warning p-2">HISTORY</span>
+                                            </a>
+                                            <a href="{{ url('commission/'.$player->id) }}">
+                                                <span class="badge bg-primary p-2">COMM</span>
+                                            </a>
+                                            <a href="{{ url('admin/players/'.$player->player_code) }}">
+                                                <span class="badge bg-success p-2">PLAYERS</span>
+                                            </a>
+                                            <a href="{{ url('logs/'.$player->id) }}">
+                                                <span class="badge bg-light-secondary p-2">LOGS</span>
+                                            </a>
+                                        </td>
+                                        @endif
                                     @endif
                                 </tr>
                             @endforeach

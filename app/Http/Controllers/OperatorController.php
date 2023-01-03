@@ -38,13 +38,24 @@ class OperatorController extends Controller
 
     public function getAgents()
     {
-        $agents = DB::table('users')
-        ->orWhere('role_type', 'Operator')
-        ->orWhere('role_type', 'Sub_Operator')
-        ->orWhere('role_type', 'Master_Agent')
-        ->orWhere('role_type', 'Gold_Agent')
-        ->orderBy('id', 'desc')
-        ->get();
+        $agents;
+        if(Auth::user()->role_type == 'Operator'){
+            $agents = DB::table('users')
+            ->orWhere('role_type', 'Operator')
+            ->orWhere('role_type', 'Sub_Operator')
+            ->orWhere('role_type', 'Master_Agent')
+            ->orWhere('role_type', 'Gold_Agent')
+            ->orderBy('id', 'desc')
+            ->get();
+        }else{
+            $agents = DB::table('users')
+            ->orWhere('role_type', 'Sub_Operator')
+            ->orWhere('role_type', 'Master_Agent')
+            ->orWhere('role_type', 'Gold_Agent')
+            ->orderBy('id', 'desc')
+            ->get();
+        }
+        
         
         return view('operators.agents', compact('agents'));
     }
@@ -311,6 +322,7 @@ class OperatorController extends Controller
 
     public function agentDepositWithdraw(Request $request)
     {
+
         $playerId = $request->playerId;
         $amount = $request->amount;
         $note = $request->note;
@@ -324,99 +336,7 @@ class OperatorController extends Controller
 
         if($saveValue == 'deposit'){
             
-            $totalBalance = $user[0]->current_balance + $amount;
-
-            $transaction = Transactions::updateOrCreate([
-                'id' => $request->transaction_id
-            ],
-            [
-                'user_id' => $user[0]->id,
-                'transaction_type' => 'deposit',    
-                'amount' => $amount,
-                'current_balance' => $totalBalance,
-                'status' => 1,
-                'note'     => $note,
-                'from' => Auth::user()->user_name,
-                'to' => $user[0]->user_name,
-                'approved_date_time' => $todayDate,
-                'approve_by' => Auth::user()->user_name,
-
-            ]); 
-
-            $description  = $amount .' points loaded to ( ' .  $user[0]->user_name . ' )';
-
-
-            DB::table('users')->where('id', $playerId)
-            ->update([
-                'current_balance' => $totalBalance,
-            ]);
-
-            $activityLog = [
-                'user_id'        => Auth::user()->id,
-                'description' => $description,
-                'date_time'   => $todayDate,
-            ];
-
-            DB::table('activity_logs')->insert($activityLog);
-
-            $description1  = $amount .' points loaded from ( ' .  Auth::user()->user_name . ' )';
-
-            $activityLog1 = [
-                'user_id'        => $playerId,
-                'description' => $description1,
-                'date_time'   => $todayDate,
-            ];
-
-            DB::table('activity_logs')->insert($activityLog1);
-            
-
-            return response()->json(array('success'=>true));
-
-        }else if($saveValue == 'withdraw'){
-
-            if($user[0]->current_balance >= $amount){
-                $totalBalance = $user[0]->current_balance - $amount;
-
-                $transaction = Transactions::updateOrCreate([
-                    'id' => $request->transaction_id
-                ],
-                [
-                    'user_id' => $user[0]->id,
-                    'transaction_type' => 'withdraw',    
-                    'amount' => $amount,
-                    'current_balance' => $totalBalance,
-                    'status' => 2,
-                    'note'     => $note,
-                    'from' => Auth::user()->user_name,
-                    'to' => $user[0]->user_name,
-                    'approved_date_time' => $todayDate,
-                    'approve_by' => Auth::user()->user_name,
-                ]); 
-
-                $description  = $amount .' points withdraw from ( ' .  $user[0]->user_name . ' )';
-
-
-                DB::table('users')->where('id', $playerId)
-                ->update([
-                    'current_balance' => $totalBalance,
-                ]);
-
-                $activityLog = [
-                    'user_id'        => Auth::user()->id,
-                    'description' => $description,
-                    'date_time'   => $todayDate,
-                ];
-
-                DB::table('activity_logs')->insert($activityLog);
-
-                return response()->json(array('success'=>true));
-            }else{
-                return response()->json(array('success'=>false));
-            }
-           
-        }else{
-            if($user[0]->current_commission >= $amount){
-                $totalCommission = $user[0]->current_commission - $amount;
+            if(Auth::user()->role_type == 'Operator'){
                 $totalBalance = $user[0]->current_balance + $amount;
 
                 $transaction = Transactions::updateOrCreate([
@@ -424,9 +344,8 @@ class OperatorController extends Controller
                 ],
                 [
                     'user_id' => $user[0]->id,
-                    'transaction_type' => 'convert',    
+                    'transaction_type' => 'deposit',    
                     'amount' => $amount,
-                    'current_commission' => $totalCommission,
                     'current_balance' => $totalBalance,
                     'status' => 1,
                     'note'     => $note,
@@ -434,13 +353,70 @@ class OperatorController extends Controller
                     'to' => $user[0]->user_name,
                     'approved_date_time' => $todayDate,
                     'approve_by' => Auth::user()->user_name,
+    
+                ]); 
+    
+                $description  = $amount .' points loaded to ( ' .  $user[0]->user_name . ' )';
+    
+    
+                DB::table('users')->where('id', $playerId)
+                ->update([
+                    'current_balance' => $totalBalance,
+                ]);
+    
+                $activityLog = [
+                    'user_id'        => Auth::user()->id,
+                    'description' => $description,
+                    'date_time'   => $todayDate,
+                ];
+    
+                DB::table('activity_logs')->insert($activityLog);
+    
+                $description1  = $amount .' points loaded from ( ' .  Auth::user()->user_name . ' )';
+    
+                $activityLog1 = [
+                    'user_id'        => $playerId,
+                    'description' => $description1,
+                    'date_time'   => $todayDate,
+                ];
+    
+                DB::table('activity_logs')->insert($activityLog1);
+                
+    
+                return response()->json(array('success'=>true));
+            }elseif(Auth::user()->role_type == 'Loader' && Auth::user()->current_balance >= $amount){
+                $totalBalance = $user[0]->current_balance + $amount;
+
+                $currLoader = DB::table('users')->select('current_balance')
+                ->where('id',  Auth::user()->id)->first();
+
+                DB::table('users')->where('id', Auth::user()->id)
+                ->update([
+                    'current_balance' => $currLoader->current_balance - $amount,
+                ]);
+
+                $transaction = Transactions::updateOrCreate([
+                    'id' => $request->transaction_id
+                ],
+                [
+                    'user_id' => $user[0]->id,
+                    'transaction_type' => 'cashin',    
+                    'amount' => $amount,
+                    'current_balance' => $totalBalance,
+                    'status' => 1,
+                    'note'     => $note,
+                    'from' => Auth::user()->user_name,
+                    'to' => $user[0]->user_name,
+                    'approved_date_time' => $todayDate,
+                    'approve_by' => Auth::user()->user_name,
+
                 ]); 
 
-                $description  = $amount .' commission convert from ( ' .  $user[0]->user_name . ' )';
+                $description  = $amount .' points loaded to ( ' .  $user[0]->user_name . ' )';
+
 
                 DB::table('users')->where('id', $playerId)
                 ->update([
-                    'current_commission' => $totalCommission,
                     'current_balance' => $totalBalance,
                 ]);
 
@@ -452,20 +428,121 @@ class OperatorController extends Controller
 
                 DB::table('activity_logs')->insert($activityLog);
 
-                $description  = $amount .' commission converted to points';
+                $description1  = $amount .' points loaded from ( ' .  Auth::user()->user_name . ' )';
 
-                $activityLog = [
+                $activityLog1 = [
                     'user_id'        => $playerId,
-                    'description' => $description,
+                    'description' => $description1,
                     'date_time'   => $todayDate,
                 ];
 
-                DB::table('activity_logs')->insert($activityLog);
+                DB::table('activity_logs')->insert($activityLog1);
+                
 
                 return response()->json(array('success'=>true));
-            }else{
-                return response()->json(array('success'=>false));
             }
+
+        }else if($saveValue == 'withdraw'){
+
+            if(Auth::user()->role_type == 'Operator'){
+                if($user[0]->current_balance >= $amount){
+                    $totalBalance = $user[0]->current_balance - $amount;
+    
+                    $transaction = Transactions::updateOrCreate([
+                        'id' => $request->transaction_id
+                    ],
+                    [
+                        'user_id' => $user[0]->id,
+                        'transaction_type' => 'withdraw',    
+                        'amount' => $amount,
+                        'current_balance' => $totalBalance,
+                        'status' => 2,
+                        'note'     => $note,
+                        'from' => Auth::user()->user_name,
+                        'to' => $user[0]->user_name,
+                        'approved_date_time' => $todayDate,
+                        'approve_by' => Auth::user()->user_name,
+                    ]); 
+    
+                    $description  = $amount .' points withdraw from ( ' .  $user[0]->user_name . ' )';
+    
+    
+                    DB::table('users')->where('id', $playerId)
+                    ->update([
+                        'current_balance' => $totalBalance,
+                    ]);
+    
+                    $activityLog = [
+                        'user_id'        => Auth::user()->id,
+                        'description' => $description,
+                        'date_time'   => $todayDate,
+                    ];
+    
+                    DB::table('activity_logs')->insert($activityLog);
+    
+                    return response()->json(array('success'=>true));
+                }else{
+                    return response()->json(array('success'=>false));
+                }
+            }
+            
+           
+        }else{
+
+            if(Auth::user()->role_type == 'Operator'){
+                if($user[0]->current_commission >= $amount){
+                    $totalCommission = $user[0]->current_commission - $amount;
+                    $totalBalance = $user[0]->current_balance + $amount;
+    
+                    $transaction = Transactions::updateOrCreate([
+                        'id' => $request->transaction_id
+                    ],
+                    [
+                        'user_id' => $user[0]->id,
+                        'transaction_type' => 'convert',    
+                        'amount' => $amount,
+                        'current_commission' => $totalCommission,
+                        'current_balance' => $totalBalance,
+                        'status' => 1,
+                        'note'     => $note,
+                        'from' => Auth::user()->user_name,
+                        'to' => $user[0]->user_name,
+                        'approved_date_time' => $todayDate,
+                        'approve_by' => Auth::user()->user_name,
+                    ]); 
+    
+                    $description  = $amount .' commission convert from ( ' .  $user[0]->user_name . ' )';
+    
+                    DB::table('users')->where('id', $playerId)
+                    ->update([
+                        'current_commission' => $totalCommission,
+                        'current_balance' => $totalBalance,
+                    ]);
+    
+                    $activityLog = [
+                        'user_id'        => Auth::user()->id,
+                        'description' => $description,
+                        'date_time'   => $todayDate,
+                    ];
+    
+                    DB::table('activity_logs')->insert($activityLog);
+    
+                    $description  = $amount .' commission converted to points';
+    
+                    $activityLog = [
+                        'user_id'        => $playerId,
+                        'description' => $description,
+                        'date_time'   => $todayDate,
+                    ];
+    
+                    DB::table('activity_logs')->insert($activityLog);
+    
+                    return response()->json(array('success'=>true));
+                }else{
+                    return response()->json(array('success'=>false));
+                }
+            }
+            
         }
         
     }
@@ -561,32 +638,7 @@ class OperatorController extends Controller
     {
 
         $auditHistory = collect([]);
-
-        $transactionHistory = DB::table('transactions')
-        ->orderBy('id', 'desc')
-        ->get();
-
-        foreach($transactionHistory as $history){
-            if($history->status == 1 || $history->status == 2){
-                $user = DB::table('users')->select('user_name')
-                ->where('id',  $history->user_id)->first();
-    
-                $auditHistory->push([
-                    'id' => $history->id,
-                    'username' => $user->user_name,
-                    'transaction_type' => $history->transaction_type,
-                    'amount' => $history->amount,
-                    'current_balance' => $history->current_balance,
-                    'current_commission' => $history->current_commission,
-                    'status' => $history->status,
-                    'note' => $history->note,
-                    'from' => $history->from,
-                    'to' => $history->to,
-                    'approved_date_time' => $history->approved_date_time,
-                ]);
-            }
-        }
-       
+        
         $auditHistory->all();
         
         return view('operators.audit', compact('auditHistory'));
@@ -600,103 +652,110 @@ class OperatorController extends Controller
         $totalCurrentCommission = 0;
         $totalCurrentBalance = 0;
 
-
-        $trans_from = Carbon::createFromFormat('Y-m-d H:i', $request->from_date_time)->toDateTimeString(); 
-        $trans_to = Carbon::createFromFormat('Y-m-d H:i', $request->to_date_time)->toDateTimeString(); 
-
-        
-        $transaction = collect([]);
-        $usersId = collect([]);
-        $lastTransactions = collect([]);
-        //2022-12-29 20:21:29
-
-        $filter_transactions =  DB::table('transactions')
-        ->whereBetween('created_at', [$trans_from, $trans_to])
-        ->orderBy('id', 'desc')
-        ->get();
-
-
-        foreach($filter_transactions as $history){
-            if($history->status == 1 || $history->status == 2){
-                $user = DB::table('users')->select('user_name', 'role_type')
-                ->where('id',  $history->user_id)->first();
-
-                if($history->transaction_type == 'deposit'){
-                    $totalDeposit += $history->amount;
-                }
-
-                if($history->transaction_type == 'withdraw'){
-                    $totalWithdraw += $history->amount;
-                }
-
-
-                $transaction->push([
-                    'id' => $history->id,
-                    'username' => $user->user_name,
-                    'transaction_type' => $history->transaction_type,
-                    'amount' => $history->amount,
-                    'current_balance' => $history->current_balance,
-                    'current_commission' => $history->current_commission,
-                    'status' => $history->status,
-                    'note' => $history->note,
-                    'from' => $history->from,
-                    'to' => $history->to,
-                    'approved_date_time' => $history->approved_date_time,
-                ]);
-
-                $usersId->push([
-                    'id' => $history->user_id,
-                    'role_type' => $user->role_type,
-                ]);
-            }
-                
-        }
-
-        $transaction->all();
-        $usersId->all();
-
-        $usersRemoveDupicate = [];
-
-        for($i=0; $i<count($usersId); $i++){
-
-            if($usersId[$i]['role_type'] != 'Operator' && $usersId[$i]['role_type'] != 'Declarator'){
-                if(!in_array($usersId[$i], $usersRemoveDupicate)){
-                    array_push($usersRemoveDupicate, $usersId[$i]);
-                }
-            }
-        }
-
-        for($i=0; $i<count($usersRemoveDupicate); $i++){
-
-            $user = DB::table('transactions')
-            ->where('user_id',  $usersRemoveDupicate[$i]['id'])
+        if($request->from_date_time != null && $request->to_date_time != null){
+            $trans_from = Carbon::createFromFormat('Y-m-d H:i', $request->from_date_time)->toDateTimeString(); 
+            $trans_to = Carbon::createFromFormat('Y-m-d H:i', $request->to_date_time)->toDateTimeString(); 
+    
+            
+            $transaction = collect([]);
+            $usersId = collect([]);
+            $lastTransactions = collect([]);
+            //2022-12-29 20:21:29
+    
+            $filter_transactions =  DB::table('transactions')
             ->whereBetween('created_at', [$trans_from, $trans_to])
             ->orderBy('id', 'desc')
-            ->first();
-
-            $totalCurrentBalance += $user->current_balance;
-            $totalCurrentCommission += $user->current_commission;
-
-            $lastTransactions->push([
-                'id' => $user->id,
-                'user_id' => $user->user_id,
-                'transaction_type' => $user->transaction_type,
-                'amount' => $user->amount,
-                'current_balance' => $user->current_balance,
-                'current_commission' => $user->current_commission,
-                'status' => $user->status,
-                'note' => $user->note,
-                'from' => $user->from,
-                'to' => $user->to,
-                'approved_date_time' => $user->approved_date_time,
-            ]);
+            ->get();
+    
+    
+            foreach($filter_transactions as $history){
+                if($history->status == 1 || $history->status == 2){
+                    $user = DB::table('users')->select('user_name', 'role_type')
+                    ->where('id',  $history->user_id)->first();
+    
+                    if($history->transaction_type == 'deposit'){
+                        $totalDeposit += $history->amount;
+                    }
+    
+                    if($history->transaction_type == 'withdraw'){
+                        $totalWithdraw += $history->amount;
+                    }
+    
+    
+                    $transaction->push([
+                        'id' => $history->id,
+                        'username' => $user->user_name,
+                        'transaction_type' => $history->transaction_type,
+                        'amount' => $history->amount,
+                        'current_balance' => $history->current_balance,
+                        'current_commission' => $history->current_commission,
+                        'status' => $history->status,
+                        'note' => $history->note,
+                        'from' => $history->from,
+                        'to' => $history->to,
+                        'approved_date_time' => $history->approved_date_time,
+                    ]);
+    
+                    $usersId->push([
+                        'id' => $history->user_id,
+                        'role_type' => $user->role_type,
+                    ]);
+                }
+                    
+            }
+    
+            $transaction->all();
+            $usersId->all();
+    
+            $usersRemoveDupicate = [];
+    
+            for($i=0; $i<count($usersId); $i++){
+    
+                if($usersId[$i]['role_type'] != 'Operator' && $usersId[$i]['role_type'] != 'Declarator'){
+                    if(!in_array($usersId[$i], $usersRemoveDupicate)){
+                        array_push($usersRemoveDupicate, $usersId[$i]);
+                    }
+                }
+            }
+    
+            for($i=0; $i<count($usersRemoveDupicate); $i++){
+    
+                $user = DB::table('transactions')
+                ->where('user_id',  $usersRemoveDupicate[$i]['id'])
+                ->whereBetween('created_at', [$trans_from, $trans_to])
+                ->orderBy('id', 'desc')
+                ->first();
+    
+                $totalCurrentBalance += $user->current_balance;
+                $totalCurrentCommission += $user->current_commission;
+    
+                $lastTransactions->push([
+                    'id' => $user->id,
+                    'user_id' => $user->user_id,
+                    'transaction_type' => $user->transaction_type,
+                    'amount' => $user->amount,
+                    'current_balance' => $user->current_balance,
+                    'current_commission' => $user->current_commission,
+                    'status' => $user->status,
+                    'note' => $user->note,
+                    'from' => $user->from,
+                    'to' => $user->to,
+                    'approved_date_time' => $user->approved_date_time,
+                ]);
+            }
+    
+            $lastTransactions->all();
+    
+            $totalGross = $totalDeposit - ( $totalWithdraw + $totalCurrentBalance + $totalCurrentCommission ) ;
+    
+            return view('operators.compute', compact('transaction', 'totalGross'));
+        }else{
+            $auditHistory = collect([]);
+        
+            $auditHistory->all();
+            return view('operators.audit', compact('auditHistory'));
         }
 
-        $lastTransactions->all();
-
-        $totalGross = $totalDeposit - ( $totalWithdraw + $totalCurrentBalance + $totalCurrentCommission ) ;
-
-        return view('operators.compute', compact('transaction', 'totalGross'));
     }
    
 }

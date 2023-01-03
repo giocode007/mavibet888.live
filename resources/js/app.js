@@ -9,7 +9,7 @@ require('./bootstrap');
 const UserId = document.getElementById("userId").value;
 
 let usersOnline = [];
-let operatorId;
+let operators = [];
 let listMessage;
 
 const presenceChannel = Echo.join('presence.chat.1');
@@ -27,12 +27,20 @@ presenceChannel.here((users) => {
 .leaving((user) => {
     // console.log({user}, 'Leaving');
     usersOnline = usersOnline.filter((userOnline) => userOnline.id !== user.id);
+    renderAvatars();
 })
 
 function renderAvatars(){
     usersOnline.forEach((user) => {
         if(user.role_type == 'Operator' || user.role_type == 'Declarator'){
-            operatorId = user.id;
+            operators.push(user);
+            operators = [...new Set(operators)]
+        }
+    })
+
+    operators.forEach((user) => {
+        if(user.id == UserId){
+            document.getElementById("onlineUsers").textContent = ' ' + usersOnline.length;
         }
     })
 }
@@ -85,17 +93,21 @@ channel.listen('.player-bet', (event) => {
        
     }
     
-    if(operatorId == UserId){
+    operators.forEach((user) => {
+        if(user.id == UserId){
+            console.log(UserId);
 
-        
-        addBet(event.userName , ' Bet on ' + event.betOn + ' = ' + event.amount);
+            if(user.role_type == "Operator"){
+                addBet(event.userName , ' Bet on ' + event.betOn + ' = ' + event.amount);
+            }else{
+                addBet(event.userName , ' Bet on ' + event.betOn + ' = ' + event.amount);
+            }
 
-        document.getElementById("totalRealMeronBet").textContent= "( " +number_format(event.allRealMeronBet)+ " )";
-        document.getElementById("totalRealWalaBet").textContent= "( " +number_format(event.allRealWalaBet)+ " )";
-    }
-
-
-
+            document.getElementById("totalRealMeronBet").textContent= "( " +number_format(event.allRealMeronBet)+ " )";
+            document.getElementById("totalRealWalaBet").textContent= "( " +number_format(event.allRealWalaBet)+ " )";
+            
+        }
+    })
 
     document.getElementById("totalMeronBet").textContent= number_format(event.allMeronBet);
     document.getElementById("totalWalaBet").textContent= number_format(event.allWalaBet);

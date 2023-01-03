@@ -26,9 +26,11 @@
         <section class="section">
             <div class="card">
                 <div class="d-flex card-header justify-content-between">
-                    <a href="javascript:void(0)" id="profit">
-                        <span class="p-3 badge bg-dark"><i class="icon-mid bi bi-plus-circle me-2"></i>PROFIT</span>
-                    </a>
+                    @if (Auth::user()->role_type == 'Operator')
+                        <a href="javascript:void(0)" id="profit">
+                            <span class="p-3 badge bg-dark"><i class="icon-mid bi bi-plus-circle me-2"></i>PROFIT</span>
+                        </a>
+                    @endif
                 </div>
                 <div id="crud-table" class="card-body">
                     <table class="table table-striped" id="table1">
@@ -96,7 +98,9 @@
                 </div>
 
                 <div class="col-sm-offset-2 col-sm-10">
-                 <button type="submit" class="btn bg-warning text-white" >Compute</button>
+                 <button id="compute" type="submit" class="btn bg-warning text-white" >Compute</button>
+                 <button id="computing" class="hide btn bg-warning p-2 text-white font-bold"><span class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span> Computing...</button>
                 </div>
             </form>
         </div>
@@ -124,6 +128,14 @@
         $('#fightModal').html("DEPOSIT");
         $('#ajax-crud-modal').modal('show');
      });
+
+     $('body').on('click', '#compute', function () {
+        document.getElementById('compute').classList.add('hide');
+        document.getElementById('computing').classList.remove('hide');
+
+     });
+
+     
 
     });
    

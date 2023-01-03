@@ -1845,7 +1845,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 var UserId = document.getElementById("userId").value;
 var usersOnline = [];
-var operatorId;
+var operators = [];
 var listMessage;
 var presenceChannel = Echo.join('presence.chat.1');
 presenceChannel.here(function (users) {
@@ -1861,11 +1861,18 @@ presenceChannel.here(function (users) {
   usersOnline = usersOnline.filter(function (userOnline) {
     return userOnline.id !== user.id;
   });
+  renderAvatars();
 });
 function renderAvatars() {
   usersOnline.forEach(function (user) {
     if (user.role_type == 'Operator' || user.role_type == 'Declarator') {
-      operatorId = user.id;
+      operators.push(user);
+      operators = _toConsumableArray(new Set(operators));
+    }
+  });
+  operators.forEach(function (user) {
+    if (user.id == UserId) {
+      document.getElementById("onlineUsers").textContent = ' ' + usersOnline.length;
     }
   });
 }
@@ -1899,11 +1906,18 @@ channel.listen('.player-bet', function (event) {
     document.getElementById("spanMeronReward").textContent = number_format(Math.ceil(mr, 0));
     document.getElementById("spanWalaReward").textContent = number_format(Math.ceil(wr, 0));
   }
-  if (operatorId == UserId) {
-    addBet(event.userName, ' Bet on ' + event.betOn + ' = ' + event.amount);
-    document.getElementById("totalRealMeronBet").textContent = "( " + number_format(event.allRealMeronBet) + " )";
-    document.getElementById("totalRealWalaBet").textContent = "( " + number_format(event.allRealWalaBet) + " )";
-  }
+  operators.forEach(function (user) {
+    if (user.id == UserId) {
+      console.log(UserId);
+      if (user.role_type == "Operator") {
+        addBet(event.userName, ' Bet on ' + event.betOn + ' = ' + event.amount);
+      } else {
+        addBet(event.userName, ' Bet on ' + event.betOn + ' = ' + event.amount);
+      }
+      document.getElementById("totalRealMeronBet").textContent = "( " + number_format(event.allRealMeronBet) + " )";
+      document.getElementById("totalRealWalaBet").textContent = "( " + number_format(event.allRealWalaBet) + " )";
+    }
+  });
   document.getElementById("totalMeronBet").textContent = number_format(event.allMeronBet);
   document.getElementById("totalWalaBet").textContent = number_format(event.allWalaBet);
   document.getElementById("totalDrawBet").textContent = number_format(event.allDrawBet);

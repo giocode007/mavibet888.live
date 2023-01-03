@@ -47,6 +47,7 @@
                                     <td class="name">{{ $agent->first_name }}</td>
                                     <td class="name">{{ $agent->status }}</td>
                                     <td class="name">@comma($agent->current_balance)</td>
+                                    @if (Auth::user()->role_type == 'Operator')
                                     <td class="text-center">
                                         <a href="javascript:void(0)" id="edit-player" data-id="{{ $agent->id }}">
                                             <span class="badge bg-info p-2">EDIT</span>
@@ -58,6 +59,16 @@
                                             <span class="badge bg-light-secondary p-2">LOGS</span>
                                         </a>
                                     </td>
+                                    @else
+                                    <td class="text-center">
+                                        <a href="{{ url('player/history/'.$agent->id) }}">
+                                            <span class="badge bg-warning p-2">HISTORY</span>
+                                        </a>
+                                        <a href="{{ url('logs/'.$agent->id) }}">
+                                            <span class="badge bg-light-secondary p-2">LOGS</span>
+                                        </a>
+                                    </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

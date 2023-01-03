@@ -31,9 +31,11 @@
                     <a href="javascript:void(0)" id="deposit" data-id="{{ $selectedUser[0]->id }}">
                         <span class="p-3 badge bg-success"><i class="icon-mid bi bi-plus-circle me-2"></i>DEPOSIT</span>
                     </a>
-                    <a href="javascript:void(0)" id="withdraw" data-id="{{ $selectedUser[0]->id }}">
-                        <span class="p-3 badge bg-danger"><i class="icon-mid bi bi-dash-circle me-2"></i>WITHDRAW</span>
-                    </a>
+                    @if (Auth::user()->role_type == 'Operator')
+                        <a href="javascript:void(0)" id="withdraw" data-id="{{ $selectedUser[0]->id }}">
+                            <span class="p-3 badge bg-danger"><i class="icon-mid bi bi-dash-circle me-2"></i>WITHDRAW</span>
+                        </a>
+                    @endif
                 </div>
                 @endif
                 <div class="card-body">
