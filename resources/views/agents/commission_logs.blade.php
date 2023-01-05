@@ -30,9 +30,9 @@
                         <thead>
                             <tr>
                                 <th>Transaction</th>
-                                <th>Amount</th>
                                 <th>From</th>
                                 <th>To</th>
+                                <th>Amount</th>
                                 <th>Current Commission</th>
                                 <th>Note</th>
                                 <th>Date</th>
@@ -42,14 +42,14 @@
                             @foreach ($commissionHistory as $transaction)
                             <tr id="commission_id_{{ $transaction['id'] }}">
                                 <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
+                                <td class="name">{{ $transaction['from'] }}</td>
+                                <td class="name">{{ $transaction['to'] }}</td>
                                 @if ($transaction['transaction_type'] == 'commission get'
                                 || $transaction['transaction_type'] == 'commission')
                                 <td class="name bg-success text-white">{{ $transaction['amount'] }}</td>
                                 @else
                                 <td class="name bg-danger text-white">{{ $transaction['amount'] }}</td>
                                 @endif
-                                <td class="name">{{ $transaction['from'] }}</td>
-                                <td class="name">{{ $transaction['to'] }}</td>
                                 <td class="name">{{ $transaction['current_commission'] }}</td>
                                 <td class="name">{{ $transaction['note'] }}</td>
                                 <td class="name">{{ $transaction['date'] }}</td>

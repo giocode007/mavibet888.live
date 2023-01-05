@@ -96,7 +96,7 @@
                                     <div class="card-body">
                                         <h4 class="card-title text-white">Current Commission ({{ Auth::user()->commission_percent * 100 }}%)</h4>
                                         <p class="card-text text-white">
-                                            Your commission:  @money(Auth::user()->current_commission)</p>
+                                            Your commission:  @commission(Auth::user()->current_commission)</p>
                                     </div>
                                 </div>
                             </div>

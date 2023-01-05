@@ -52,6 +52,9 @@
                                         <a href="javascript:void(0)" id="deposit" data-id="{{ $agent->id }}" data-user="{{ $agent->user_name }}">
                                             <span class="badge bg-success p-2">CASH IN</span>
                                         </a>
+                                        <a href="{{ url('bettinng/history/'.$agent->id) }}">
+                                            <span class="badge bg-warning p-2">BETTING</span>
+                                        </a>
                                         <a href="javascript:void(0)" id="withdraw" data-id="{{ $agent->id }}" data-user="{{ $agent->user_name }}">
                                             <span class="badge bg-danger p-2">CASH OUT</span>
                                         </a>

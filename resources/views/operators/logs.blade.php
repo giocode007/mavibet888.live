@@ -8,7 +8,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-first">
-                    <h3 class="text-white">User Logs</h3>
+                    <h3 class="text-white">User Logs of <span class="text-warning">({{ Str::upper($user->user_name) }})</span></h3>
                     <p class="text-subtitle text-muted">Player logs information list</p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-last">
@@ -33,11 +33,13 @@
         {!! Toastr::message() !!}
         <section class="section">
             <div class="card">
-                {{-- <div class="card-header">
-                    <a href="javascript:void(0)" id="create-new-post">
-                        <span class="p-3 badge bg-success"><i class="icon-mid bi bi-plus-circle me-2"></i>ADD EVENT</span>
-                    </a>
-                </div> --}}
+                <div class="card-header">
+                     @if (Auth::user()->role_type == 'Operator')
+                        <a href="javascript:void(0)" id="password" data-id="{{ $user->id }}" data-user="{{ $user->user_name }}">
+                            <span class="p-3 badge bg-primary">FORGOT PASSWORD</span>
+                        </a>
+                    @endif
+                </div>
                 <div class="card-body">
                     <table class="table table-striped" id="table1">
                         <thead>
@@ -69,27 +71,24 @@
             <h4 class="modal-title" id="fightModal"></h4>
         </div>
         <div class="modal-body">
-            <form id="fightForm" name="fightForm" class="form-horizontal">
-               <input type="hidden" name="fightId" id="fightId">
+            <form id="playerForm" name="playerForm" class="form-horizontal">
+               <input type="hidden" name="playerId" id="playerId">
                 <div class="form-group">
-                    <label for="fight_name" class="col-sm-2 control-label">FIGHT NUMBER</label>
+                    <label for="username" class="col-sm-2 control-label">USERNAME</label>
                     <div class="col-sm-12">
-                        <input disabled="disabled" class="form-control" id="fight_name" name="fight_name" value="" required="">
+                        <input disabled="disabled" class="form-control" id="username" name="username" value="" required="">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="result" class="col-sm-4 control-label">FIGHT RESULT</label>
-                    <select class="form-control" id="result" name="result" value="">
-                        <option value="meron">MERON</option>
-                        <option value="wala">WALA</option>
-                        <option value="draw">DRAW</option>
-                        <option value="cancel">CANCEL</option>
-                    </select>
+                    <label for="new-password" class="col-sm-2 control-label">NEW PASSWORD</label>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" id="new-password" name="new-password" value="" required="">
+                    </div>
                 </div>
 
                 <div class="col-sm-offset-2 col-sm-10">
-                 <button type="submit" class="btn btn-warning" id="btn-save">Reverse
+                 <button type="submit" class="btn btn-primary" id="btn-save">Save
                  </button>
                 </div>
             </form>
@@ -108,5 +107,51 @@
     let dataTable = new simpleDatatables.DataTable(table1);
 </script>
 
+<script>
+    $(document).ready(function () {
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      
+      $('body').on('click', '#password', function () {
+        $('#fightModal').html("FORGET PASSWORD");
+        $('#ajax-crud-modal').modal('show');
+        $('#playerId').val($(this).data('id'));
+        $('#username').val($(this).data('user'));
+     });
+
+    });
+   
+    if ($("#playerForm").length > 0) {
+        $("#playerForm").validate({
+   
+       submitHandler: function(form) {
+        $('#btn-save').html('Saving...');
+
+        var playerId = document.getElementById("playerId").value;
+        var password = document.getElementById("new-password").value;
+
+        $.ajax({
+            url: "{{ route('forgetPassword') }}",
+            type: "GET",
+            data: {playerId:playerId,password:password},
+            success: function (response) {
+                $('#btn-save').html('Save');
+                $('#ajax-crud-modal').modal('hide');
+                $('#playerForm').trigger("reset");
+                alert('Password Changed');
+            },
+            error: function (response) {
+                console.log('Error:', response);
+            }
+        });
+      }
+    })
+  }
+     
+    
+</script>
 @endpush
 @endsection

@@ -362,6 +362,7 @@ class AgentController extends Controller
                     'transaction_type' => 'cashin',    
                     'amount' => $amount,
                     'current_balance' => $activeAgent->current_balance - $amount,
+                    'current_commission' => $activeAgent->current_commission,
                     'status' => 2,
                     'note'     => $note,
                     'from' => Auth::user()->user_name,
@@ -438,6 +439,7 @@ class AgentController extends Controller
                     'transaction_type' => 'cashout',    
                     'amount' => $amount,
                     'current_balance' => $activeAgent->current_balance + $amount,
+                    'current_commission' => $activeAgent->current_commission,
                     'status' => 1,
                     'note'     => $note,
                     'from' => $user[0]->user_name,
@@ -563,5 +565,49 @@ class AgentController extends Controller
         ->get();
 
         return view('agents.active_players', compact('agents'));
+    }
+
+    public function getPlayerHistory($playerId)
+    {
+
+        $selectedUser = DB::table('users')->select('id','user_name','role_type','agent_code')
+        ->where('id',  $playerId)->get();
+
+        $allTransactions = collect([]);
+
+        $transactionHistory = DB::table('transactions')
+        ->where('user_id', $playerId)
+        ->orderBy('id', 'desc')
+        ->get();
+
+
+        foreach($transactionHistory as $history){
+
+            if($history->transaction_type == 'betting' || $history->transaction_type == 'result'){
+
+                if($history->status == 1 || $history->status == 2){
+                    $user = DB::table('users')->select('user_name')
+                    ->where('id',  $history->user_id)->get();
+        
+                    $allTransactions->push([
+                        'id' => $history->id,
+                        'transaction_type' => $history->transaction_type,
+                        'status' => $history->status,
+                        'amount' => $history->amount,
+                        'from' => $history->from,
+                        'to' => $history->to,
+                        'current_balance' => $history->current_balance,
+                        'note' => $history->note,
+                        'date' => $history->approved_date_time,
+                    ]);
+                }
+                
+            }
+
+        }
+       
+        $allTransactions->all();
+
+        return view('agents.player_history', compact('selectedUser','allTransactions'));
     }
 }

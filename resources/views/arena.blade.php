@@ -48,7 +48,7 @@
                             </select>
                         </div>
 
-                        <div class="d-flex justify-content-around py-2 border">
+                        <div id="openclose" class="d-flex justify-content-around py-2 border">
                             <div class="align-self-sm-center">
                                 <span class="text-white font-bold">BETTING STATUS : </span>
                             </div>
@@ -121,7 +121,7 @@
                             </div>
                             <div>
                                 <button id="refresh-users" class="bg-success p-2 text-white">REFRESH USERS</button>
-                                <button id="refreshing" class="hide bg-warning p-2 font-bold"><span class="spinner-border spinner-border-sm" role="status"
+                                <button id="refreshing" class="hide bg-success p-2 font-bold text-white"><span class="spinner-border spinner-border-sm" role="status"
                                     aria-hidden="true"></span> REFRESHING...</button>
                             </div>
                         </div>
@@ -342,6 +342,11 @@ $(document).ready(function () {
         document.getElementById('reset-all').classList.add('hide');
         document.getElementById('resetting').classList.remove('hide');
 
+        document.getElementById('declare-result').classList.remove('d-flex');
+        document.getElementById('declare-result').classList.add('hide');
+        document.getElementById('openclose').classList.remove('d-flex');
+        document.getElementById('openclose').classList.add('hide');
+
         $.ajax({
         url: "{{ url('checkFight') }}",
         type: "GET",
@@ -409,6 +414,9 @@ $(document).ready(function () {
         type: "GET",
         data: {id:id,eventId:eventId,actions:actions},  
             success: function (response) {
+
+                document.getElementById('openclose').classList.add('d-flex');
+                document.getElementById('openclose').classList.remove('hide');
 
                 document.getElementById('go-next').classList.remove('hide');
                 document.getElementById('nexting').classList.add('hide');

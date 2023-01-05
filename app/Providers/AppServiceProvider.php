@@ -34,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('comma', function ($amount) {
             return "<?php echo number_format($amount); ?>";
         });
+        Blade::directive('commission', function ($amount) {
+            return "<?php echo number_format($amount, 2); ?>";
+        });
         Blade::directive('payout', function ($amount) {
             return "<?php echo number_format($amount, 1); ?>";
         });

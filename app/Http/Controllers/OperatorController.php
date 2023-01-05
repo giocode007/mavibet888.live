@@ -214,7 +214,7 @@ class OperatorController extends Controller
         ->get();
 
         $user = DB::table('users')
-        ->select('role_type', 'agent_code')
+        ->select('role_type', 'agent_code','user_name','id')
         ->where('id', $userId)
         ->first();
         
@@ -557,14 +557,13 @@ class OperatorController extends Controller
 
         $transactionHistory = DB::table('transactions')
         ->where('user_id', $playerId)
-        ->orWhere('to', $selectedUser[0]->user_name)
         ->orderBy('id', 'desc')
         ->get();
 
 
         foreach($transactionHistory as $history){
 
-            if($history->transaction_type == 'deposit' || $history->transaction_type == 'withdraw' 
+            if($history->transaction_type == 'cashin' || $history->transaction_type == 'cashout' 
             || $history->transaction_type == 'betting' || $history->transaction_type == 'result'){
 
                 if($history->status == 1 || $history->status == 2){
@@ -672,7 +671,7 @@ class OperatorController extends Controller
                 if($history->status == 1 || $history->status == 2){
                     $user = DB::table('users')->select('user_name', 'role_type')
                     ->where('id',  $history->user_id)->first();
-    
+                    
                     if($history->transaction_type == 'deposit'){
                         $totalDeposit += $history->amount;
                     }
@@ -680,7 +679,6 @@ class OperatorController extends Controller
                     if($history->transaction_type == 'withdraw'){
                         $totalWithdraw += $history->amount;
                     }
-    
     
                     $transaction->push([
                         'id' => $history->id,
@@ -726,11 +724,15 @@ class OperatorController extends Controller
                 ->orderBy('id', 'desc')
                 ->first();
     
+                $activeUser = DB::table('users')->select('user_name', 'role_type')
+                    ->where('id',  $usersRemoveDupicate[$i]['id'])->first();
+
                 $totalCurrentBalance += $user->current_balance;
                 $totalCurrentCommission += $user->current_commission;
     
                 $lastTransactions->push([
                     'id' => $user->id,
+                    'username' => $activeUser->user_name,
                     'user_id' => $user->user_id,
                     'transaction_type' => $user->transaction_type,
                     'amount' => $user->amount,
@@ -745,10 +747,10 @@ class OperatorController extends Controller
             }
     
             $lastTransactions->all();
-    
+
             $totalGross = $totalDeposit - ( $totalWithdraw + $totalCurrentBalance + $totalCurrentCommission ) ;
     
-            return view('operators.compute', compact('transaction', 'totalGross'));
+            return view('operators.compute', compact('totalDeposit','totalWithdraw','totalCurrentBalance','totalCurrentCommission','lastTransactions', 'totalGross'));
         }else{
             $auditHistory = collect([]);
         
@@ -756,6 +758,39 @@ class OperatorController extends Controller
             return view('operators.audit', compact('auditHistory'));
         }
 
+    }
+
+    public function forgetPassword(Request $request)
+    {
+        $playerId = $request->playerId;
+        $password = $request->password;
+
+        $playerInfo = DB::table('users')
+        ->where('id', $playerId)
+        ->get();
+
+        DB::table('users')->where('id', $playerId)
+        ->update([
+            'password' => Hash::make($request->password)
+        ]);
+        
+
+        $dt         = Carbon::now('Asia/Manila');
+        $todayDate  = $dt->toDayDateTimeString();
+
+
+        $description  = 'Change player: (' . $playerInfo[0]->user_name . 
+        ') Password to : ' . $request->password;
+        
+        
+        $activityLog = [
+            'user_id'        => Auth::user()->id,
+            'description' => $description,
+            'date_time'   => $todayDate,
+        ];
+
+        DB::table('activity_logs')->insert($activityLog);
+        
     }
    
 }

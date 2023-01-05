@@ -65,6 +65,8 @@ Route::get('audit', [App\Http\Controllers\OperatorController::class, 'getAudit']
 Route::post('audit/range', [App\Http\Controllers\OperatorController::class, 'computeProfit'])->name('computeProfit');
 Route::get('admin/agents', [App\Http\Controllers\OperatorController::class, 'getAgents'])->name('getAgents');
 Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])->name('admin');
+Route::get('forgot/password', [App\Http\Controllers\OperatorController::class, 'forgetPassword'])->name('forgetPassword');
+
 
 
 
@@ -119,6 +121,8 @@ Route::get('agents', [App\Http\Controllers\AgentController::class, 'getAgents'])
 Route::get('active/players', [App\Http\Controllers\AgentController::class, 'getActivePlayers'])->name('getActivePlayers');
 Route::get('deleted/players', [App\Http\Controllers\AgentController::class, 'getDeletedPlayers'])->name('getDeletedPlayers');
 Route::get('agents/agentDW', [App\Http\Controllers\AgentController::class, 'agentDepositWithdraw'])->name('agentCash');
+Route::get('bettinng/history/{id}', [App\Http\Controllers\AgentController::class, 'getPlayerHistory']);
+
 
 
 // ----------------------------- sidebar ------------------------------//

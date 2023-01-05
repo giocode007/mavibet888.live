@@ -95,8 +95,6 @@ channel.listen('.player-bet', (event) => {
     
     operators.forEach((user) => {
         if(user.id == UserId){
-            console.log(UserId);
-
             if(user.role_type == "Operator"){
                 addBet(event.userName , ' Bet on ' + event.betOn + ' = ' + event.amount);
             }else{

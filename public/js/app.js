@@ -1908,7 +1908,6 @@ channel.listen('.player-bet', function (event) {
   }
   operators.forEach(function (user) {
     if (user.id == UserId) {
-      console.log(UserId);
       if (user.role_type == "Operator") {
         addBet(event.userName, ' Bet on ' + event.betOn + ' = ' + event.amount);
       } else {

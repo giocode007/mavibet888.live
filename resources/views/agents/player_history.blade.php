@@ -1,7 +1,10 @@
-@extends('layouts.player')
+@extends('layouts.master')
 @push('style')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
+@section('menu')
+@extends('sidebar.players')
+@endsection
 @section('content')
 <div id="main">
     <div class="page-heading">
@@ -10,14 +13,6 @@
                 <div class="col-12 col-md-6 order-md-1 order-first">
                     <h3 class="text-white">Transaction History of <span class="text-warning">({{ Str::upper($selectedUser[0]->user_name) }})</span></h3>
                     <p class="text-subtitle text-muted">transaction information list</p>
-                </div>
-                <div class="col-12 col-md-6 order-md-2 order-last">
-                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('getAgents') }}">Agents</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">History</li>
-                        </ol>
-                    </nav>
                 </div>
             </div>
         </div>
@@ -56,18 +51,17 @@
                                 <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
                                 <td class="name">{{ $transaction['from'] }}</td>
                                 <td class="name">{{ $transaction['to'] }}</td>
-                                @if ($transaction['status'] == 1 || $transaction['status'] == 3)
-                                <td class="name bg-success text-white">@commission($transaction['amount'])</td>
+                                @if($transaction['amount'] == 0)
+                                <td class="name text-center"> - </td>
+                                @elseif ($transaction['status'] == 1 || $transaction['status'] == 3)
+                                <td class="name bg-success text-white">{{ $transaction['amount'] }}</td>
                                 @elseif($transaction['status'] == 2 || $transaction['status'] == 4)
-                                <td class="name bg-danger text-white">@commission($transaction['amount'])</td>
-                                @else
-                                <td class="name bg-primary text-white">@commission($transaction['amount'])</td>
+                                <td class="name bg-danger text-white">{{ $transaction['amount'] }}</td>
                                 @endif
                                 <td class="name">{{ $transaction['current_balance'] }}</td>
                                 <td class="name">{{ $transaction['note'] }}</td>
                                 <td class="name">{{ $transaction['date'] }}</td>
                             </tr>
-                            
                             @endforeach
                         </tbody>
                     </table>

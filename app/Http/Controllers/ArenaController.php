@@ -27,7 +27,6 @@ class ArenaController extends Controller
 
     public function index($id){
         $activeEvent = DB::table('events')->where('id', $id)->where('status', 1)->count();
-        $activeFight = DB::table('fights')->where('event_id', $id)->count();
         $activeEventAndFight = DB::table('fights')->where('event_id', $id)->where('status', 0)->count();
 
         if($activeEventAndFight == 0){
@@ -43,7 +42,7 @@ class ArenaController extends Controller
             
         }
 
-        if($activeEvent != 0 && $activeFight != 0){
+        if($activeEvent != 0 ){
             $userId = Auth::user()->id;
 
             $event = DB::table('events')->where('id', $id)->get();
@@ -1044,18 +1043,24 @@ class ArenaController extends Controller
 
         $event = DB::table('events')->select('event_name')->where('id', $request->eventId)->get();
 
+        $openFight = DB::table('fights')->select('id')->where('event_id', $request->eventId)->get();
+
+        foreach($openFight as $fight){
+            DB::table('fights')->where('id', $fight->id)->update(['isOpen' => 0]);
+        }
+
         $dt         = Carbon::now('Asia/Manila');
         $todayDate  = $dt->toDayDateTimeString();
 
         $description  = 'Refresh Users and complete event ' . $event[0]->event_name;
             
-                    $activityLog = [
-                        'user_id'        => $userId,
-                        'description' => $description,
-                        'date_time'   => $todayDate,
-                    ];
+        $activityLog = [
+            'user_id'        => $userId,
+            'description' => $description,
+            'date_time'   => $todayDate,
+        ];
 
-                    DB::table('activity_logs')->insert($activityLog);
+        DB::table('activity_logs')->insert($activityLog);
 
         event(new RefreshUsersUpdated(true,$userId));
     }

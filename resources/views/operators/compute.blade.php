@@ -30,6 +30,7 @@
                         <span class="p-3 badge bg-dark"><i class="icon-mid bi bi-plus-circle me-2"></i>PROFIT</span>
                     </a>
                     <div>
+                    Deposit(@comma($totalDeposit)) - ( Withdraw(@comma($totalWithdraw)) + Points(@comma($totalCurrentBalance)) + Commission(@comma($totalCurrentCommission)))
                     @if ($totalGross > 0)
                         <span class="p-3 badge bg-success">Gross: @money($totalGross)</span>
                     @elseif($totalGross < 0)
@@ -44,32 +45,24 @@
                         <thead>
                             <tr>
                                 <th>Username</th>
-                                <th>Transaction</th>
-                                <th>Amount</th>
                                 <th>Current Balance</th>
                                 <th>Current Commission</th>
-                                <th>Note</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>Date</th>
                             </tr>    
                         </thead>
                         <tbody id="event-crud">
-                            @foreach ($transaction as $transaction)
+                            @foreach ($lastTransactions as $transaction)
                             <tr id="transaction_id_{{ $transaction['id'] }}">
                                 <td class="name">{{ $transaction['username'] }}</td>
-                                <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
-                                @if ($transaction['status'] == 1)
-                                    <td class="name bg-success text-white">{{ $transaction['amount'] }}</td>
-                                @elseif ($transaction['status'] == 2)
-                                    <td class="name bg-danger text-white">{{ $transaction['amount'] }}</td>
+                                @if ($transaction['current_balance'] > 0)
+                                    <td class="name">{{ $transaction['current_balance'] }}</td>
+                                @else
+                                    <td class="name"> 0 </td>
                                 @endif
-                                <td class="name">{{ $transaction['current_balance'] }}</td>
-                                <td class="name">{{ $transaction['current_commission'] }}</td>
-                                <td class="name">{{ $transaction['note'] }}</td>
-                                <td class="name">{{ $transaction['from'] }}</td>
-                                <td class="name">{{ $transaction['to'] }}</td>
-                                <td class="name">{{ $transaction['approved_date_time'] }}</td>
+                                @if ($transaction['current_commission'] > 0)
+                                    <td class="name">{{ $transaction['current_commission'] }}</td>
+                                @else
+                                    <td class="name"> 0 </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

@@ -22,9 +22,9 @@
                         <thead>
                             <tr>
                                 <th>Transaction</th>
-                                <th>Amount</th>
                                 <th>From</th>
                                 <th>To</th>
+                                <th>Amount</th>
                                 <th>Current Balance</th>
                                 <th>Note</th>
                                 <th>Date</th>
@@ -34,6 +34,8 @@
                             @foreach ($allTransactions as $transaction)
                             <tr id="transaction_id_{{ $transaction['id'] }}">
                                 <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
+                                <td class="name">{{ $transaction['from'] }}</td>
+                                <td class="name">{{ $transaction['to'] }}</td>
                                 @if($transaction['amount'] == 0)
                                 <td class="name text-center"> - </td>
                                 @elseif ($transaction['status'] == 1 || $transaction['status'] == 3)
@@ -41,8 +43,6 @@
                                 @elseif($transaction['status'] == 2 || $transaction['status'] == 4)
                                 <td class="name bg-danger text-white">{{ $transaction['amount'] }}</td>
                                 @endif
-                                <td class="name">{{ $transaction['from'] }}</td>
-                                <td class="name">{{ $transaction['to'] }}</td>
                                 <td class="name">{{ $transaction['current_balance'] }}</td>
                                 <td class="name">{{ $transaction['note'] }}</td>
                                 <td class="name">{{ $transaction['date'] }}</td>

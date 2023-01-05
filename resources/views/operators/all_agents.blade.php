@@ -58,7 +58,7 @@
                                     <td class="name">With Bet (0.00)</td>
                                     @endif
                                     <td class="name">@comma($agent->current_balance)</td>
-                                    <td class="name">@comma($agent->current_commission)</td>
+                                    <td class="name">@commission($agent->current_commission)</td>
 
                                     @if (Auth::user()->role_type == 'Operator')
                                     <td class="text-center">
