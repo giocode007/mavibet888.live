@@ -10,7 +10,7 @@
             <h5 class="text-warning"><a href="{{ url('events/'.$event[0]->id) }}">
                 {{ \Carbon\Carbon::parse($event[0]->fight_date_time)->isoFormat('dddd') }} {{ $event[0]->event_name }} - 
                 {{ \Carbon\Carbon::parse($event[0]->fight_date_time)->isoFormat('MM/DD/Y') }}</a>
-                ONLINE:<span id="onlineUsers"> 0 </span>
+                <a href="javascript:void(0)" id="usersThatOnline"> ONLINE:<span id="onlineUsers"> 0 </span></a> 
             </h5>
             @endif
         </div>
@@ -300,6 +300,26 @@
         </div>
     </div>
 
+@if (Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
+<div class="modal fade w-100" id="ajax-crud-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="eventModal"></h4>
+        </div>
+        <div class="modal-body">
+            <div  id="avatars">
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            
+        </div>
+    </div>
+    </div>
+</div>
+@endif
+
 @push('scripts')
 
 <script>
@@ -336,6 +356,7 @@ $(document).ready(function () {
 
 
     $('body').on('click', '#reset-all', function () {
+        
         var id = document.getElementById("fightId").value;
         var eventId = document.getElementById("eventId").value;
 
@@ -500,6 +521,9 @@ $(document).ready(function () {
         });
     })
 
+    $('body').on('click', '#usersThatOnline', function(){
+        $('#ajax-crud-modal').modal('show');
+    })
 
     $('body').on('change', '#cancelFight', function () {
         var id = document.getElementById("fightId").value;

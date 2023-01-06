@@ -204,6 +204,8 @@
                     <select class="form-control" id="player_status" name="player_status" value="">
                         <option value="Active">Active</option>
                         <option value="Disabled">Disabled</option>
+                        <option value="Banned">BANNED</option>
+
                     </select>
                 </div>
                 

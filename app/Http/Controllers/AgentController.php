@@ -219,72 +219,76 @@ class AgentController extends Controller
         ->where('id', $playerId)
         ->get();
 
+
         $currComm = $request->currComm;
         $playerStatus = $request->playerStatus;
         $role = $request->role;
 
-        if($currComm != null){
-            DB::table('users')->where('id', $playerId)
-            ->update([
-                'commission_percent' => $currComm,
-                'status' => $playerStatus,
-            ]);
+        if($playerInfo[0]->status != 'Banned'){
+            if($currComm != null){
+                DB::table('users')->where('id', $playerId)
+                ->update([
+                    'commission_percent' => $currComm,
+                    'status' => $playerStatus,
+                ]);
+        
+                $dt         = Carbon::now('Asia/Manila');
+                $todayDate  = $dt->toDayDateTimeString();
+        
+        
+                $description  = 'Change player: (' . $playerInfo[0]->user_name . 
+                ') Current Commission: ' . $playerInfo[0]->current_commission . ' to ' . $currComm . 
+                ' Status: ' . $playerInfo[0]->status . ' to ' . $playerStatus;
+            }else{
     
-            $dt         = Carbon::now('Asia/Manila');
-            $todayDate  = $dt->toDayDateTimeString();
+                if($playerInfo[0]->role_type != $role){
     
+                    if(Auth::user()->role_type == 'Sub_Operator' || Auth::user()->role_type == 'Master_Agent'){
+                        $code = Str::upper($this->generateRandomString(6));
     
-            $description  = 'Change player: (' . $playerInfo[0]->user_name . 
-            ') Current Commission: ' . $playerInfo[0]->current_commission . ' to ' . $currComm . 
-            ' Status: ' . $playerInfo[0]->status . ' to ' . $playerStatus;
-        }else{
-
-            if($playerInfo[0]->role_type != $role){
-
-                if(Auth::user()->role_type == 'Sub_Operator' || Auth::user()->role_type == 'Master_Agent'){
-                    $code = Str::upper($this->generateRandomString(6));
-
+                        DB::table('users')->where('id', $playerId)
+                        ->update([
+                            'role_type' => $role,
+                            'status' => $playerStatus,
+                            'player_code' => $code,
+                        ]);
+        
+                        $dt         = Carbon::now('Asia/Manila');
+                        $todayDate  = $dt->toDayDateTimeString();
+        
+        
+                        $description  = 'Change player: (' . $playerInfo[0]->user_name . 
+                        ') Role: ' . $playerInfo[0]->role_type . ' to ' . $role;
+                    }
+    
+                }else{
+                    
                     DB::table('users')->where('id', $playerId)
                     ->update([
                         'role_type' => $role,
                         'status' => $playerStatus,
-                        'player_code' => $code,
                     ]);
-    
+        
                     $dt         = Carbon::now('Asia/Manila');
                     $todayDate  = $dt->toDayDateTimeString();
-    
-    
+        
+        
                     $description  = 'Change player: (' . $playerInfo[0]->user_name . 
-                    ') Role: ' . $playerInfo[0]->role_type . ' to ' . $role;
+                    ') Status: ' . $playerInfo[0]->status . ' to ' . $playerStatus;
                 }
-
-            }else{
                 
-                DB::table('users')->where('id', $playerId)
-                ->update([
-                    'role_type' => $role,
-                    'status' => $playerStatus,
-                ]);
-    
-                $dt         = Carbon::now('Asia/Manila');
-                $todayDate  = $dt->toDayDateTimeString();
-    
-    
-                $description  = 'Change player: (' . $playerInfo[0]->user_name . 
-                ') Status: ' . $playerInfo[0]->status . ' to ' . $playerStatus;
             }
             
+            
+            $activityLog = [
+                'user_id'        => Auth::user()->id,
+                'description' => $description,
+                'date_time'   => $todayDate,
+            ];
+    
+            DB::table('activity_logs')->insert($activityLog);
         }
         
-        
-        $activityLog = [
-            'user_id'        => Auth::user()->id,
-            'description' => $description,
-            'date_time'   => $todayDate,
-        ];
-
-        DB::table('activity_logs')->insert($activityLog);
         
     }
 
@@ -562,6 +566,7 @@ class AgentController extends Controller
         ->where('agent_code', $playerCode)
         ->where('role_type', 'Player')
         ->where('status', 'Disabled')
+        ->orWhere('status', 'Banned')
         ->get();
 
         return view('agents.active_players', compact('agents'));

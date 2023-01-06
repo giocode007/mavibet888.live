@@ -16,7 +16,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-first">
-                    <h3 class="text-white">All Active Players</h3>
+                    <h3 class="text-white">All Players</h3>
                     <p class="text-subtitle text-muted">Players information list</p>
                 </div>
             </div>
@@ -46,18 +46,22 @@
                                     <td class="name">{{ $agent->status }}</td>
                                     <td class="name">@comma($agent->current_balance)</td>
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" id="edit-player" data-id="{{ $agent->id }}">
-                                            <span class="badge bg-info p-2">EDIT</span>
-                                        </a>
-                                        <a href="javascript:void(0)" id="deposit" data-id="{{ $agent->id }}" data-user="{{ $agent->user_name }}">
-                                            <span class="badge bg-success p-2">CASH IN</span>
-                                        </a>
-                                        <a href="{{ url('bettinng/history/'.$agent->id) }}">
-                                            <span class="badge bg-warning p-2">BETTING</span>
-                                        </a>
-                                        <a href="javascript:void(0)" id="withdraw" data-id="{{ $agent->id }}" data-user="{{ $agent->user_name }}">
-                                            <span class="badge bg-danger p-2">CASH OUT</span>
-                                        </a>
+                                        @if ($agent->status == 'Banned')
+                                            <span class="badge bg-danger text-white font-bold p-2">BANNED</span>
+                                        @else
+                                            <a href="javascript:void(0)" id="edit-player" data-id="{{ $agent->id }}">
+                                                <span class="badge bg-info p-2">EDIT</span>
+                                            </a>
+                                            <a href="javascript:void(0)" id="deposit" data-id="{{ $agent->id }}" data-user="{{ $agent->user_name }}">
+                                                <span class="badge bg-success p-2">CASH IN</span>
+                                            </a>
+                                            <a href="{{ url('bettinng/history/'.$agent->id) }}">
+                                                <span class="badge bg-warning p-2">BETTING</span>
+                                            </a>
+                                            <a href="javascript:void(0)" id="withdraw" data-id="{{ $agent->id }}" data-user="{{ $agent->user_name }}">
+                                                <span class="badge bg-danger p-2">CASH OUT</span>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

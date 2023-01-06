@@ -7,6 +7,8 @@
 require('./bootstrap');
 
 const UserId = document.getElementById("userId").value;
+let avatars;
+
 
 let usersOnline = [];
 let operators = [];
@@ -40,7 +42,10 @@ function renderAvatars(){
 
     operators.forEach((user) => {
         if(user.id == UserId){
+            avatars = document.getElementById('avatars');
+
             document.getElementById("onlineUsers").textContent = ' ' + usersOnline.length;
+            addOnline();
         }
     })
 }
@@ -67,7 +72,19 @@ function addBet(name, message, color="white"){
     listMessage.append(li);
 }
 
-
+function addOnline(){
+    
+    avatars.textContent = "";
+    usersOnline.forEach((user) => {
+        const span = document.createElement('span');
+        const hr = document.createElement('hr');
+        // span.textContent = userInitial(user.user_name);
+        span.textContent = user.user_name;
+        span.classList.add('avatar');
+        span.classList.add('font-bold');
+        avatars.append(span, hr);
+    })
+}
 
 const channel = Echo.channel('bettings');
 

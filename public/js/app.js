@@ -1844,6 +1844,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 var UserId = document.getElementById("userId").value;
+var avatars;
 var usersOnline = [];
 var operators = [];
 var listMessage;
@@ -1872,7 +1873,9 @@ function renderAvatars() {
   });
   operators.forEach(function (user) {
     if (user.id == UserId) {
+      avatars = document.getElementById('avatars');
       document.getElementById("onlineUsers").textContent = ' ' + usersOnline.length;
+      addOnline();
     }
   });
 }
@@ -1890,6 +1893,18 @@ function addBet(name, message) {
   messageSpan.style.color = color;
   li.append(span, messageSpan);
   listMessage.append(li);
+}
+function addOnline() {
+  avatars.textContent = "";
+  usersOnline.forEach(function (user) {
+    var span = document.createElement('span');
+    var hr = document.createElement('hr');
+    // span.textContent = userInitial(user.user_name);
+    span.textContent = user.user_name;
+    span.classList.add('avatar');
+    span.classList.add('font-bold');
+    avatars.append(span, hr);
+  });
 }
 var channel = Echo.channel('bettings');
 channel.subscribe(function () {

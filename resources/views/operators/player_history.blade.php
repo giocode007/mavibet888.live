@@ -49,24 +49,65 @@
                                 <th>Current Balance</th>
                                 <th>Note</th>
                                 <th>Date</th>
+                                <th>Modify</th>
                             </tr>    
                         </thead>
                         <tbody id="event-crud">
                             @foreach ($allTransactions as $transaction)
                             <tr id="transaction_id_{{ $transaction['id'] }}">
-                                <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
-                                <td class="name">{{ $transaction['from'] }}</td>
-                                <td class="name">{{ $transaction['to'] }}</td>
-                                @if($transaction['amount'] == 0)
-                                <td class="name text-center"> - </td>
-                                @elseif ($transaction['status'] == 1 || $transaction['status'] == 3)
-                                <td class="name bg-success text-white">@commission($transaction['amount'])</td>
-                                @elseif($transaction['status'] == 2 || $transaction['status'] == 4)
-                                <td class="name bg-danger text-white">@commission($transaction['amount'])</td>
+                                @if (Auth::user()->role_type == 'Operator')
+                                    @if (($transaction['status'] == 1 || $transaction['status'] == 3)
+                                    && $transaction['transaction_type'] != 'cashin')
+                                    <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
+                                    <td class="name">{{ $transaction['from'] }}</td>
+                                    <td class="name">{{ $transaction['to'] }}</td>
+                                    @if($transaction['amount'] == 0)
+                                    <td class="name text-center"> - </td>
+                                    @elseif ($transaction['status'] == 1 || $transaction['status'] == 3)
+                                    <td class="name bg-success text-white">@commission($transaction['amount'])</td>
+                                    @elseif($transaction['status'] == 2 || $transaction['status'] == 4)
+                                    <td class="name bg-danger text-white">@commission($transaction['amount'])</td>
+                                    @endif
+                                    <td class="name">{{ $transaction['current_balance'] }}</td>
+                                    <td class="name">{{ $transaction['note'] }}</td>
+                                    <td class="name">{{ $transaction['date'] }}</td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" id="remove-points" data-id="{{ $transaction['id'] }}">
+                                            <span class="badge bg-danger p-2">REMOVE POINTS</span>
+                                        </a>
+                                    </td>
+                                    @else
+                                    <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
+                                    <td class="name">{{ $transaction['from'] }}</td>
+                                    <td class="name">{{ $transaction['to'] }}</td>
+                                    @if($transaction['amount'] == 0)
+                                    <td class="name text-center"> - </td>
+                                    @elseif ($transaction['status'] == 1 || $transaction['status'] == 3)
+                                    <td class="name bg-success text-white">@commission($transaction['amount'])</td>
+                                    @elseif($transaction['status'] == 2 || $transaction['status'] == 4)
+                                    <td class="name bg-danger text-white">@commission($transaction['amount'])</td>
+                                    @endif
+                                    <td class="name">{{ $transaction['current_balance'] }}</td>
+                                    <td class="name">{{ $transaction['note'] }}</td>
+                                    <td class="name">{{ $transaction['date'] }}</td>
+                                    <td class="name"></td>
+                                    @endif
+                                @else
+                                    <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
+                                    <td class="name">{{ $transaction['from'] }}</td>
+                                    <td class="name">{{ $transaction['to'] }}</td>
+                                    @if($transaction['amount'] == 0)
+                                    <td class="name text-center"> - </td>
+                                    @elseif ($transaction['status'] == 1 || $transaction['status'] == 3)
+                                    <td class="name bg-success text-white">@commission($transaction['amount'])</td>
+                                    @elseif($transaction['status'] == 2 || $transaction['status'] == 4)
+                                    <td class="name bg-danger text-white">@commission($transaction['amount'])</td>
+                                    @endif
+                                    <td class="name">{{ $transaction['current_balance'] }}</td>
+                                    <td class="name">{{ $transaction['note'] }}</td>
+                                    <td class="name">{{ $transaction['date'] }}</td>
                                 @endif
-                                <td class="name">{{ $transaction['current_balance'] }}</td>
-                                <td class="name">{{ $transaction['note'] }}</td>
-                                <td class="name">{{ $transaction['date'] }}</td>
+                                
                             </tr>
                             @endforeach
                         </tbody>
@@ -130,6 +171,22 @@
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
+
+      $('body').on('click', '#remove-points', function () {
+        var transactionId = $(this).data('id');
+        
+        $.ajax({
+            url: "{{ route('removePoints') }}",
+            type: "GET",
+            data: {transactionId:transactionId},
+            success: function (response) {
+                location.reload();
+            },
+            error: function (response) {
+                console.log('Error:', response);
+            }
+        });
+     });
       
       $('body').on('click', '#deposit', function () {
         $('#fightModal').html("DEPOSIT");

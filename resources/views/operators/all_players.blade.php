@@ -40,7 +40,8 @@
                         </thead>
                         <tbody id="event-crud">
                             @foreach ($players as $agent)
-                                <tr id="event_id_{{ $agent->id }}">
+                                @if ($agent->status == 'Banned')
+                                <tr id="event_id_{{ $agent->id }}" class="bg-danger text-white">
                                     <td class="name">{{ $agent->agent_code }}</td>
                                     <td class="name">{{ $agent->user_name }}</td>
                                     <td class="name">{{ $agent->last_name }}</td>
@@ -70,6 +71,39 @@
                                     </td>
                                     @endif
                                 </tr>
+                                @else
+                                <tr id="event_id_{{ $agent->id }}">
+                                    <td class="name">{{ $agent->agent_code }}</td>
+                                    <td class="name">{{ $agent->user_name }}</td>
+                                    <td class="name">{{ $agent->last_name }}</td>
+                                    <td class="name">{{ $agent->first_name }}</td>
+                                    <td class="name">{{ $agent->status }}</td>
+                                    <td class="name">@comma($agent->current_balance)</td>
+                                    @if (Auth::user()->role_type == 'Operator')
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" id="edit-player" data-id="{{ $agent->id }}">
+                                            <span class="badge bg-info p-2">EDIT</span>
+                                        </a>
+                                        <a href="{{ url('player/history/'.$agent->id) }}">
+                                            <span class="badge bg-warning p-2">HISTORY</span>
+                                        </a>
+                                        <a href="{{ url('logs/'.$agent->id) }}">
+                                            <span class="badge bg-light-secondary p-2">LOGS</span>
+                                        </a>
+                                    </td>
+                                    @else
+                                    <td class="text-center">
+                                        <a href="{{ url('player/history/'.$agent->id) }}">
+                                            <span class="badge bg-warning p-2">HISTORY</span>
+                                        </a>
+                                        <a href="{{ url('logs/'.$agent->id) }}">
+                                            <span class="badge bg-light-secondary p-2">LOGS</span>
+                                        </a>
+                                    </td>
+                                    @endif
+                                </tr> 
+                                @endif
+                                
                             @endforeach
                         </tbody>
                     </table>
@@ -127,6 +161,8 @@
                     <select class="form-control" id="player_status" name="player_status" value="">
                         <option value="Active">Active</option>
                         <option value="Disabled">Disabled</option>
+                        <option value="Banned">BANNED</option>
+
                     </select>
                 </div>
 

@@ -793,4 +793,71 @@ class OperatorController extends Controller
         
     }
    
+    public function removePoints(Request $request){
+        $transactionId = $request->transactionId;
+        $changeBet;
+
+        $activeTransaction = DB::table('transactions')->where('id', $transactionId)->first();
+        $activeUser = DB::table('users')->select('current_balance')->where('id', $activeTransaction->user_id)->first();
+        $activeBetting = DB::table('bettings')->select('bet_type', 'result','amount')->where('id', $activeTransaction->betting_id)->first();
+        $allTransactions = DB::table('transactions')
+        ->where('id', '>', $activeTransaction->id)
+        ->where('user_id', $activeTransaction->user_id)
+        ->get();
+
+        if($activeBetting->bet_type == 'meron'){
+            $changeBet = 'wala';
+        }else{
+            $changeBet = 'meron';
+        }
+
+        DB::table('bettings')->where('id', $activeTransaction->betting_id)
+        ->update([
+            'bet_type' => $changeBet
+        ]);
+
+        DB::table('transactions')->where('betting_id', $activeTransaction->betting_id)->where('transaction_type', 'betting')
+        ->update([
+            'note' => 'Bet on ' . $changeBet
+        ]);
+
+        $currPoints = $activeTransaction->current_balance - $activeTransaction->amount;
+        $currAmount = $activeBetting->amount;
+        $currBal = 0;
+
+        DB::table('transactions')->where('id', $transactionId)
+        ->update([
+            'amount' => 0,
+            'current_balance' => $currPoints,
+            'status' => 2,
+            'note' => 'LOSE: result: ' . $activeBetting->result . ' = Bet: ' . $changeBet
+        ]);
+
+        DB::table('users')->where('id', $activeTransaction->user_id)
+        ->update([
+            'current_balance' => $activeUser->current_balance - $activeTransaction->amount,
+        ]);
+
+        foreach($allTransactions as $history){
+            $newAmount = $history->amount;
+
+            if($history->status == 1){
+                $currBal =  $currPoints + $newAmount;
+                $currAmount = $newAmount;
+                $currPoints = $currBal;
+
+            }elseif($history->status == 2){
+                $currBal =  $currPoints - $newAmount;
+                $currAmount = $newAmount;
+                $currPoints = $currBal;
+            }
+
+            DB::table('transactions')->where('id', $history->id)
+            ->update([
+                'current_balance' => $currBal,
+            ]);
+
+        }
+
+    }
 }
