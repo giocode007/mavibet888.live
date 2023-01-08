@@ -56,7 +56,9 @@
                                     <td class="name">{{ $agent->last_name }}</td>
                                     <td class="name">{{ $agent->first_name }}</td>
                                     <td class="name">{{ $agent->status }}</td>
-                                    @if ($agent->role_type == 'Sub_Operator')
+                                    @if ($agent->role_type == 'Sub_Admin')
+                                    <td class="name bg-info text-white font-bold">Sub-Admin ({{ $agent->commission_percent }})</td>
+                                    @elseif ($agent->role_type == 'Sub_Operator')
                                         <td class="name bg-warning text-white font-bold">Sub-Op ({{ $agent->commission_percent }})</td>
                                     @elseif  ($agent->role_type == 'Master_Agent')
                                         <td class="name font-bold">Master ({{ $agent->commission_percent }})</td>
@@ -178,6 +180,7 @@
                     <select class="form-control" id="player_role" name="player_role" value="">
                         <option value="Declarator">Declarator</option>
                         <option value="Loader">Loader</option>
+                        <option value="Sub_Admin">Sub Admin</option>
                         <option value="Sub_Operator">Sub Operator</option>
                         <option value="Master_Agent">Master Agent</option>
                         <option value="Gold_Agent">Gold Agent</option>

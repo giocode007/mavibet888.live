@@ -142,6 +142,7 @@
                     <select class="form-control" id="player_role" name="player_role" value="">
                         <option value="Declarator">Declarator</option>
                         <option value="Loader">Loader</option>
+                        <option value="Sub_Admin">Sub Admin</option>
                         <option value="Sub_Operator">Sub Operator</option>
                         <option value="Master_Agent">Master Agent</option>
                         <option value="Gold_Agent">Gold Agent</option>

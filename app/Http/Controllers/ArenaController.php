@@ -379,7 +379,8 @@ class ArenaController extends Controller
         $id = $request->id;
         $eventId = $request->eventId;
 
-        $fight = DB::table('fights')->select('id', 'event_id','fight_number', 'result', 'payoutMeron', 'payoutWala')->where('id', $id)->get();
+        $fight = DB::table('fights')->select('id', 'event_id','fight_number', 'result', 'payoutMeron', 'payoutWala')
+        ->where('id', $id)->get();
         
         $event = DB::table('events')->select('event_name')->where('id', $eventId)->get();
 
@@ -406,7 +407,7 @@ class ArenaController extends Controller
                             'commission_percent', 'current_balance', 'player_code', 'agent_code', 'role_type')
                             ->where('player_code', $user[0]->agent_code)->get();
             
-                            if($checkAgent[0]->role_type == 'Sub_Operator'){
+                            if($checkAgent[0]->role_type == 'Sub_Admin'){
                                 $commission = $allBet->amount * $checkAgent[0]->commission_percent;
                                 $currCommission = $checkAgent[0]->current_commission + $commission;
                 
@@ -445,7 +446,7 @@ class ArenaController extends Controller
                 
                                 DB::table('activity_logs')->insert($activityLog);
                             }else{
-                                if($checkAgent[0]->role_type == 'Master_Agent'){
+                                if($checkAgent[0]->role_type == 'Sub_Operator'){
                                     $checkSubOp = DB::table('users')
                                     ->select('id','user_name','current_commission', 'current_balance', 'commission_percent', 
                                     'player_code', 'agent_code', 'role_type')
@@ -501,7 +502,7 @@ class ArenaController extends Controller
                                         'from' => $checkAgent[0]->user_name,
                                         'to' => $checkSubOp[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => $checkAgent[0]->user_name,
+                                        'approve_by' => Auth::user()->user_name,
                                     ]);   
                     
                                     $description  = 'Received ' . $masterCommission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
@@ -526,7 +527,7 @@ class ArenaController extends Controller
                                     ];
                     
                                     DB::table('activity_logs')->insert($activityLog1);
-                                }else{
+                                }else if($checkAgent[0]->role_type == 'Master_Agent'){
                                     $checkMaster = DB::table('users')
                                     ->select('id','user_name','current_commission', 'current_balance', 'commission_percent', 
                                     'player_code', 'agent_code', 'role_type')
@@ -615,7 +616,7 @@ class ArenaController extends Controller
                                         'from' => $checkMaster[0]->user_name,
                                         'to' => $checkSubOp[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => $checkAgent[0]->user_name,
+                                        'approve_by' => Auth::user()->user_name,
                                     ]);   
                     
                                     $description  = 'Received ' . $totalGoldCommission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
@@ -651,6 +652,173 @@ class ArenaController extends Controller
                                     ];
                     
                                     DB::table('activity_logs')->insert($activityLog2);
+                                }else{
+                                    $checkMaster = DB::table('users')
+                                    ->select('id','user_name','current_commission', 'current_balance', 'commission_percent', 
+                                    'player_code', 'agent_code', 'role_type')
+                                    ->where('player_code', $checkAgent[0]->agent_code)->get();
+                                    $checkSubOp = DB::table('users')
+                                    ->select('id','user_name','current_commission',  'current_balance', 'commission_percent', 
+                                    'player_code', 'agent_code', 'role_type')
+                                    ->where('player_code', $checkMaster[0]->agent_code)->get();
+                                    $checkSubAdmin = DB::table('users')
+                                    ->select('id','user_name','current_commission',  'current_balance', 'commission_percent', 
+                                    'player_code', 'agent_code', 'role_type')
+                                    ->where('player_code', $checkSubOp[0]->agent_code)->get();
+            
+            
+                                    $totalGoldCommission = $allBet->amount * $checkAgent[0]->commission_percent;
+                                    $masterCommission = $allBet->amount * $checkMaster[0]->commission_percent;
+                                    $subOpCommission = $allBet->amount * $checkSubOp[0]->commission_percent;
+                                    $subAdminCommission = $allBet->amount * $checkSubAdmin[0]->commission_percent;
+                
+                                    
+                                    $totalMasterCommission = $masterCommission - $totalGoldCommission;
+                                    $totalSubOpCommission = $subOpCommission - $masterCommission;
+                                    $totalSubAdminCommission = $subAdminCommission - $subOpCommission;
+            
+                                    $commissionGold = $totalGoldCommission + $checkAgent[0]->current_commission;
+                                    $commissionMaster = $totalMasterCommission + $checkMaster[0]->current_commission;
+                                    $commissionSubOp = $totalSubOpCommission + $checkSubOp[0]->current_commission;
+                                    $commissionSubAdmin = $totalSubAdminCommission + $checkSubAdmin[0]->current_commission;
+                
+                                    DB::table('users')->where('id', $checkAgent[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionGold,
+                                    ]);
+                
+                                    DB::table('users')->where('id', $checkMaster[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionMaster,
+                                    ]);
+            
+                                    DB::table('users')->where('id', $checkSubOp[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionSubOp,
+                                    ]);
+
+                                    DB::table('users')->where('id', $checkSubAdmin[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionSubAdmin,
+                                    ]);
+                    
+                                    $transaction = Transactions::updateOrCreate([
+                                        'id' => $request->transaction_id
+                                    ],
+                                    [
+                                        'user_id' => $checkAgent[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'transaction_type' => 'commission',
+                                        'amount' => $totalGoldCommission,
+                                        'current_balance' => $checkAgent[0]->current_balance,
+                                        'current_commission' => $commissionGold,
+                                        'status' => 1,
+                                        'note'     => 'Fight # ' . $fight[0]->fight_number . ' - ' . $event[0]->event_name,
+                                        'from' => $user[0]->user_name,
+                                        'to' => $checkAgent[0]->user_name,
+                                        'approved_date_time' => $todayDate,
+                                        'approve_by' => Auth::user()->user_name,
+                                    ]);   
+            
+                                    $transaction = Transactions::updateOrCreate([
+                                        'id' => $request->transaction_id
+                                    ],
+                                    [
+                                        'user_id' => $checkMaster[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'transaction_type' => 'commission',
+                                        'amount' => $totalMasterCommission,
+                                        'current_balance' => $checkMaster[0]->current_balance,
+                                        'current_commission' => $commissionMaster,
+                                        'status' => 1,
+                                        'note'     => 'Fight # ' . $fight[0]->fight_number . ' - ' . $event[0]->event_name,
+                                        'from' => $checkAgent[0]->user_name,
+                                        'to' => $checkMaster[0]->user_name,
+                                        'approved_date_time' => $todayDate,
+                                        'approve_by' => Auth::user()->user_name,
+                                    ]);   
+                    
+            
+                                    $transaction = Transactions::updateOrCreate([
+                                        'id' => $request->transaction_id
+                                    ],
+                                    [
+                                        'user_id' => $checkSubOp[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'transaction_type' => 'commission',
+                                        'amount' => $totalSubOpCommission,
+                                        'current_balance' => $checkSubOp[0]->current_balance,
+                                        'current_commission' => $commissionSubOp,
+                                        'status' => 1,
+                                        'note'     => 'Fight # ' . $fight[0]->fight_number . ' - ' . $event[0]->event_name,
+                                        'from' => $checkMaster[0]->user_name,
+                                        'to' => $checkSubOp[0]->user_name,
+                                        'approved_date_time' => $todayDate,
+                                        'approve_by' => Auth::user()->user_name,
+                                    ]); 
+                                    
+                                    $transaction = Transactions::updateOrCreate([
+                                        'id' => $request->transaction_id
+                                    ],
+                                    [
+                                        'user_id' => $checkSubAdmin[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'transaction_type' => 'commission',
+                                        'amount' => $totalSubAdminCommission,
+                                        'current_balance' => $checkSubAdmin[0]->current_balance,
+                                        'current_commission' => $commissionSubAdmin,
+                                        'status' => 1,
+                                        'note'     => 'Fight # ' . $fight[0]->fight_number . ' - ' . $event[0]->event_name,
+                                        'from' => $checkSubOp[0]->user_name,
+                                        'to' => $checkSubAdmin[0]->user_name,
+                                        'approved_date_time' => $todayDate,
+                                        'approve_by' => Auth::user()->user_name,
+                                    ]);   
+                    
+                                    $description  = 'Received ' . $totalGoldCommission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
+                                    $description1 = 'Received ' . $totalMasterCommission . ' Commission from ' . $checkAgent[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
+                                    $description2 = 'Received ' . $totalSubOpCommission . ' Commission from ' . $checkMaster[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
+                                    $description3 = 'Received ' . $totalSubAdminCommission . ' Commission from ' . $checkSubOp[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
+                        
+                                    $activityLog = [
+                                        'user_id'        => $checkAgent[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'status' => 1,
+                                        'description' => $description,
+                                        'date_time'   => $todayDate,
+                                    ];
+                    
+                                    DB::table('activity_logs')->insert($activityLog);
+                
+                                    $activityLog1 = [
+                                        'user_id'        => $checkMaster[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'status' => 1,
+                                        'description' => $description1,
+                                        'date_time'   => $todayDate,
+                                    ];
+                    
+                                    DB::table('activity_logs')->insert($activityLog1);
+            
+                                    $activityLog2 = [
+                                        'user_id'        => $checkSubOp[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'status' => 1,
+                                        'description' => $description2,
+                                        'date_time'   => $todayDate,
+                                    ];
+                    
+                                    DB::table('activity_logs')->insert($activityLog2);
+
+                                    $activityLog3 = [
+                                        'user_id'        => $checkSubAdmin[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'status' => 1,
+                                        'description' => $description3,
+                                        'date_time'   => $todayDate,
+                                    ];
+                    
+                                    DB::table('activity_logs')->insert($activityLog3);
                                 }
                             }
                         }

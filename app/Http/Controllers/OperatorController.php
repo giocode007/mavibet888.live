@@ -42,6 +42,7 @@ class OperatorController extends Controller
         if(Auth::user()->role_type == 'Operator'){
             $agents = DB::table('users')
             ->orWhere('role_type', 'Operator')
+            ->orWhere('role_type', 'Sub_Admin')
             ->orWhere('role_type', 'Sub_Operator')
             ->orWhere('role_type', 'Master_Agent')
             ->orWhere('role_type', 'Gold_Agent')
@@ -49,6 +50,7 @@ class OperatorController extends Controller
             ->get();
         }else{
             $agents = DB::table('users')
+            ->orWhere('role_type', 'Sub_Admin')
             ->orWhere('role_type', 'Sub_Operator')
             ->orWhere('role_type', 'Master_Agent')
             ->orWhere('role_type', 'Gold_Agent')
@@ -63,7 +65,8 @@ class OperatorController extends Controller
     public function allAgents()
     {
         $agents = DB::table('users')
-        ->where('role_type', 'Sub_Operator')
+        ->orWhere('role_type', 'Sub_Admin')
+        ->orWhere('role_type', 'Sub_Operator')
         ->orWhere('role_type', 'Master_Agent')
         ->orWhere('role_type', 'Gold_Agent')
         ->orderBy('current_balance', 'desc')
@@ -84,7 +87,8 @@ class OperatorController extends Controller
 
     public function getPlayers($playerCode)
     {
-        $selectedUser = DB::table('users')->select('id','user_name','player_code')->where('player_code',  $playerCode)->get();
+        $selectedUser = DB::table('users')
+        ->select('id','user_name','player_code')->where('player_code',  $playerCode)->get();
 
         $players = DB::table('users')
         ->where('agent_code', $playerCode)

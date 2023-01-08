@@ -19,7 +19,7 @@ class AgentMiddleware
     {
         if(Auth::check()){
 
-            if(Auth::user()->role_type == 'Admin' ||
+            if(Auth::user()->role_type == 'Sub_Admin' ||
                     Auth::user()->role_type == 'Sub_Operator' || 
                         Auth::user()->role_type == 'Master_Agent' ||
                             Auth::user()->role_type == 'Gold_Agent'){

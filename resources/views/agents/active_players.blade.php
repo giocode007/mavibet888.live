@@ -90,7 +90,15 @@
                     </div>
                 </div>
 
-                @if (Auth::user()->role_type == 'Sub_Operator')
+                @if (Auth::user()->role_type == 'Sub_Admin')
+                <div class="form-group">
+                    <label for="player_role" class="col-sm-4 control-label">Player Role</label>
+                    <select class="form-control" id="player_role" name="player_role" value="">
+                        <option value="Player">Player</option>
+                        <option value="Sub_Operator">Sub Operator</option>
+                    </select>
+                </div>
+                @elseif (Auth::user()->role_type == 'Sub_Operator')
                 <div class="form-group">
                     <label for="player_role" class="col-sm-4 control-label">Player Role</label>
                     <select class="form-control" id="player_role" name="player_role" value="">

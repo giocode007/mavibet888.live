@@ -243,7 +243,9 @@ class AgentController extends Controller
     
                 if($playerInfo[0]->role_type != $role){
     
-                    if(Auth::user()->role_type == 'Sub_Operator' || Auth::user()->role_type == 'Master_Agent'){
+                    if(Auth::user()->role_type == 'Sub_Admin' ||
+                        Auth::user()->role_type == 'Sub_Operator' || 
+                            Auth::user()->role_type == 'Master_Agent'){
                         $code = Str::upper($this->generateRandomString(6));
     
                         DB::table('users')->where('id', $playerId)
@@ -313,7 +315,6 @@ class AgentController extends Controller
     
     public function agentDepositWithdraw(Request $request)
     {
-
         $agentId = Auth::user()->id;
         $playerId = $request->playerId;
         $amount = $request->amount;
@@ -565,8 +566,7 @@ class AgentController extends Controller
         $agents = DB::table('users')
         ->where('agent_code', $playerCode)
         ->where('role_type', 'Player')
-        ->where('status', 'Disabled')
-        ->orWhere('status', 'Banned')
+        ->where('status', '!=', 'Active')
         ->get();
 
         return view('agents.active_players', compact('agents'));

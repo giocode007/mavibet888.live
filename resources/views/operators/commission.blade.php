@@ -53,8 +53,8 @@
                                 <td class="name" style="text-transform:uppercase;">{{ $transaction['transaction_type'] }}</td>
                                 <td class="name">{{ $transaction['from'] }}</td>
                                 <td class="name">{{ $transaction['to'] }}</td>
-                                @if ($transaction['transaction_type'] == 'commission get'
-                                || $transaction['transaction_type'] == 'commission')
+                                @if (($transaction['transaction_type'] == 'commission get'
+                                || $transaction['transaction_type'] == 'commission') && $transaction['status'] == 1)
                                 <td class="name bg-success text-white">{{ $transaction['amount'] }}</td>
                                 @else
                                 <td class="name bg-danger text-white">{{ $transaction['amount'] }}</td>

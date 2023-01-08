@@ -35,7 +35,7 @@ class HomeController extends Controller
                 {
                     return redirect()->intended('/declarator');
                 }
-        else if (Auth::user()->role_type == 'Admin' ||
+        else if (Auth::user()->role_type == 'Sub_Admin' ||
                     Auth::user()->role_type == 'Sub_Operator' || 
                         Auth::user()->role_type == 'Master_Agent' ||
                             Auth::user()->role_type == 'Gold_Agent')
