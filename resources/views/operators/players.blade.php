@@ -49,7 +49,9 @@
                                 <td class="name">{{ $player->last_name }}</td>
                                 <td class="name">{{ $player->first_name }}</td>
                                 <td class="name">{{ $player->status }}</td>
-                                @if  ($player->role_type == 'Sub_Operator')
+                                @if  ($player->role_type == 'Sub_Admin')
+                                    <td class="name bg-warning text-white font-bold">Sub-Admin ({{ $player->commission_percent }})</td>
+                                @elseif  ($player->role_type == 'Sub_Operator')
                                     <td class="name bg-warning text-white font-bold">Sub-Op ({{ $player->commission_percent }})</td>
                                 @elseif  ($player->role_type == 'Master_Agent')
                                     <td class="name bg-warning text-white font-bold">Master ({{ $player->commission_percent }})</td>
@@ -149,7 +151,9 @@
                                 <td class="name">{{ $player->last_name }}</td>
                                 <td class="name">{{ $player->first_name }}</td>
                                 <td class="name">{{ $player->status }}</td>
-                                @if  ($player->role_type == 'Sub_Operator')
+                                @if  ($player->role_type == 'Sub_Admin')
+                                    <td class="name bg-warning text-white font-bold">Sub-Admin ({{ $player->commission_percent }})</td>
+                                @elseif  ($player->role_type == 'Sub_Operator')
                                     <td class="name bg-warning text-white font-bold">Sub-Op ({{ $player->commission_percent }})</td>
                                 @elseif  ($player->role_type == 'Master_Agent')
                                     <td class="name bg-warning text-white font-bold">Master ({{ $player->commission_percent }})</td>
