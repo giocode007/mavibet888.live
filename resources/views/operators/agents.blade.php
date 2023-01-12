@@ -57,13 +57,13 @@
                                     <td class="name">{{ $agent->first_name }}</td>
                                     <td class="name">{{ $agent->status }}</td>
                                     @if ($agent->role_type == 'Sub_Admin')
-                                    <td class="name bg-info text-white font-bold">Sub-Admin ({{ $agent->commission_percent }})</td>
+                                        <td class="name bg-info text-white font-bold">Sub-Admin ({{ $agent->commission_percent * 100}})</td>
                                     @elseif ($agent->role_type == 'Sub_Operator')
-                                        <td class="name bg-warning text-white font-bold">Sub-Op ({{ $agent->commission_percent }})</td>
+                                        <td class="name bg-warning text-white font-bold">Sub-Op ({{ $agent->commission_percent * 100 }})</td>
                                     @elseif  ($agent->role_type == 'Master_Agent')
-                                        <td class="name font-bold">Master ({{ $agent->commission_percent }})</td>
+                                        <td class="name font-bold">Master ({{ $agent->commission_percent * 100 }})</td>
                                     @elseif  ($agent->role_type == 'Gold_Agent')
-                                        <td class="name font-bold">Agent ({{ $agent->commission_percent }})</td>
+                                        <td class="name font-bold">Agent ({{ $agent->commission_percent * 100 }})</td>
                                     @else
                                     <td class="name">With Bet (0.00)</td>
                                     @endif
