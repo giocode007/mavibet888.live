@@ -219,13 +219,13 @@ class AgentController extends Controller
         ->where('id', $playerId)
         ->get();
 
-
-        $currComm = $request->currComm;
         $playerStatus = $request->playerStatus;
         $role = $request->role;
 
         if($playerInfo[0]->status != 'Banned'){
-            if($currComm != null){
+            if($request->currComm != null){
+
+                $currComm = $request->currComm / 100;
 
                 DB::table('users')->where('id', $playerId)
                 ->update([

@@ -119,7 +119,6 @@ class OperatorController extends Controller
         ->get();
 
         $playerRole = $request->playerRole;
-        $currComm = $request->currComm;
         $playerStatus = $request->playerStatus;
         $agentCode = $request->agentCode;
         $avatar = '';
@@ -156,6 +155,7 @@ class OperatorController extends Controller
                 }
             }
         }else{
+            $currComm = $request->currComm / 100;
 
             $request->validate([
                 'agentCode'      => 'exists:users,player_code',
@@ -177,7 +177,7 @@ class OperatorController extends Controller
 
         $description  = 'Change player: (' . $playerInfo[0]->user_name . 
         ') Role: ' . $playerInfo[0]->role_type . ' to ' . $playerRole .
-        ' Current Commission: ' . $playerInfo[0]->current_commission . ' to ' . $currComm . 
+        ' Current Commission: ' . $playerInfo[0]->current_commission . ' to ' . $request->currComm . 
         ' Status: ' . $playerInfo[0]->status . ' to ' . $playerStatus . 
         ' Agent: ' . $playerInfo[0]->agent_code . ' to ' . $agentCode;
         
@@ -738,20 +738,20 @@ class OperatorController extends Controller
                 $totalCurrentCommission += $user->current_commission;
     
                 if($user->current_balance != 0 || $user->current_commission != 0 ){
-                    $lastTransactions->push([
-                        'id' => $user->id,
-                        'username' => $activeUser->user_name,
-                        'user_id' => $user->user_id,
-                        'transaction_type' => $user->transaction_type,
-                        'amount' => $user->amount,
-                        'current_balance' => $user->current_balance,
-                        'current_commission' => $user->current_commission,
-                        'status' => $user->status,
-                        'note' => $user->note,
-                        'from' => $user->from,
-                        'to' => $user->to,
-                        'approved_date_time' => $user->approved_date_time,
-                    ]);
+                    // $lastTransactions->push([
+                    //     'id' => $user->id,
+                    //     'username' => $activeUser->user_name,
+                    //     'user_id' => $user->user_id,
+                    //     'transaction_type' => $user->transaction_type,
+                    //     'amount' => $user->amount,
+                    //     'current_balance' => $user->current_balance,
+                    //     'current_commission' => $user->current_commission,
+                    //     'status' => $user->status,
+                    //     'note' => $user->note,
+                    //     'from' => $user->from,
+                    //     'to' => $user->to,
+                    //     'approved_date_time' => $user->approved_date_time,
+                    // ]);
                 }
                 
             }

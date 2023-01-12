@@ -204,7 +204,7 @@
                 $('#playerId').val(response[0][0].id);
                 $('#user_name').val(response[0][0].user_name);
                 $('#player_role').val(response[0][0].role_type);  
-                $('#curr_commission').val(response[0][0].commission_percent);  
+                $('#curr_commission').val(number_format(response[0][0].commission_percent * 100, 2));  
                 $('#player_status').val(response[0][0].status);  
                 $('#player_code').val(response[0][0].agent_code);  
 
@@ -263,7 +263,6 @@
             var playerId = document.getElementById("playerId").value;
             var currComm = document.getElementById("curr_commission").value;
             var playerStatus = document.getElementById("player_status").value;
-
             
             $.ajax({
                 url: "{{ route('updateAgent') }}",
@@ -318,6 +317,38 @@
         }
         })
     }
+
+function number_format(number, decimals, dec_point, thousands_point) {
+
+    if (number == null || !isFinite(number)) {
+        throw new TypeError("number is not valid");
+    }
+
+    if (!decimals) {
+        var len = number.toString().split('.').length;
+        decimals = len > 1 ? len : 0;
+    }
+
+    if (!dec_point) {
+        dec_point = '.';
+    }
+
+    if (!thousands_point) {
+        thousands_point = ',';
+    }
+
+    number = parseFloat(number).toFixed(decimals);
+
+    number = number.replace(".", dec_point);
+
+    var splitNum = number.split(dec_point);
+    splitNum[0] = splitNum[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_point);
+    number = splitNum.join(dec_point);
+
+    return number;
+}
+
+ 
     
   </script>
 @endpush
