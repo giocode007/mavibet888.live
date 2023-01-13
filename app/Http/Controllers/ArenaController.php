@@ -382,6 +382,8 @@ class ArenaController extends Controller
         $fight = DB::table('fights')->select('id', 'event_id','fight_number', 'result', 'payoutMeron', 'payoutWala')
         ->where('id', $id)->get();
         
+        DB::table('fights')->where('id', $fight[0]->id)->update(['isOpen' => 0]);
+
         $event = DB::table('events')->select('event_name')->where('id', $eventId)->get();
 
         $allBets = DB::table('bettings')->select('id', 'user_id', 'amount')->where('fight_id', $id)->get();
@@ -411,29 +413,29 @@ class ArenaController extends Controller
                                 $commission = $allBet->amount * $checkAgent[0]->commission_percent;
                                 $currCommission = $checkAgent[0]->current_commission + $commission;
                 
-                                DB::table('users')->where('id', $checkAgent[0]->id)
-                                ->update([
-                                    'current_commission' => $currCommission,
-                                ]);
-                
-                                $transaction = Transactions::updateOrCreate([
-                                    'id' => $request->transaction_id
-                                ],
-                                [
-                                    'user_id' => $checkAgent[0]->id,
-                                    'betting_id' => $allBet->id,
-                                    'transaction_type' => 'commission',
-                                    'amount' => $commission,
-                                    'current_balance' => $checkAgent[0]->current_balance,
-                                    'current_commission' => $currCommission,
-                                    'status' => 1,
-                                    'note'     => 'Fight # ' . $fight[0]->fight_number . ' - ' . $event[0]->event_name,
-                                    'from' => $user[0]->user_name,
-                                    'to' => $checkAgent[0]->user_name,
-                                    'approved_date_time' => $todayDate,
-                                    'approve_by' => Auth::user()->user_name,
-                                ]);   
-                
+                                    DB::table('users')->where('id', $checkAgent[0]->id)
+                                    ->update([
+                                        'current_commission' => $currCommission,
+                                    ]);
+                    
+                                    $transaction = Transactions::updateOrCreate([
+                                        'id' => $request->transaction_id
+                                    ],
+                                    [
+                                        'user_id' => $checkAgent[0]->id,
+                                        'betting_id' => $allBet->id,
+                                        'transaction_type' => 'commission',
+                                        'amount' => $commission,
+                                        'current_balance' => $checkAgent[0]->current_balance,
+                                        'current_commission' => $currCommission,
+                                        'status' => 1,
+                                        'note'     => 'Fight # ' . $fight[0]->fight_number . ' - ' . $event[0]->event_name,
+                                        'from' => $user[0]->user_name,
+                                        'to' => $checkAgent[0]->user_name,
+                                        'approved_date_time' => $todayDate,
+                                        'approve_by' => Auth::user()->user_name,
+                                    ]);   
+                                
                                 $description  = 'Received ' . $commission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
                     
                                 $activityLog = [
@@ -454,21 +456,16 @@ class ArenaController extends Controller
             
                                     $subOpCommission = $allBet->amount * $checkSubOp[0]->commission_percent;
                                     $masterCommission = $allBet->amount * $checkAgent[0]->commission_percent;
-                
+                                    
                                     $totalSubOpCommission = $subOpCommission - $masterCommission;
-                                    $totalSubOpCommission1 = $totalSubOpCommission + $checkSubOp[0]->current_commission;
-                                    $totalMasterCommission = $masterCommission + $checkAgent[0]->current_commission;
-                
+                                    $totalSubOpCommission1 = $checkSubOp[0]->current_commission + $totalSubOpCommission;
+                                    $totalMasterCommission = $checkAgent[0]->current_commission + $masterCommission;
+
                                     DB::table('users')->where('id', $checkAgent[0]->id)
                                     ->update([
                                         'current_commission' => $totalMasterCommission,
                                     ]);
-                
-                                    DB::table('users')->where('id', $checkSubOp[0]->id)
-                                    ->update([
-                                        'current_commission' => $totalSubOpCommission1,
-                                    ]);
-                    
+
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
                                     ],
@@ -487,6 +484,13 @@ class ArenaController extends Controller
                                         'approve_by' => Auth::user()->user_name,
                                     ]);   
                 
+                
+                                        
+                                    DB::table('users')->where('id', $checkSubOp[0]->id)
+                                    ->update([
+                                        'current_commission' => $totalSubOpCommission1,
+                                    ]);
+
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
                                     ],
@@ -504,6 +508,7 @@ class ArenaController extends Controller
                                         'approved_date_time' => $todayDate,
                                         'approve_by' => Auth::user()->user_name,
                                     ]);   
+                                    
                     
                                     $description  = 'Received ' . $masterCommission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
                                     $description1 = 'Received ' . $totalSubOpCommission . ' Commission from ' . $checkAgent[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
@@ -540,30 +545,19 @@ class ArenaController extends Controller
                                     $totalGoldCommission = $allBet->amount * $checkAgent[0]->commission_percent;
                                     $masterCommission = $allBet->amount * $checkMaster[0]->commission_percent;
                                     $subOpCommission = $allBet->amount * $checkSubOp[0]->commission_percent;
-                
                                     
                                     $totalMasterCommission = $masterCommission - $totalGoldCommission;
                                     $totalSubOpCommission = $subOpCommission - $masterCommission;
             
-                                    $commissionGold = $totalGoldCommission + $checkAgent[0]->current_commission;
-                                    $commissionMaster = $totalMasterCommission + $checkMaster[0]->current_commission;
-                                    $commissionSubOp = $totalSubOpCommission + $checkSubOp[0]->current_commission;
-                
+                                    $commissionGold = $checkAgent[0]->current_commission + $totalGoldCommission;
+                                    $commissionMaster = $checkMaster[0]->current_commission + $totalMasterCommission;
+                                    $commissionSubOp = $checkSubOp[0]->current_commission + $totalSubOpCommission;
+
                                     DB::table('users')->where('id', $checkAgent[0]->id)
                                     ->update([
                                         'current_commission' => $commissionGold,
                                     ]);
-                
-                                    DB::table('users')->where('id', $checkMaster[0]->id)
-                                    ->update([
-                                        'current_commission' => $commissionMaster,
-                                    ]);
-            
-                                    DB::table('users')->where('id', $checkSubOp[0]->id)
-                                    ->update([
-                                        'current_commission' => $commissionSubOp,
-                                    ]);
-                    
+
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
                                     ],
@@ -580,8 +574,13 @@ class ArenaController extends Controller
                                         'to' => $checkAgent[0]->user_name,
                                         'approved_date_time' => $todayDate,
                                         'approve_by' => Auth::user()->user_name,
-                                    ]);   
-            
+                                    ]); 
+
+                                    DB::table('users')->where('id', $checkMaster[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionMaster,
+                                    ]);
+
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
                                     ],
@@ -598,8 +597,13 @@ class ArenaController extends Controller
                                         'to' => $checkMaster[0]->user_name,
                                         'approved_date_time' => $todayDate,
                                         'approve_by' => Auth::user()->user_name,
-                                    ]);   
-                    
+                                    ]); 
+                
+                                    
+                                    DB::table('users')->where('id', $checkSubOp[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionSubOp,
+                                    ]);
             
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
@@ -617,7 +621,8 @@ class ArenaController extends Controller
                                         'to' => $checkSubOp[0]->user_name,
                                         'approved_date_time' => $todayDate,
                                         'approve_by' => Auth::user()->user_name,
-                                    ]);   
+                                    ]);  
+                                     
                     
                                     $description  = 'Received ' . $totalGoldCommission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
                                     $description1 = 'Received ' . $totalMasterCommission . ' Commission from ' . $checkAgent[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
@@ -677,31 +682,16 @@ class ArenaController extends Controller
                                     $totalSubOpCommission = $subOpCommission - $masterCommission;
                                     $totalSubAdminCommission = $subAdminCommission - $subOpCommission;
             
-                                    $commissionGold = $totalGoldCommission + $checkAgent[0]->current_commission;
-                                    $commissionMaster = $totalMasterCommission + $checkMaster[0]->current_commission;
-                                    $commissionSubOp = $totalSubOpCommission + $checkSubOp[0]->current_commission;
-                                    $commissionSubAdmin = $totalSubAdminCommission + $checkSubAdmin[0]->current_commission;
+                                    $commissionGold = $checkAgent[0]->current_commission + $totalGoldCommission;
+                                    $commissionMaster = $checkMaster[0]->current_commission + $totalMasterCommission;
+                                    $commissionSubOp = $checkSubOp[0]->current_commission + $totalSubOpCommission;
+                                    $commissionSubAdmin = $checkSubAdmin[0]->current_commission + $totalSubAdminCommission;
                 
                                     DB::table('users')->where('id', $checkAgent[0]->id)
                                     ->update([
                                         'current_commission' => $commissionGold,
                                     ]);
-                
-                                    DB::table('users')->where('id', $checkMaster[0]->id)
-                                    ->update([
-                                        'current_commission' => $commissionMaster,
-                                    ]);
-            
-                                    DB::table('users')->where('id', $checkSubOp[0]->id)
-                                    ->update([
-                                        'current_commission' => $commissionSubOp,
-                                    ]);
 
-                                    DB::table('users')->where('id', $checkSubAdmin[0]->id)
-                                    ->update([
-                                        'current_commission' => $commissionSubAdmin,
-                                    ]);
-                    
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
                                     ],
@@ -718,8 +708,13 @@ class ArenaController extends Controller
                                         'to' => $checkAgent[0]->user_name,
                                         'approved_date_time' => $todayDate,
                                         'approve_by' => Auth::user()->user_name,
-                                    ]);   
-            
+                                    ]);  
+                                    
+                                    DB::table('users')->where('id', $checkMaster[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionMaster,
+                                    ]);
+
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
                                     ],
@@ -737,8 +732,12 @@ class ArenaController extends Controller
                                         'approved_date_time' => $todayDate,
                                         'approve_by' => Auth::user()->user_name,
                                     ]);   
-                    
-            
+                                   
+                                    DB::table('users')->where('id', $checkSubOp[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionSubOp,
+                                    ]);
+
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
                                     ],
@@ -757,6 +756,11 @@ class ArenaController extends Controller
                                         'approve_by' => Auth::user()->user_name,
                                     ]); 
                                     
+                                    DB::table('users')->where('id', $checkSubAdmin[0]->id)
+                                    ->update([
+                                        'current_commission' => $commissionSubAdmin,
+                                    ]);
+
                                     $transaction = Transactions::updateOrCreate([
                                         'id' => $request->transaction_id
                                     ],
@@ -774,7 +778,7 @@ class ArenaController extends Controller
                                         'approved_date_time' => $todayDate,
                                         'approve_by' => Auth::user()->user_name,
                                     ]);   
-                    
+                                    
                                     $description  = 'Received ' . $totalGoldCommission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
                                     $description1 = 'Received ' . $totalMasterCommission . ' Commission from ' . $checkAgent[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
                                     $description2 = 'Received ' . $totalSubOpCommission . ' Commission from ' . $checkMaster[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;

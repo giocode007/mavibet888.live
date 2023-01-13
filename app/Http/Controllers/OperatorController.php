@@ -676,7 +676,7 @@ class OperatorController extends Controller
     
             foreach($filter_transactions as $history){
                 if($history->status == 1 || $history->status == 2){
-                    $user = DB::table('users')->select('user_name', 'role_type')
+                    $user = DB::table('users')->select('role_type')
                     ->where('id',  $history->user_id)->first();
                     
                     if($history->transaction_type == 'deposit'){
@@ -687,19 +687,19 @@ class OperatorController extends Controller
                         $totalWithdraw += $history->amount;
                     }
     
-                    $transaction->push([
-                        'id' => $history->id,
-                        'username' => $user->user_name,
-                        'transaction_type' => $history->transaction_type,
-                        'amount' => $history->amount,
-                        'current_balance' => $history->current_balance,
-                        'current_commission' => $history->current_commission,
-                        'status' => $history->status,
-                        'note' => $history->note,
-                        'from' => $history->from,
-                        'to' => $history->to,
-                        'approved_date_time' => $history->approved_date_time,
-                    ]);
+                    // $transaction->push([
+                    //     'id' => $history->id,
+                    //     'username' => $user->user_name,
+                    //     'transaction_type' => $history->transaction_type,
+                    //     'amount' => $history->amount,
+                    //     'current_balance' => $history->current_balance,
+                    //     'current_commission' => $history->current_commission,
+                    //     'status' => $history->status,
+                    //     'note' => $history->note,
+                    //     'from' => $history->from,
+                    //     'to' => $history->to,
+                    //     'approved_date_time' => $history->approved_date_time,
+                    // ]);
     
                     $usersId->push([
                         'id' => $history->user_id,
@@ -726,33 +726,34 @@ class OperatorController extends Controller
             for($i=0; $i<count($usersRemoveDupicate); $i++){
     
                 $user = DB::table('transactions')
+                ->select('current_balance', 'current_commission')
                 ->where('user_id',  $usersRemoveDupicate[$i]['id'])
                 ->whereBetween('created_at', [$trans_from, $trans_to])
                 ->orderBy('id', 'desc')
                 ->first();
     
-                $activeUser = DB::table('users')->select('user_name', 'role_type')
-                    ->where('id',  $usersRemoveDupicate[$i]['id'])->first();
+                // $activeUser = DB::table('users')->select('user_name', 'role_type')
+                //     ->where('id',  $usersRemoveDupicate[$i]['id'])->first();
 
                 $totalCurrentBalance += $user->current_balance;
                 $totalCurrentCommission += $user->current_commission;
     
-                if($user->current_balance != 0 || $user->current_commission != 0 ){
-                    // $lastTransactions->push([
-                    //     'id' => $user->id,
-                    //     'username' => $activeUser->user_name,
-                    //     'user_id' => $user->user_id,
-                    //     'transaction_type' => $user->transaction_type,
-                    //     'amount' => $user->amount,
-                    //     'current_balance' => $user->current_balance,
-                    //     'current_commission' => $user->current_commission,
-                    //     'status' => $user->status,
-                    //     'note' => $user->note,
-                    //     'from' => $user->from,
-                    //     'to' => $user->to,
-                    //     'approved_date_time' => $user->approved_date_time,
-                    // ]);
-                }
+                // if($user->current_balance = 0 || $user->current_commission != 0 ){
+                //     $lastTransactions->push([
+                //         'id' => $user->id,
+                //         'username' => $activeUser->user_name,
+                //         'user_id' => $user->user_id,
+                //         'transaction_type' => $user->transaction_type,
+                //         'amount' => $user->amount,
+                //         'current_balance' => $user->current_balance,
+                //         'current_commission' => $user->current_commission,
+                //         'status' => $user->status,
+                //         'note' => $user->note,
+                //         'from' => $user->from,
+                //         'to' => $user->to,
+                //         'approved_date_time' => $user->approved_date_time,
+                //     ]);
+                // }
                 
             }
     

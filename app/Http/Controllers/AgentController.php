@@ -224,24 +224,34 @@ class AgentController extends Controller
 
         if($playerInfo[0]->status != 'Banned'){
             if($request->currComm != null){
+                if($request->currComm >= 0 && $request->currComm != $playerInfo[0]->commission_percent 
+                && $request->currComm <= (Auth::user()->commission_percent * 100)){
+                    $currComm = $request->currComm / 100;
 
-                $currComm = $request->currComm / 100;
+                    DB::table('users')->where('id', $playerId)
+                    ->update([
+                        'commission_percent' => $currComm,
+                        'status' => $playerStatus,
+                    ]);
+            
+                    $dt         = Carbon::now('Asia/Manila');
+                    $todayDate  = $dt->toDayDateTimeString();
+            
+            
+                    $description  = 'Change player: (' . $playerInfo[0]->user_name . 
+                    ') Current Commission: ' . $playerInfo[0]->current_commission . ' to ' . $currComm . 
+                    ' Status: ' . $playerInfo[0]->status . ' to ' . $playerStatus;
 
-                DB::table('users')->where('id', $playerId)
-                ->update([
-                    'commission_percent' => $currComm,
-                    'status' => $playerStatus,
-                ]);
-        
-                $dt         = Carbon::now('Asia/Manila');
-                $todayDate  = $dt->toDayDateTimeString();
-        
-        
-                $description  = 'Change player: (' . $playerInfo[0]->user_name . 
-                ') Current Commission: ' . $playerInfo[0]->current_commission . ' to ' . $currComm . 
-                ' Status: ' . $playerInfo[0]->status . ' to ' . $playerStatus;
+                    $activityLog = [
+                        'user_id'        => Auth::user()->id,
+                        'description' => $description,
+                        'date_time'   => $todayDate,
+                    ];
+            
+                    DB::table('activity_logs')->insert($activityLog);
+                }
+                
             }else{
-    
                 if($playerInfo[0]->role_type != $role){
     
                     if(Auth::user()->role_type == 'Sub_Admin' ||
@@ -262,6 +272,14 @@ class AgentController extends Controller
         
                         $description  = 'Change player: (' . $playerInfo[0]->user_name . 
                         ') Role: ' . $playerInfo[0]->role_type . ' to ' . $role;
+
+                        $activityLog = [
+                            'user_id'        => Auth::user()->id,
+                            'description' => $description,
+                            'date_time'   => $todayDate,
+                        ];
+                
+                        DB::table('activity_logs')->insert($activityLog);
                     }
     
                 }else{
@@ -277,18 +295,19 @@ class AgentController extends Controller
         
                     $description  = 'Change player: (' . $playerInfo[0]->user_name . 
                     ') Status: ' . $playerInfo[0]->status . ' to ' . $playerStatus;
+
+                    $activityLog = [
+                        'user_id'        => Auth::user()->id,
+                        'description' => $description,
+                        'date_time'   => $todayDate,
+                    ];
+            
+                    DB::table('activity_logs')->insert($activityLog);
                 }
                 
             }
             
-            
-            $activityLog = [
-                'user_id'        => Auth::user()->id,
-                'description' => $description,
-                'date_time'   => $todayDate,
-            ];
-    
-            DB::table('activity_logs')->insert($activityLog);
+           
         }
         
         
