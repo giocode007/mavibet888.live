@@ -1171,15 +1171,21 @@ class ArenaController extends Controller
         if($request->actions == 'goNext'){
             $fightNumber = $lastFight->fight_number + 1;
 
-            $createFight = Fight::Create(
-            [
-                'event_id' => $eventId,
-                'fight_number' => $fightNumber,
-                'payoutMeron' => 0,
-                'payoutWala' => 0,
-                'isOpen' => 0,
-                'status' => 0,
-            ]); 
+            $checkFight = DB::table('fights')->where('event_id', $eventId)
+            ->where('fight_number', $fightNumber)->first();
+
+            if($checkFight == null){
+                $createFight = Fight::Create(
+                    [
+                        'event_id' => $eventId,
+                        'fight_number' => $fightNumber,
+                        'payoutMeron' => 0,
+                        'payoutWala' => 0,
+                        'isOpen' => 0,
+                        'status' => 0,
+                    ]); 
+            }
+            
 
             $fight = DB::table('fights')->where('event_id', $eventId)->where('status', 0)->get();
 

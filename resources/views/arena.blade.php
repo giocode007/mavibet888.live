@@ -1,7 +1,7 @@
 @extends('layouts.player')
 @section('content')
-    <div id="main">
-        <div class="page-heading">
+    <div id="main-arena">
+        <div class="page-heading mx-2">
             @if (Auth::user()->role_type == 'Player')
             <h5 class="text-warning">{{ \Carbon\Carbon::parse($event[0]->fight_date_time)->isoFormat('dddd') }} 
                 {{ $event[0]->event_name }} - {{ \Carbon\Carbon::parse($event[0]->fight_date_time)->isoFormat('MM/DD/Y') }}
@@ -18,19 +18,21 @@
             <section class="row">
                 <div class="col-12 col-lg-6">
 
-                    @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
-                    <iframe class="live-video" width="100%" height="500"
-                    src="{{ $event[0]->video_code }}" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>
-                    @elseif(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
-                    <iframe class="live-video" width="100%" height="500"
-                    src="{{ $event[0]->video_code }}" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>
-                    @endif
+                    <div class="iwrapper">
+                        @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
+                        <iframe
+                        src="{{ $event[0]->video_code }}" 
+                        frameborder="0" 
+                        scrolling="no"
+                        allowfullscreen></iframe>
+                        @elseif(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
+                        <iframe
+                        src="{{ $event[0]->video_code }}" 
+                        frameborder="0" 
+                        scrolling="no"
+                        allowfullscreen></iframe>
+                        @endif
+                    </div>
 
 
                     {{-- Operator --}}
@@ -144,7 +146,8 @@
                     </section>
                     
                 </div>
-                <div class="col-12 col-lg-6">
+
+                <div id="main" class="col-12 col-lg-6">
                     <div class="blink card bg-warning">
                         <div class="text-center p-1">
                             <span id="spanStatus" class="text-black font-bold text-uppercase">{{ $selectedStatus[0]->status_type }}</span>
@@ -236,7 +239,7 @@
                                 <div id="wala" class="player-bet box-bet-wala bet-wala"><i class="icon-mid bi bi-plus-circle me-1"></i>BET WALA</span></div>
                             @endif
                         </div>
-                       
+                        
                         <div class="box-points points">Current Points: <span id="current_balance" class="text-warning">@money(Auth::user()->current_balance )</span></div>
                         <div class="box-amount amount">
                                 <input id="bet-amount" type="number" class="form-control form-control-lg" placeholder="ENTER BET AMOUNT"></div>
@@ -296,6 +299,7 @@
                         </div>
                     </div> --}}
                 </div>
+                
             </section>
         </div>
     </div>

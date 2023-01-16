@@ -663,10 +663,8 @@ class OperatorController extends Controller
             $trans_to = Carbon::createFromFormat('Y-m-d H:i', $request->to_date_time)->toDateTimeString(); 
     
             
-            $transaction = collect([]);
             $usersId = collect([]);
             $lastTransactions = collect([]);
-            //2022-12-29 20:21:29
     
             $filter_transactions =  DB::table('transactions')
             ->whereBetween('created_at', [$trans_from, $trans_to])
@@ -687,20 +685,6 @@ class OperatorController extends Controller
                         $totalWithdraw += $history->amount;
                     }
     
-                    // $transaction->push([
-                    //     'id' => $history->id,
-                    //     'username' => $user->user_name,
-                    //     'transaction_type' => $history->transaction_type,
-                    //     'amount' => $history->amount,
-                    //     'current_balance' => $history->current_balance,
-                    //     'current_commission' => $history->current_commission,
-                    //     'status' => $history->status,
-                    //     'note' => $history->note,
-                    //     'from' => $history->from,
-                    //     'to' => $history->to,
-                    //     'approved_date_time' => $history->approved_date_time,
-                    // ]);
-    
                     $usersId->push([
                         'id' => $history->user_id,
                         'role_type' => $user->role_type,
@@ -709,7 +693,6 @@ class OperatorController extends Controller
                     
             }
     
-            $transaction->all();
             $usersId->all();
     
             $usersRemoveDupicate = [];
@@ -731,33 +714,11 @@ class OperatorController extends Controller
                 ->whereBetween('created_at', [$trans_from, $trans_to])
                 ->orderBy('id', 'desc')
                 ->first();
-    
-                // $activeUser = DB::table('users')->select('user_name', 'role_type')
-                //     ->where('id',  $usersRemoveDupicate[$i]['id'])->first();
 
                 $totalCurrentBalance += $user->current_balance;
                 $totalCurrentCommission += $user->current_commission;
-    
-                // if($user->current_balance = 0 || $user->current_commission != 0 ){
-                //     $lastTransactions->push([
-                //         'id' => $user->id,
-                //         'username' => $activeUser->user_name,
-                //         'user_id' => $user->user_id,
-                //         'transaction_type' => $user->transaction_type,
-                //         'amount' => $user->amount,
-                //         'current_balance' => $user->current_balance,
-                //         'current_commission' => $user->current_commission,
-                //         'status' => $user->status,
-                //         'note' => $user->note,
-                //         'from' => $user->from,
-                //         'to' => $user->to,
-                //         'approved_date_time' => $user->approved_date_time,
-                //     ]);
-                // }
                 
             }
-    
-            $lastTransactions->all();
 
             $totalGross = $totalDeposit - ( $totalWithdraw + $totalCurrentBalance + $totalCurrentCommission ) ;
     
