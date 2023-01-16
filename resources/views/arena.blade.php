@@ -16,11 +16,13 @@
         </div>
         <div class="page-content">
             <section class="row">
-                <div id="iwrapper" class="col-12 col-lg-6">
+                <div style="position: relative;overflow: hidden; padding-top: 56.25%;"  class="col-12 col-lg-6">
 
                     @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
                     <iframe
-                    width="100%" height="200"
+                    style="width: 100%; height: 100%;position: absolute;
+                    top: 0;
+                    left: 0;"
                     src="{{ $event[0]->video_code }}" 
                     frameborder="0" 
                     scrolling="no"
@@ -28,13 +30,16 @@
                     allowfullscreen></iframe>
                     @elseif(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
                     <iframe
-                    width="100%" height="200"
+                    style="width: 100%; height: 100%;position: absolute;
+                    top: 0;
+                    left: 0;"
                     src="{{ $event[0]->video_code }}" 
                     frameborder="0" 
                     scrolling="no"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen></iframe>
                     @endif
+
 
                     {{-- Operator --}}
 
