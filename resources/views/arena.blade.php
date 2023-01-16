@@ -20,7 +20,7 @@
 
                     @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
                     <iframe
-                    class="w-100 h-100"
+                    width="100%" height="100%"
                     src="{{ $event[0]->video_code }}" 
                     frameborder="0" 
                     scrolling="no"
@@ -28,6 +28,7 @@
                     allowfullscreen></iframe>
                     @elseif(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
                     <iframe
+                    width="100%" height="100%"
                     class="w-100 h-100"
                     src="{{ $event[0]->video_code }}" 
                     frameborder="0" 
