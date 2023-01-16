@@ -16,10 +16,9 @@
         </div>
         <div class="page-content">
             <section class="row">
-                <div class="col-12 col-lg-6">
-
-                    <div style="position: relative;overflow: hidden; padding-top: 56.25%;">
-                        @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
+                <div style="position: relative;overflow: hidden; padding-top: 56.25%;"  class="col-12 col-lg-6">
+                    
+                    @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
                         <iframe
                         style="width: 100%; height: 100%; position: absolute;
                         top: 0;
@@ -40,14 +39,11 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen></iframe>
                     @endif
-                    </div>
-
-                    
 
 
                     {{-- Operator --}}
 
-                    <section>
+                    <section style="width: 95%; position: absolute; top: 550px; left: 2%;">
                         @if (Auth::user()->role_type=='Operator' || Auth::user()->role_type == 'Declarator')
                         <div class="py-2">
                             <select class="form-control" id="status" name="status">
