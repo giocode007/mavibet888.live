@@ -1894,6 +1894,10 @@
         float: left;
         margin-bottom: .4rem
     }
+
+    .live-video {
+        height: 220px;
+    }
 }
 
 @media (max-width:540px) {
@@ -2010,7 +2014,7 @@
 }
 
 #main {
-    padding: 1.5rem
+    padding: 1rem
 }
 
 #main-arena {
