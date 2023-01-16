@@ -28,7 +28,7 @@
                         @elseif(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
                         <iframe
                         src="{{ $event[0]->video_code }}" 
-                        frameborder="0" 
+                        frameborder="0"     
                         scrolling="no"
                         allowfullscreen></iframe>
                         @endif
