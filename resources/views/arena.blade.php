@@ -1,6 +1,6 @@
 @extends('layouts.player')
 @section('content')
-    <div id="main">
+    <div id="main-arena">
         <div class="page-heading mx-2">
             @if (Auth::user()->role_type == 'Player')
             <h5 class="text-warning">{{ \Carbon\Carbon::parse($event[0]->fight_date_time)->isoFormat('dddd') }} 
@@ -16,22 +16,23 @@
         </div>
         <div class="page-content">
             <section class="row">
-                <div class="col-12 col-lg-6">
+                <div id="iwrapper" class="col-12 col-lg-6">
 
                     @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
-                    <iframe class="live-video" width="100%" height="500"
+                    <iframe
                     src="{{ $event[0]->video_code }}" 
                     frameborder="0" 
+                    scrolling="no"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen></iframe>
                     @elseif(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
-                    <iframe class="live-video" width="100%" height="500"
+                    <iframe
                     src="{{ $event[0]->video_code }}" 
                     frameborder="0" 
+                    scrolling="no"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen></iframe>
                     @endif
-
 
                     {{-- Operator --}}
 
@@ -145,7 +146,7 @@
                     
                 </div>
 
-                <div class="col-12 col-lg-6">
+                <div id="main" class="col-12 col-lg-6">
                     <div class="blink card bg-warning">
                         <div class="text-center p-1">
                             <span id="spanStatus" class="text-black font-bold text-uppercase">{{ $selectedStatus[0]->status_type }}</span>
