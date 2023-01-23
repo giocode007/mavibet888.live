@@ -157,7 +157,7 @@
                             <span id="spanStatus" class="text-black font-bold text-uppercase">{{ $selectedStatus[0]->status_type }}</span>
                         </div>
                     </div>
-                    <div class="wrapper">
+                    <div class="wrapper" style="font-size: 100%">
                         <input id="fightId" type="hidden" value="{{ $fight[0]->id }}">
                         <input id="eventId" type="hidden" value="{{ $event[0]->id }}">
                         <input id="userId" type="hidden" value="{{ Auth::user()->id }}">
