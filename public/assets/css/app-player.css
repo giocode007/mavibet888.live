@@ -1422,18 +1422,40 @@
     display: none
 }
 
-#iwrapper {
+.declarator-tab{
+    width: 95%;
+    position: absolute; 
+    top: 550px; 
+    left: 2%;
+}
+
+.iwrapper {
     position: relative;
     overflow: hidden;
     padding-top: 56.25%;
 }
 
-#iwrapper iframe{
+.iwrapper iframe{
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 45%;
+}
+
+.live-video {
+    position: absolute;
+    width: 100%;
+    height: 45%;
+    top: 0;
+    left: 0;
+}
+
+.betting-section{
+    width: 95%;
+    position: absolute; 
+    top: 550px; 
+    left: 2%;
 }
 
 .sidebar-wrapper .menu {
@@ -1889,15 +1911,19 @@
     background-color: #5ddab4
 }
 
-@media (max-width:767px) {
+@media (max-width:990px) {
     .stats-icon {
         float: left;
         margin-bottom: .4rem
     }
 
-    .live-video {
-        height: 220px;
+    .declarator-tab{
+        width: 95%;
+        position: relative; 
+        top: 0; 
+        left: 2%;
     }
+
 }
 
 @media (max-width:540px) {
@@ -2014,6 +2040,10 @@
 }
 
 #main {
+    padding: 2rem
+}
+
+#main-betting {
     padding: 2rem
 }
 

@@ -667,6 +667,7 @@ class OperatorController extends Controller
             $lastTransactions = collect([]);
     
             $filter_transactions =  DB::table('transactions')
+            ->select('id', 'user_id', 'status', 'transaction_type', 'amount')
             ->whereBetween('created_at', [$trans_from, $trans_to])
             ->orderBy('id', 'desc')
             ->get();
@@ -685,10 +686,12 @@ class OperatorController extends Controller
                         $totalWithdraw += $history->amount;
                     }
     
-                    $usersId->push([
-                        'id' => $history->user_id,
-                        'role_type' => $user->role_type,
-                    ]);
+                    if($user->role_type != 'Operator' && $user->role_type != 'Declarator'){
+                        $usersId->push([
+                            'id' => $history->user_id,
+                        ]);
+                    }
+                    
                 }
                     
             }
@@ -699,10 +702,8 @@ class OperatorController extends Controller
     
             for($i=0; $i<count($usersId); $i++){
     
-                if($usersId[$i]['role_type'] != 'Operator' && $usersId[$i]['role_type'] != 'Declarator'){
-                    if(!in_array($usersId[$i], $usersRemoveDupicate)){
-                        array_push($usersRemoveDupicate, $usersId[$i]);
-                    }
+                if(!in_array($usersId[$i], $usersRemoveDupicate)){
+                    array_push($usersRemoveDupicate, $usersId[$i]);
                 }
             }
     

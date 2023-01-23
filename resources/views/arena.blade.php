@@ -17,6 +17,8 @@
         <div class="page-content">
             <section class="row">
                 <div style="position: relative;overflow: hidden; padding-top: 56.25%;"  class="col-12 col-lg-6">
+
+                    @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
                         <iframe
                         style="width: 100%; height: 100%; position: absolute;
                         top: 0;
@@ -26,9 +28,20 @@
                         scrolling="no"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen></iframe>
+                    @elseif(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
+                        <iframe
+                        style="width: 100%; height: 100%; position: absolute;
+                        top: 0;
+                        left: 0;"
+                        src="{{ $event[0]->video_code }}" 
+                        frameborder="0" 
+                        scrolling="no"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen></iframe>
+                    @endif
                     {{-- Operator --}}
 
-                    <section style="width: 95%; position: absolute; top: 550px; left: 2%;">
+                    <section class="declarator-tab">
                         @if (Auth::user()->role_type=='Operator' || Auth::user()->role_type == 'Declarator')
                         <div class="py-2">
                             <select class="form-control" id="status" name="status">
@@ -689,33 +702,30 @@ $(document).ready(function () {
                     data: {id:id},
                         success: function (response) {
                             if(response.isOpen == 1){
-                                if (confirm("Are you sure you want to BET " + betAmount + " - " + betType.toUpperCase() + "?")) 
-                                    {
-                                        $.ajax({
-                                            url: "{{ route('bet') }}",
-                                            type: "GET",
-                                            data: {amount:betAmount,bet_type:betType,id:id,eventId:eventId},
-                                            success: function (response) {
+                                $.ajax({
+                                    url: "{{ route('bet') }}",
+                                    type: "GET",
+                                    data: {amount:betAmount,bet_type:betType,id:id,eventId:eventId},
+                                    success: function (response) {
 
-                                                // window.location = "/events";
-                                                if(!response.success){
-                                                    alert('INVALID AMOUNT, TRY TO RECHARGE!');
-                                                }else{
+                                        // window.location = "/events";
+                                        if(!response.success){
+                                            alert('INVALID AMOUNT, TRY TO RECHARGE!');
+                                        }else{
 
-                                                    inpuBet.value = "";
-                                                    $('#current_balance').html('$' + number_format(response[1][0].current_balance));
-                                                    $('.meron-bet').html(number_format(response[2]));
-                                                    $('#spanMeronReward').html(number_format(Math.ceil(response[2] * (response[5] / 100))));
-                                                    $('.wala-bet').html(number_format(response[3]));
-                                                    $('#spanWalaReward').html(number_format(Math.ceil(response[3] * (response[6] / 100))));
-                                                    $('.draw-amount').html(number_format(response[4]));
-                                                }
-                                            },
-                                            error: function (response) {
-                                                console.log('Error:', response);
-                                            }
-                                        });
+                                            inpuBet.value = "";
+                                            $('#current_balance').html('$' + number_format(response[1][0].current_balance));
+                                            $('.meron-bet').html(number_format(response[2]));
+                                            $('#spanMeronReward').html(number_format(Math.ceil(response[2] * (response[5] / 100))));
+                                            $('.wala-bet').html(number_format(response[3]));
+                                            $('#spanWalaReward').html(number_format(Math.ceil(response[3] * (response[6] / 100))));
+                                            $('.draw-amount').html(number_format(response[4]));
+                                        }
+                                    },
+                                    error: function (response) {
+                                        console.log('Error:', response);
                                     }
+                                });
                             }
                         },
                         error: function (response) {
