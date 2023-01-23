@@ -1988,8 +1988,8 @@
         border-color: slategray;
         text-align: center;
         color: #f9fafb;
-        padding: 10px;
-        font-size: 65%;
+        padding: 5px;
+        font-size: 100%;
         font-weight: 700;
     }
     
@@ -1999,7 +1999,7 @@
         text-align: start;
         color: #f9fafb;
         padding: 10px;
-        font-size: 100%;
+        font-size: 120%;
         font-weight: 900;
     }
 
