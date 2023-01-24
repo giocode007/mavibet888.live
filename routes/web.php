@@ -63,6 +63,7 @@ Route::get('commission/{id}', [App\Http\Controllers\OperatorController::class, '
 Route::get('agentDW', [App\Http\Controllers\OperatorController::class, 'agentDepositWithdraw'])->name('agentDepositWithdraw');
 Route::get('audit', [App\Http\Controllers\OperatorController::class, 'getAudit'])->name('getAudit');
 Route::post('audit/range', [App\Http\Controllers\OperatorController::class, 'computeProfit'])->name('computeProfit');
+Route::post('audit/history', [App\Http\Controllers\OperatorController::class, 'profitHistory'])->name('profitHistory');
 Route::get('admin/agents', [App\Http\Controllers\OperatorController::class, 'getAgents'])->name('getAgents');
 Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])->name('admin');
 Route::get('forgot/password', [App\Http\Controllers\OperatorController::class, 'forgetPassword'])->name('forgetPassword');

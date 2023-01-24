@@ -27,8 +27,8 @@
             <div class="card">
                 <div class="d-flex card-header justify-content-between">
                     @if (Auth::user()->role_type == 'Operator')
-                        <a href="javascript:void(0)" id="profit">
-                            <span class="p-3 badge bg-dark"><i class="icon-mid bi bi-plus-circle me-2"></i>PROFIT</span>
+                        <a href="javascript:void(0)" id="checkHistory">
+                            <span class="p-3 badge bg-dark">Check History</span>
                         </a>
                     @endif
                 </div>
@@ -81,7 +81,7 @@
             <h4 class="modal-title" id="fightModal"></h4>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{{ route('computeProfit') }}" class="form-horizontal">
+            <form method="POST" action="{{ route('profitHistory') }}" class="form-horizontal">
                 @csrf
                 <div class="form-group">
                     <label for="from_date_time" class="col-sm-2 control-label">FROM DATE</label>
@@ -124,8 +124,8 @@
           }
       });
       
-      $('body').on('click', '#profit', function () {
-        $('#fightModal').html("DEPOSIT");
+      $('body').on('click', '#checkHistory', function () {
+        $('#fightModal').html("Check History");
         $('#ajax-crud-modal').modal('show');
      });
 

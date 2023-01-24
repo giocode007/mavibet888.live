@@ -18,7 +18,6 @@
             <section class="row">
                 <div style="position: relative;overflow: hidden; padding-top: 56.25%;"  class="col-12 col-lg-6">
 
-                    @if (Auth::user()->role_type == 'Player' && Auth::user()->current_balance >= 20)
                         <iframe
                         style="width: 100%; height: 100%; position: absolute;
                         top: 0;
@@ -28,17 +27,7 @@
                         scrolling="no"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen></iframe>
-                    @elseif(Auth::user()->role_type == 'Operator' || Auth::user()->role_type == 'Declarator')
-                        <iframe
-                        style="width: 100%; height: 100%; position: absolute;
-                        top: 0;
-                        left: 0;"
-                        src="{{ $event[0]->video_code }}" 
-                        frameborder="0" 
-                        scrolling="no"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen></iframe>
-                    @endif
+                    
                     {{-- Operator --}}
 
                     <section class="declarator-tab">
@@ -153,8 +142,8 @@
 
                 <div id="main" class="col-12 col-lg-6">
                     <div class="blink card bg-warning">
-                        <div class="text-center p-1">
-                            <span id="spanStatus" class="text-black font-bold text-uppercase">{{ $selectedStatus[0]->status_type }}</span>
+                        <div id="statusspan" class="text-center p-1">
+                            <span id="spanStatus" class="text-black text-uppercase">{{ $selectedStatus[0]->status_type }}</span>
                         </div>
                     </div>
                     <div class="wrapper">

@@ -665,6 +665,7 @@ class OperatorController extends Controller
             
             $usersId = collect([]);
             $lastTransactions = collect([]);
+            $usersRemoveDupicate = [];
     
             $filter_transactions =  DB::table('transactions')
             ->select('id', 'user_id', 'status', 'transaction_type', 'amount')
@@ -677,7 +678,7 @@ class OperatorController extends Controller
                 if($history->status == 1 || $history->status == 2){
                     $user = DB::table('users')->select('role_type')
                     ->where('id',  $history->user_id)->first();
-                    
+
                     if($history->transaction_type == 'deposit'){
                         $totalDeposit += $history->amount;
                     }
@@ -687,31 +688,21 @@ class OperatorController extends Controller
                     }
     
                     if($user->role_type != 'Operator' && $user->role_type != 'Declarator'){
-                        $usersId->push([
-                            'id' => $history->user_id,
-                        ]);
+                        if(!in_array($history->user_id, $usersRemoveDupicate)){
+                            array_push($usersRemoveDupicate, $history->user_id);
+                        }
                     }
                     
                 }
                     
             }
     
-            $usersId->all();
-    
-            $usersRemoveDupicate = [];
-    
-            for($i=0; $i<count($usersId); $i++){
-    
-                if(!in_array($usersId[$i], $usersRemoveDupicate)){
-                    array_push($usersRemoveDupicate, $usersId[$i]);
-                }
-            }
     
             for($i=0; $i<count($usersRemoveDupicate); $i++){
     
                 $user = DB::table('transactions')
                 ->select('current_balance', 'current_commission')
-                ->where('user_id',  $usersRemoveDupicate[$i]['id'])
+                ->where('user_id',  $usersRemoveDupicate[$i])
                 ->whereBetween('created_at', [$trans_from, $trans_to])
                 ->orderBy('id', 'desc')
                 ->first();
@@ -724,6 +715,70 @@ class OperatorController extends Controller
             $totalGross = $totalDeposit - ( $totalWithdraw + $totalCurrentBalance + $totalCurrentCommission ) ;
     
             return view('operators.compute', compact('totalDeposit','totalWithdraw','totalCurrentBalance','totalCurrentCommission','lastTransactions', 'totalGross'));
+        }else{
+            $auditHistory = collect([]);
+        
+            $auditHistory->all();
+            return view('operators.audit', compact('auditHistory'));
+        }
+
+    }
+
+    public function profitHistory(Request $request)
+    {
+
+        if($request->from_date_time != null && $request->to_date_time != null){
+            $trans_from = Carbon::createFromFormat('Y-m-d H:i', $request->from_date_time)->toDateTimeString(); 
+            $trans_to = Carbon::createFromFormat('Y-m-d H:i', $request->to_date_time)->toDateTimeString(); 
+            
+            $usersId = collect([]);
+            $lastTransactions = collect([]);
+            $usersRemoveDupicate = [];
+    
+            $filter_transactions =  DB::table('transactions')
+            ->select('id', 'user_id', 'status', 'transaction_type', 'amount')
+            ->whereBetween('created_at', [$trans_from, $trans_to])
+            ->orderBy('id', 'desc')
+            ->get();
+    
+            foreach($filter_transactions as $history){
+                if($history->status == 1 || $history->status == 2){
+                    $user = DB::table('users')->select('role_type')
+                    ->where('id',  $history->user_id)->first();
+
+                    if($user->role_type != 'Operator' && $user->role_type != 'Declarator'){
+                        if(!in_array($history->user_id, $usersRemoveDupicate)){
+                            array_push($usersRemoveDupicate, $history->user_id);
+
+                            $user = DB::table('transactions')
+                            ->select('current_balance', 'current_commission')
+                            ->where('user_id',  $history->user_id)
+                            ->whereBetween('created_at', [$trans_from, $trans_to])
+                            ->orderBy('id', 'desc')
+                            ->first();
+
+                            $activeUser = DB::table('users')
+                            ->select('user_name')
+                            ->where('id',  $history->user_id)
+                            ->first();
+
+                            $lastTransactions->push([
+                                'id' => $history->id,
+                                'user_id' => $history->user_id,
+                                'username' => $activeUser->user_name,
+                                'current_balance' => $user->current_balance,
+                                'current_commission' => $user->current_commission,
+                            ]);
+                        }
+                    }
+                    
+                }
+                    
+            }
+
+            $lastTransactions->all();
+    
+            return view('operators.compute', compact('lastTransactions'));
         }else{
             $auditHistory = collect([]);
         
