@@ -30,21 +30,6 @@
                         <a href="javascript:void(0)" id="profit">
                             <span class="p-3 badge bg-dark">PROFIT</span>
                         </a>
-                        <div>
-                            <a href="{{ url('export/exportLogs') }}">
-                                <span class="p-3 badge bg-primary">EXPORT LOGS</span>
-                            </a>
-                            <a href="{{ url('export/exportEvents') }}">
-                                <span class="p-3 badge bg-primary">EXPORT EVENTS</span>
-                            </a>
-                            <a href="{{ url('export/exportFights') }}">
-                                <span class="p-3 badge bg-primary">EXPORT FIGHTS</span>
-                            </a>
-                            <a href="{{ url('export/exportHistory') }}">
-                                <span class="p-3 badge bg-primary">EXPORT HISTORY</span>
-                            </a>
-                        </div>
-                        
                     @endif
                 </div>
                 <div id="crud-table" class="card-body">
