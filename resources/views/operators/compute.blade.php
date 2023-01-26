@@ -29,7 +29,16 @@
                     <a href="javascript:void(0)" id="profit">
                         <span class="p-3 badge bg-dark"><i class="icon-mid bi bi-plus-circle me-2"></i>PROFIT</span>
                     </a>
-                    
+                    <div>
+                    Deposit(@comma($totalDeposit)) - ( Withdraw(@comma($totalWithdraw)) + Points(@comma($totalCurrentBalance)) + Commission(@comma($totalCurrentCommission)))
+                    @if ($totalGross > 0)
+                        <span class="p-3 badge bg-success">Gross: @money($totalGross)</span>
+                    @elseif($totalGross < 0)
+                        <span class="p-3 badge bg-danger">Gross: @money($totalGross)</span>
+                    @else
+                        <span class="p-3 badge bg-warning">Gross: @money($totalGross)</span>
+                    @endif
+                    </div>
                 </div>
                 <div id="crud-table" class="card-body">
                     <table class="table table-striped" id="table1">

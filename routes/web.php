@@ -68,6 +68,7 @@ Route::get('admin/agents', [App\Http\Controllers\OperatorController::class, 'get
 Route::get('/admin', [App\Http\Controllers\OperatorController::class, 'index'])->name('admin');
 Route::get('forgot/password', [App\Http\Controllers\OperatorController::class, 'forgetPassword'])->name('forgetPassword');
 Route::get('remove/points', [App\Http\Controllers\OperatorController::class, 'removePoints'])->name('removePoints');
+Route::get('export/{action}', [App\Http\Controllers\OperatorController::class, 'export']);
 
 
 

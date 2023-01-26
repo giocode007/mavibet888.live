@@ -8,11 +8,13 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
+use App\Exports\InvoicesExport;
 use App\Rules\MatchOldPassword;
 use Illuminate\Support\Facades\DB;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 
@@ -644,7 +646,7 @@ class OperatorController extends Controller
     {
 
         $auditHistory = collect([]);
-        
+
         $auditHistory->all();
         
         return view('operators.audit', compact('auditHistory'));
@@ -696,21 +698,37 @@ class OperatorController extends Controller
                 }
                     
             }
-    
-    
+
+
             for($i=0; $i<count($usersRemoveDupicate); $i++){
     
                 $user = DB::table('transactions')
-                ->select('current_balance', 'current_commission')
+                ->select('id','current_balance', 'current_commission')
                 ->where('user_id',  $usersRemoveDupicate[$i])
                 ->whereBetween('created_at', [$trans_from, $trans_to])
                 ->orderBy('id', 'desc')
                 ->first();
 
+                $activeUser = DB::table('users')
+                ->select('user_name')
+                ->where('id',  $usersRemoveDupicate[$i])
+                ->first();
+
                 $totalCurrentBalance += $user->current_balance;
                 $totalCurrentCommission += $user->current_commission;
+
+                if($user->current_balance != 0 || $user->current_commission != 0 ){
+                    $lastTransactions->push([
+                        'id' => $user->id,
+                        'username' => $activeUser->user_name,
+                        'current_balance' => $user->current_balance,
+                        'current_commission' => $user->current_commission,
+                    ]);
+                }
                 
             }
+
+            $lastTransactions->all();
 
             $totalGross = $totalDeposit - ( $totalWithdraw + $totalCurrentBalance + $totalCurrentCommission ) ;
     
@@ -885,6 +903,119 @@ class OperatorController extends Controller
                 'current_balance' => $currBal,
             ]);
 
+        }
+
+    }
+
+    public function export($action) 
+    {
+
+        $exportedList = collect([]);
+       
+        if($action == 'exportLogs'){
+            $logs =  DB::table('activity_logs')->get();
+
+            foreach($logs as $data){
+                $user = DB::table('users')
+                    ->select('user_name')
+                    ->where('id',  $data->user_id)
+                    ->first();
+
+                    $exportedList->push([
+                        'id' => $data->id,
+                        'user_name' => $user->user_name,
+                        'description' => $data->description,
+                        'date' => $data->date_time,
+                    ]);
+                
+            }
+
+            $exportedList->all();
+
+            $export = new InvoicesExport([$exportedList]);
+            return Excel::download($export, 'activity_logs.xlsx');
+        }else if($action == 'exportEvents'){
+            $events =  DB::table('events')->get();
+
+            foreach($events as $data){
+                $user = DB::table('users')
+                    ->select('user_name')
+                    ->where('id',  $data->user_id)
+                    ->first();
+
+                    $exportedList->push([
+                        'id' => $data->id,
+                        'user_name' => $user->user_name,
+                        'event_name' => $data->event_name,
+                        'date' => $data->fight_date_time,
+                        'location' => $data->location,
+                        'video_source' => $data->video_code,
+                        'plasada' => $data->palasada,
+                    ]);
+                
+            }
+
+            $exportedList->all();
+
+            $export = new InvoicesExport([$exportedList]);
+            return Excel::download($export, 'events.xlsx');
+        }else if($action == 'exportFights'){
+            $fights =  DB::table('fights')->get();
+
+            foreach($fights as $data){
+                $event = DB::table('events')
+                    ->select('event_name')
+                    ->where('id',  $data->event_id)
+                    ->first();
+
+                    $exportedList->push([
+                        'id' => $data->id,
+                        'event_name' => $event->event_name,
+                        'fight_number' => $data->fight_number,
+                        'result' => $data->result,
+                        'payout_meron' => $data->payoutMeron,
+                        'payout_wala' => $data->payoutWala,
+                        'declared_by' => $data->declared_by,
+                        'date' => $data->created_at,
+                    ]);
+                
+            }
+
+            $exportedList->all();
+
+            $export = new InvoicesExport([$exportedList]);
+            return Excel::download($export, 'fights.xlsx');
+        }else if($action == 'exportHistory'){
+            $transaction =  DB::table('transactions')->get();
+
+            foreach($transaction as $data){
+                $user = DB::table('users')
+                    ->select('user_name', 'role_type')
+                    ->where('id',  $data->user_id)
+                    ->first();
+
+                    if($user->role_type != 'Operator' && $user->role_type != 'Declarator'){
+                        $exportedList->push([
+                            'id' => $data->id,
+                            'user_name' => $user->user_name,
+                            'transaction_type' => $data->transaction_type,
+                            'amount' => $data->amount,
+                            'current_balance' => $data->current_balance,
+                            'current_commission' => $data->current_commission,
+                            'note' => $data->note,
+                            'from' => $data->from,
+                            'to' => $data->to,
+                            'date' => $data->approved_date_time,
+                            'approved_by' => $data->approve_by,
+                        ]);
+                    }
+                    
+            }
+
+            $exportedList->all();
+
+            $export = new InvoicesExport([$exportedList]);
+            return Excel::download($export, 'history.xlsx');
         }
 
     }

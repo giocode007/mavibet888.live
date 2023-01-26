@@ -27,9 +27,24 @@
             <div class="card">
                 <div class="d-flex card-header justify-content-between">
                     @if (Auth::user()->role_type == 'Operator')
-                        <a href="javascript:void(0)" id="checkHistory">
-                            <span class="p-3 badge bg-dark">Check History</span>
+                        <a href="javascript:void(0)" id="profit">
+                            <span class="p-3 badge bg-dark">PROFIT</span>
                         </a>
+                        <div>
+                            <a href="{{ url('export/exportLogs') }}">
+                                <span class="p-3 badge bg-primary">EXPORT LOGS</span>
+                            </a>
+                            <a href="{{ url('export/exportEvents') }}">
+                                <span class="p-3 badge bg-primary">EXPORT EVENTS</span>
+                            </a>
+                            <a href="{{ url('export/exportFights') }}">
+                                <span class="p-3 badge bg-primary">EXPORT FIGHTS</span>
+                            </a>
+                            <a href="{{ url('export/exportHistory') }}">
+                                <span class="p-3 badge bg-primary">EXPORT HISTORY</span>
+                            </a>
+                        </div>
+                        
                     @endif
                 </div>
                 <div id="crud-table" class="card-body">
@@ -81,7 +96,7 @@
             <h4 class="modal-title" id="fightModal"></h4>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{{ route('profitHistory') }}" class="form-horizontal">
+            <form method="POST" action="{{ route('computeProfit') }}" class="form-horizontal">
                 @csrf
                 <div class="form-group">
                     <label for="from_date_time" class="col-sm-2 control-label">FROM DATE</label>
@@ -124,18 +139,15 @@
           }
       });
       
-      $('body').on('click', '#checkHistory', function () {
-        $('#fightModal').html("Check History");
+      $('body').on('click', '#profit', function () {
+        $('#fightModal').html("DEPOSIT");
         $('#ajax-crud-modal').modal('show');
      });
 
      $('body').on('click', '#compute', function () {
         document.getElementById('compute').classList.add('hide');
         document.getElementById('computing').classList.remove('hide');
-
      });
-
-     
 
     });
    
