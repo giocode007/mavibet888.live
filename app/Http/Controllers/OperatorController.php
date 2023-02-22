@@ -672,12 +672,13 @@ class OperatorController extends Controller
             $filter_transactions =  DB::table('transactions')
             ->select('id', 'user_id', 'status', 'transaction_type', 'amount')
             ->whereBetween('created_at', [$trans_from, $trans_to])
+            ->where('transaction_type', 'deposit')
+            ->orWhere('transaction_type', 'withdraw')
             ->orderBy('id', 'desc')
             ->get();
-    
+
     
             foreach($filter_transactions as $history){
-                if($history->status == 1 || $history->status == 2){
                     $user = DB::table('users')->select('role_type')
                     ->where('id',  $history->user_id)->first();
 
@@ -689,45 +690,29 @@ class OperatorController extends Controller
                         $totalWithdraw += $history->amount;
                     }
     
-                    if($user->role_type != 'Operator' && $user->role_type != 'Declarator'){
-                        if(!in_array($history->user_id, $usersRemoveDupicate)){
-                            array_push($usersRemoveDupicate, $history->user_id);
-                        }
-                    }
-                    
-                }
-                    
             }
 
 
-            for($i=0; $i<count($usersRemoveDupicate); $i++){
+            $currentUsersAmount =  DB::table('users')
+            ->select('id', 'user_name', 'role_type', 'current_balance', 'current_commission')
+            ->where('role_type', '!=', 'Operator')
+            ->where('role_type', '!=', 'Declarator')
+            ->get();
     
-                $user = DB::table('transactions')
-                ->select('id','current_balance', 'current_commission')
-                ->where('user_id',  $usersRemoveDupicate[$i])
-                ->whereBetween('created_at', [$trans_from, $trans_to])
-                ->orderBy('id', 'desc')
-                ->first();
-
-                $activeUser = DB::table('users')
-                ->select('user_name')
-                ->where('id',  $usersRemoveDupicate[$i])
-                ->first();
-
+            foreach($currentUsersAmount as $user){
                 $totalCurrentBalance += $user->current_balance;
                 $totalCurrentCommission += $user->current_commission;
 
                 if($user->current_balance != 0 || $user->current_commission != 0 ){
                     $lastTransactions->push([
                         'id' => $user->id,
-                        'username' => $activeUser->user_name,
+                        'username' => $user->user_name,
                         'current_balance' => $user->current_balance,
                         'current_commission' => $user->current_commission,
                     ]);
                 }
-                
+                    
             }
-
             $lastTransactions->all();
 
             $totalGross = $totalDeposit - ( $totalWithdraw + $totalCurrentBalance + $totalCurrentCommission ) ;
