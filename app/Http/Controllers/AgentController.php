@@ -351,7 +351,6 @@ class AgentController extends Controller
 
         $user = DB::table('users')->select('id','user_name','current_balance','current_commission')->where('id',  $playerId)->get();
         
-        if($amount > 0){
             if($saveValue == 'cashin'){
                 if($activeAgent->current_balance >= $amount){
     
@@ -565,7 +564,6 @@ class AgentController extends Controller
                 return response()->json(array('success'=>false));
             }
         
-        }
     }
 
     public function getActivePlayers()
