@@ -16,12 +16,9 @@
         </div>
         <div class="page-content">
             <section class="row">
-                <div style="position: relative;overflow: hidden; padding-top: 56.25%;"  class="col-12 col-lg-6">
+                <div class="iwrapper col-12 col-lg-6">
 
                         <iframe
-                        style="width: 100%; height: 100%; position: absolute;
-                        top: 0;
-                        left: 0;"
                         src="{{ $event[0]->video_code }}" 
                         frameborder="0" 
                         scrolling="no"
@@ -276,6 +273,12 @@
                         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); border-radius: 0px 0px 5px 5px;">
                             <div id="display_trade_group" class="cards_result"></div>
                         </div>
+
+                        <div class="user_field_group2" id="container_data2" style="overflow-y: hidden; 
+                        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); border-radius: 0px 0px 5px 5px;">
+                            <div id="display_trade_group2" class="cards_result2"></div>
+                        </div>
+                        
                         
 
 
@@ -328,6 +331,7 @@ $(document).ready(function () {
     });
 
     checkResult();
+    checkResult1();
     checkBet();
 
     $('body').on('click', '#refresh-users', function () {
@@ -464,37 +468,44 @@ $(document).ready(function () {
 
                 var d = JSON.stringify(result, 0, 4);
                 var jsonParse = JSON.parse(d);
+
+
+                ctr = 0;
+                number = 0;
+                checkerNumber = 0;
+                columnCount = Math.ceil(response.length / 7);
+
+
                 var html = '';
                 html += '<tr>';
-                jsonParse.forEach(function(el){
-                    html += '<td>';
-                        if(el[0].result == 'meron'){
-                            html += '<p style="background: #EEEEEE; color: #ED5659; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">MERON</p>';
-                        }else if(el[0].result == 'wala'){
-                            html += '<p style="background: #EEEEEE; color: #1072BA; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">WALA</p>';
-                        }else if(el[0].result == 'draw'){
-                            html += '<p style="background: #EEEEEE; color: #198754; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">DRAW</p>';
-                        }else if(el[0].result == 'cancel'){
-                            html += '<p style="background: #EEEEEE; color: #999999; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">CANCEL</p>';
-                        }
 
-                        el.forEach(function(ele){
-                            if(ele.result == 'meron'){
-                                meronResult++;
-                                html += '<button type="button" class="mx-3 btn trend_output btn_result" style="background: #ED5659;">'+ele.fight_number+'</button><br>';
-                            }else if(ele.result == 'wala'){
-                                walaResult++;
-                                html += '<button type="button" class="mx-2 btn trend_output btn_result" style="background: #1072BA;">'+ele.fight_number+'</button><br>';
-                            }else if(ele.result == 'draw'){
-                                drawResult++;
-                                html += '<button type="button" class="mx-2 btn trend_output btn_result" style="background: #198754;">'+ele.fight_number+'</button><br>';
-                            }else if(ele.result == 'cancel'){
-                                cancelResult++;
-                                html += '<button type="button" class="mx-3 btn trend_output btn_result" style="background: #999999;">'+ele.fight_number+'</button><br>';
+                while(ctr < columnCount){
+                    checkerNumber += 7;
+                    html += '<td>';
+                        for(var x = 0; x < response.length; x++){
+
+                            if(number >= checkerNumber || number == response.length){
+                                break;
                             }
-                        })
-                        html += '</td>';
-                })
+                            if(response[number]['result'] == 'meron'){
+                                meronResult++;
+                                html += '<button type="button" class="btn trend_output btn_result" style="background: #ED5659;">'+response[number]['fight_number']+'</button><br>';
+                            }else if(response[number]['result']  == 'wala'){
+                                walaResult++;
+                                html += '<button type="button" class="btn trend_output btn_result" style="background: #1072BA;">'+response[number]['fight_number']+'</button><br>';
+                            }else if(response[number]['result']  == 'draw'){
+                                drawResult++;
+                                html += '<button type="button" class="btn trend_output btn_result" style="background: #198754;">'+response[number]['fight_number']+'</button><br>';
+                            }else if(response[number]['result'] == 'cancel'){
+                                cancelResult++;
+                                html += '<button type="button" class="btn trend_output btn_result" style="background: #999999;">'+response[number]['fight_number']+'</button><br>';
+                            }
+
+                            number++;
+                        }
+                    ctr++;
+                    html += '</td>';
+                }
 
                 $('#result-meron').html(meronResult);
                 $('#result-wala').html(walaResult);
@@ -503,6 +514,30 @@ $(document).ready(function () {
 
                 html += '</tr>';
                 $('#display_trade_group').html(html);
+
+                var html2 = '';
+                html2 += '<tr>';
+                jsonParse.forEach(function(el){
+                    html2 += '<td>';
+                        el.forEach(function(ele){
+                            if(ele.result == 'meron'){
+                                meronResult++;
+                                html2 += '<button type="button" class="btn trend_output btn_result" style="background: #ED5659;"></button><br>';
+                            }else if(ele.result == 'wala'){
+                                walaResult++;
+                                html2 += '<button type="button" class="btn trend_output btn_result" style="background: #1072BA;"></button><br>';
+                            }else if(ele.result == 'draw'){
+                                drawResult++;
+                                html2 += '<button type="button" class="btn trend_output btn_result" style="background: #198754;"></button><br>';
+                            }
+                        })
+                        html2 += '</td>';
+                })
+
+
+                html2 += '</tr>';
+
+                $('#display_trade_group2').html(html2);
 
                 var listElements = document.querySelectorAll("#list-messages li");
 
@@ -559,6 +594,10 @@ $(document).ready(function () {
                 document.getElementById('nextFight').classList.remove('d-flex');
                 document.getElementById('nextFight').classList.add('hide');
                 document.getElementById('go-next').classList.add('hide');
+                document.getElementById('openclose').classList.add('d-flex');
+                document.getElementById('openclose').classList.remove('hide');
+                document.getElementById('refreshAllUsers').classList.add('hide');
+                document.getElementById('refreshAllUsers').classList.remove('d-flex');
                 
             },
             error: function (response) {
@@ -691,6 +730,8 @@ $(document).ready(function () {
                     data: {id:id},
                         success: function (response) {
                             if(response.isOpen == 1){
+                                if (confirm("Are you sure you want to BET " + betAmount + " - " + betType.toUpperCase() + "?")) 
+                                    {
                                 $.ajax({
                                     url: "{{ route('bet') }}",
                                     type: "GET",
@@ -715,6 +756,7 @@ $(document).ready(function () {
                                         console.log('Error:', response);
                                     }
                                 });
+                                }
                             }
                         },
                         error: function (response) {
@@ -802,7 +844,72 @@ function checkResult(){
             walaResult = 0;
             drawResult= 0;
             cancelResult = 0;
+            ctr = 0;
+            number = 0;
+            checkerNumber = 0;
+            columnCount = Math.ceil(response.length / 7);
+
+
+            var html = '';
+            html += '<tr>';
+
+            while(ctr < columnCount){
+                checkerNumber += 7;
+                html += '<td>';
+                    for(var x = 0; x < response.length; x++){
+
+                        if(number >= checkerNumber || number == response.length){
+                            break;
+                        }
+                        if(response[number]['result'] == 'meron'){
+                            meronResult++;
+                            html += '<button type="button" class="btn trend_output btn_result" style="background: #ED5659;">'+response[number]['fight_number']+'</button><br>';
+                        }else if(response[number]['result']  == 'wala'){
+                            walaResult++;
+                            html += '<button type="button" class="btn trend_output btn_result" style="background: #1072BA;">'+response[number]['fight_number']+'</button><br>';
+                        }else if(response[number]['result']  == 'draw'){
+                            drawResult++;
+                            html += '<button type="button" class="btn trend_output btn_result" style="background: #198754;">'+response[number]['fight_number']+'</button><br>';
+                        }else if(response[number]['result'] == 'cancel'){
+                            cancelResult++;
+                            html += '<button type="button" class="btn trend_output btn_result" style="background: #999999;">'+response[number]['fight_number']+'</button><br>';
+                        }
+
+                        number++;
+                    }
+                ctr++;
+                html += '</td>';
+            }
+
+            
+            $('#result-meron').html(meronResult);
+            $('#result-wala').html(walaResult);
+            $('#result-draw').html(drawResult);
+            $('#result-cancel').html(cancelResult);
+
+            html += '</tr>';
+
+            $('#display_trade_group').html(html);
+
+           
+        },
+        error: function (response) {
+            console.log('Error:', response);
+        }
+    });
+}
+
+function checkResult1(){
+    var eventId = document.getElementById("eventId").value;
+
+    $.ajax({
+    url: "{{ url('checkResult') }}",
+    type: "GET",
+    data: {eventId:eventId},
+        success: function (response) {
+            
             result = [];
+
             response.reduce(function (r, a) {
                 if (a.result !== r) {
                     result.push([]);
@@ -818,42 +925,25 @@ function checkResult(){
             html += '<tr>';
             jsonParse.forEach(function(el){
                 html += '<td>';
-                    if(el[0].result == 'meron'){
-                        html += '<p style="background: #EEEEEE; color: #ED5659; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">MERON</p>';
-                    }else if(el[0].result == 'wala'){
-                        html += '<p style="background: #EEEEEE; color: #1072BA; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">WALA</p>';
-                    }else if(el[0].result == 'draw'){
-                        html += '<p style="background: #EEEEEE; color: #198754; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">DRAW</p>';
-                    }else if(el[0].result == 'cancel'){
-                        html += '<p style="background: #EEEEEE; color: #999999; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">CANCEL</p>';
-                    }
-
                     el.forEach(function(ele){
                         if(ele.result == 'meron'){
                             meronResult++;
-                            html += '<button type="button" class="mx-3 btn trend_output btn_result" style="background: #ED5659;">'+ele.fight_number+'</button><br>';
+                            html += '<button type="button" class="btn trend_output btn_result" style="background: #ED5659;"></button><br>';
                         }else if(ele.result == 'wala'){
                             walaResult++;
-                            html += '<button type="button" class="mx-2 btn trend_output btn_result" style="background: #1072BA;">'+ele.fight_number+'</button><br>';
+                            html += '<button type="button" class="btn trend_output btn_result" style="background: #1072BA;"></button><br>';
                         }else if(ele.result == 'draw'){
                             drawResult++;
-                            html += '<button type="button" class="mx-2 btn trend_output btn_result" style="background: #198754;">'+ele.fight_number+'</button><br>';
-                        }else if(ele.result == 'cancel'){
-                            cancelResult++;
-                            html += '<button type="button" class="mx-3 btn trend_output btn_result" style="background: #999999;">'+ele.fight_number+'</button><br>';
+                            html += '<button type="button" class="btn trend_output btn_result" style="background: #198754;"></button><br>';
                         }
                     })
                     html += '</td>';
             })
 
-            $('#result-meron').html(meronResult);
-            $('#result-wala').html(walaResult);
-            $('#result-draw').html(drawResult);
-            $('#result-cancel').html(cancelResult);
 
             html += '</tr>';
 
-            $('#display_trade_group').html(html);
+            $('#display_trade_group2').html(html);
 
            
         },

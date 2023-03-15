@@ -433,7 +433,7 @@ class ArenaController extends Controller
                                         'from' => $user[0]->user_name,
                                         'to' => $checkAgent[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]);   
                                 
                                 $description  = 'Received ' . $commission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;
@@ -481,7 +481,7 @@ class ArenaController extends Controller
                                         'from' => $user[0]->user_name,
                                         'to' => $checkAgent[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]);   
                 
                 
@@ -506,7 +506,7 @@ class ArenaController extends Controller
                                         'from' => $checkAgent[0]->user_name,
                                         'to' => $checkSubOp[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]);   
                                     
                     
@@ -573,7 +573,7 @@ class ArenaController extends Controller
                                         'from' => $user[0]->user_name,
                                         'to' => $checkAgent[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]); 
 
                                     DB::table('users')->where('id', $checkMaster[0]->id)
@@ -596,7 +596,7 @@ class ArenaController extends Controller
                                         'from' => $checkAgent[0]->user_name,
                                         'to' => $checkMaster[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]); 
                 
                                     
@@ -620,7 +620,7 @@ class ArenaController extends Controller
                                         'from' => $checkMaster[0]->user_name,
                                         'to' => $checkSubOp[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]);  
                                      
                     
@@ -707,7 +707,7 @@ class ArenaController extends Controller
                                         'from' => $user[0]->user_name,
                                         'to' => $checkAgent[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]);  
                                     
                                     DB::table('users')->where('id', $checkMaster[0]->id)
@@ -730,7 +730,7 @@ class ArenaController extends Controller
                                         'from' => $checkAgent[0]->user_name,
                                         'to' => $checkMaster[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]);   
                                    
                                     DB::table('users')->where('id', $checkSubOp[0]->id)
@@ -753,7 +753,7 @@ class ArenaController extends Controller
                                         'from' => $checkMaster[0]->user_name,
                                         'to' => $checkSubOp[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]); 
                                     
                                     DB::table('users')->where('id', $checkSubAdmin[0]->id)
@@ -776,7 +776,7 @@ class ArenaController extends Controller
                                         'from' => $checkSubOp[0]->user_name,
                                         'to' => $checkSubAdmin[0]->user_name,
                                         'approved_date_time' => $todayDate,
-                                        'approve_by' => Auth::user()->user_name,
+                                        'approve_by' => $eventId,
                                     ]);   
                                     
                                     $description  = 'Received ' . $totalGoldCommission . ' Commission from ' . $user[0]->user_name . ' / ' . $fight[0]->fight_number  . ' - ' . $event[0]->event_name;

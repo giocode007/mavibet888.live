@@ -17,7 +17,7 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item active">
                     <a href="{{ route('summary_report') }}" class='sidebar-link'>
                         <i class="bi bi-speedometer"></i>
                         <span>Summary Report</span>
@@ -29,7 +29,7 @@
                         <span>Load Logs</span>
                     </a>
                 </li>
-                <li class="sidebar-item active">
+                <li class="sidebar-item">
                     <a href="{{ route('commission_logs') }}" class='sidebar-link'>
                         <i class="bi bi-calendar-week-fill"></i>
                         <span>Commision Logs</span>
@@ -60,6 +60,7 @@
                         <li class="submenu-item active">
                             <a href="{{ route('getDeletedPlayers') }}">Approval Players</a>
                         </li>
+                        
                     </ul>
                 </li>
 

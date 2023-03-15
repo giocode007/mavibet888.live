@@ -9,20 +9,18 @@
         </div>
         <div class="sidebar-menu">
             <ul class="menu">
-                <li class="sidebar-item">
-                    <div class="card-body">
-                        <div class="badges">
-                            <span>Your code:</span>
-                            <span class="badge bg-success">{{ Auth::user()->player_code }}</span>
-                        </div>
-                    </div>
-                </li>
 
                 <li class="sidebar-title">Menu</li>
                 <li class="sidebar-item">
                     <a href="{{ route('home') }}" class='sidebar-link'>
                         <i class="bi bi-speedometer"></i>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{{ route('summary_report') }}" class='sidebar-link'>
+                        <i class="bi bi-speedometer"></i>
+                        <span>Summary Report</span>
                     </a>
                 </li>
                 <li class="sidebar-item active">
@@ -35,6 +33,12 @@
                     <a href="{{ route('commission_logs') }}" class='sidebar-link'>
                         <i class="bi bi-calendar-week-fill"></i>
                         <span>Commision Logs</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{{ route('commission_withdrawal') }}" class='sidebar-link'>
+                        <i class="bi bi-calendar-week-fill"></i>
+                        <span>Commision Withdrawal</span>
                     </a>
                 </li>
 
@@ -54,8 +58,9 @@
                             <a href="{{ route('getActivePlayers') }}">Active Players</a>
                         </li>
                         <li class="submenu-item active">
-                            <a href="{{ route('getDeletedPlayers') }}">Deleted Players</a>
+                            <a href="{{ route('getDeletedPlayers') }}">Approval Players</a>
                         </li>
+                       
                     </ul>
                 </li>
 

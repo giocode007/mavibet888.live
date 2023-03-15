@@ -38,6 +38,7 @@ Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'authen
 Route::get('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 // ------------------------------ register ---------------------------------//
+Route::get('/ACCOUNTID/{id}', [App\Http\Controllers\Auth\RegisterController::class, 'accountid'])->name('accountid');
 Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register');
 Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'storeUser'])->name('register');
 
@@ -114,8 +115,12 @@ Route::get('/bet', [App\Http\Controllers\ArenaController::class, 'bet'])->name('
 
 // ----------------------------- agent ------------------------------//
 Route::get('/dashboard', [App\Http\Controllers\AgentController::class, 'dashboard'])->name('home');
+Route::get('/summary_report', [App\Http\Controllers\AgentController::class, 'summary_report'])->name('summary_report');
+Route::get('/commission_withdrawal', [App\Http\Controllers\AgentController::class, 'commissionWithdrawal'])->name('commission_withdrawal');
+Route::get('/dashboard', [App\Http\Controllers\AgentController::class, 'dashboard'])->name('home');
 Route::get('/load_logs', [App\Http\Controllers\AgentController::class, 'loadLogs'])->name('load_logs');
-Route::get('/commission_logs', [App\Http\Controllers\AgentController::class, 'commissionLogs'])->name('commission_logs');
+Route::get('/event_commission_logs', [App\Http\Controllers\AgentController::class, 'eventCommissionLogs'])->name('event_commission_logs');
+Route::get('commission_logs', [App\Http\Controllers\AgentController::class, 'commissionLogs'])->name('commission_logs');
 Route::get('agent/profile/{id}', [App\Http\Controllers\AgentController::class, 'getProfile']);
 Route::post('agent/changeProfileInfo', [App\Http\Controllers\AgentController::class, 'changeProfileInfo'])->name('agent/changeProfileInfo');
 Route::get('getPlayerInfo', [App\Http\Controllers\AgentController::class, 'getPlayerInfo'])->name('getAgengInfo');

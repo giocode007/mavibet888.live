@@ -9,9 +9,6 @@
             <i class="bi bi-justify fs-3"></i>
         </a>
     </header>
-    <div class="page-heading">
-        <h3 class="text-white">Profile Statistics</h3>
-    </div>
     {{-- message --}}
     {!! Toastr::message() !!}
     <div class="page-content">
@@ -20,65 +17,25 @@
                 {{-- Information Section --}}
 
                 <div class="row">
-                    <div class="col-6 col-lg-3 col-md-6">
+                    <div class="col-lg">
                         <div class="card">
-                            <div class="card-body px-3 py-4-5">
+                            <div class="card-body bg-light-info">
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon purple">
-                                            <i class="iconly-boldShow"></i>
+                                    <h6 class="font-bold">PLEASE TAKE NOTE OF YOUR REFFERAL LINK BELOW, ALL PLAYERS
+                                        THAT WILL REGISTER UNDER THIS LINK WILL AUTOMATICALLY BE UNDER YOUR ACCOUNT.
+                                        <div class="card-body">
+                                            <div>
+                                                <span class="text-danger">https://victory777.live/ACCOUNTID/{{ Auth::user()->player_code }}</span>
+                                                <a href="javascript:void(0)" id="copy-code" class="py-2 btn badge bg-danger" data-id="https://victory777.live/ACCOUNTID/{{ Auth::user()->player_code }}">COPY REFERAL LINK</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">Agents</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $agents }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon blue">
-                                            <i class="iconly-boldProfile"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">Active Players</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $activePlayers }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon red">
-                                            <i class="iconly-boldBookmark"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">Deleted Players</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $disabledPlayers }}</h6>
-                                    </div>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- Graph of commision --}}
-                <div class="page-heading">
-                    <div class="col-12">
-                        <h4 class="section-title text-uppercase text-white">Commission</h4>
-                    </div>
-                </div>
                 <div class="row mb-10">
                     <div class="col-12">
                         <div class="card-group">
@@ -237,10 +194,13 @@
                 var copyText =  $(this).data('id');
 
                 // Copy the text inside the text field
-                navigator.clipboard.writeText(copyText);
-
-                // Alert the copied text
-                alert("Copied the text: " + copyText);
+                navigator.clipboard.writeText(copyText)
+                .then(() => {
+                    alert("Copied the text: " + copyText);
+                })
+                .catch(() => {
+                    alert("something went wrong");
+                });
             });
 
         });

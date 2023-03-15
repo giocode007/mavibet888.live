@@ -91,6 +91,41 @@ class AgentController extends Controller
         return view('agents.load_logs', compact('selectedUser','allTransactions'));
     }
 
+    public function summary_report()
+    {
+        $userId = Auth::user()->id;
+        
+        $activeEvent = DB::table('events')->select('id','event_name','fight_date_time')->get();
+
+        $eventCommission = collect([]);
+
+        foreach($activeEvent as $history){
+
+            $transactionHistory = DB::table('transactions')
+            ->where('approve_by', $history->id)
+            ->where('user_id', $userId)
+            ->get();
+
+            $totalEventCommission = 0;
+
+            foreach($transactionHistory as $data){
+                $totalEventCommission += $data->amount;
+            }
+            
+            $eventCommission->push([
+                'id' => $history->id,
+                'date' => $history->fight_date_time,
+                'event_name' => $history->event_name,
+                'total_commission' => $totalEventCommission,
+            ]);
+                    
+        }
+        
+        $eventCommission->all();
+       
+        return view('agents.summary_report', compact('eventCommission'));
+    }
+
     public function commissionLogs()
     {
         $userId = Auth::user()->id;
@@ -107,8 +142,7 @@ class AgentController extends Controller
 
         foreach($transactionHistory as $history){
 
-            if($history->transaction_type == 'commission' || $history->transaction_type == 'commission out'
-            || $history->transaction_type == 'convert' || $history->transaction_type == 'commission get'){
+            if($history->transaction_type == 'commission'){
 
                     if($history->status == 1){
                         $commissionHistory->push([
@@ -131,6 +165,48 @@ class AgentController extends Controller
         $commissionHistory->all();
         
         return view('agents.commission_logs', compact('commissionHistory', 'selectedUser'));
+    }
+
+    public function commissionWithdrawal()
+    {
+        $userId = Auth::user()->id;
+        
+        $selectedUser = DB::table('users')->select('id','user_name','role_type','agent_code')
+        ->where('id',  $userId)->first();
+
+        $commissionHistory = collect([]);
+
+        $transactionHistory = DB::table('transactions')
+        ->where('user_id', $userId)
+        ->orderBy('id', 'desc')
+        ->get();
+
+        foreach($transactionHistory as $history){
+
+            if($history->transaction_type == 'commission out'
+            || $history->transaction_type == 'convert' || $history->transaction_type == 'commission get'){
+
+                    if($history->status == 1){
+                        $commissionHistory->push([
+                            'id' => $history->id,
+                            'transaction_type' => $history->transaction_type,
+                            'status' => $history->status,
+                            'amount' => $history->amount,
+                            'from' => $history->from,
+                            'to' => $history->to,
+                            'current_commission' => $history->current_commission,
+                            'note' => $history->note,
+                            'date' => $history->approved_date_time,
+                        ]);
+                    }
+                    
+                }
+
+        }
+       
+        $commissionHistory->all();
+        
+        return view('agents.commission_withdrawal', compact('commissionHistory', 'selectedUser'));
     }
 
     public function getProfile($id)
@@ -195,7 +271,7 @@ class AgentController extends Controller
         ->where('agent_code', $playerCode)
         ->where('role_type', '!=', 'Player')
         ->get();
-        
+
         return view('agents.agents', compact('agents'));
     }
 
@@ -351,6 +427,7 @@ class AgentController extends Controller
 
         $user = DB::table('users')->select('id','user_name','current_balance','current_commission')->where('id',  $playerId)->get();
         
+        if($amount > 0){
             if($saveValue == 'cashin'){
                 if($activeAgent->current_balance >= $amount){
     
@@ -564,6 +641,7 @@ class AgentController extends Controller
                 return response()->json(array('success'=>false));
             }
         
+        }
     }
 
     public function getActivePlayers()

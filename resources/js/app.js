@@ -190,37 +190,45 @@ channel3.listen('.player-result', (event) => {
     var d = JSON.stringify(result, 0, 4);
 
     var jsonParse = JSON.parse(d);
+
+
+    ctr = 0;
+    number = 0;
+    checkerNumber = 0;
+    columnCount = Math.ceil(event.response.length / 7);
+
+
     var html = '';
     html += '<tr>';
-    jsonParse.forEach(function(el){
-        html += '<td>';
-            if(el[0].result == 'meron'){
-                html += '<p style="background: #EEEEEE; color: #ED5659; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">MERON</p>';
-            }else if(el[0].result == 'wala'){
-                html += '<p style="background: #EEEEEE; color: #1072BA; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">WALA</p>';
-            }else if(el[0].result == 'draw'){
-                html += '<p style="background: #EEEEEE; color: #198754; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">DRAW</p>';
-            }else if(el[0].result == 'cancel'){
-                html += '<p style="background: #EEEEEE; color: #999999; padding: 3px 0 0 8px; font-weight: 700; height: 30px;">CANCEL</p>';
-            }
 
-            el.forEach(function(ele){
-                if(ele.result == 'meron'){
-                    meronResult++;
-                    html += '<button type="button" class="mx-3 btn trend_output btn_result" style="background: #ED5659;">'+ele.fight_number+'</button><br>';
-                }else if(ele.result == 'wala'){
-                    walaResult++;
-                    html += '<button type="button" class="mx-2 btn trend_output btn_result" style="background: #1072BA;">'+ele.fight_number+'</button><br>';
-                }else if(ele.result == 'draw'){
-                    drawResult++;
-                    html += '<button type="button" class="mx-2 btn trend_output btn_result" style="background: #198754;">'+ele.fight_number+'</button><br>';
-                }else if(ele.result == 'cancel'){
-                    cancelResult++;
-                    html += '<button type="button" class="mx-3 btn trend_output btn_result" style="background: #999999;">'+ele.fight_number+'</button><br>';
+    while(ctr < columnCount){
+        checkerNumber += 7;
+        html += '<td>';
+            for(var x = 0; x < event.response.length; x++){
+
+                if(number >= checkerNumber || number == event.response.length){
+                    break;
                 }
-            })
-            html += '</td>';
-    })
+                if(event.response[number]['result'] == 'meron'){
+                    meronResult++;
+                    html += '<button type="button" class="btn trend_output btn_result" style="background: #ED5659;">'+event.response[number]['fight_number']+'</button><br>';
+                }else if(event.response[number]['result']  == 'wala'){
+                    walaResult++;
+                    html += '<button type="button" class="btn trend_output btn_result" style="background: #1072BA;">'+event.response[number]['fight_number']+'</button><br>';
+                }else if(event.response[number]['result']  == 'draw'){
+                    drawResult++;
+                    html += '<button type="button" class="btn trend_output btn_result" style="background: #198754;">'+event.response[number]['fight_number']+'</button><br>';
+                }else if(event.response[number]['result'] == 'cancel'){
+                    cancelResult++;
+                    html += '<button type="button" class="btn trend_output btn_result" style="background: #999999;">'+event.response[number]['fight_number']+'</button><br>';
+                }
+
+                number++;
+            }
+        ctr++;
+        html += '</td>';
+    }
+
 
     $('#result-meron').html(meronResult);
     $('#result-wala').html(walaResult);
@@ -230,6 +238,30 @@ channel3.listen('.player-result', (event) => {
     html += '</tr>';
 
     $('#display_trade_group').html(html);
+
+    var html2 = '';
+        html2 += '<tr>';
+        jsonParse.forEach(function(el){
+            html2 += '<td>';
+                el.forEach(function(ele){
+                    if(ele.result == 'meron'){
+                        meronResult++;
+                        html2 += '<button type="button" class="btn trend_output btn_result" style="background: #ED5659;"></button><br>';
+                    }else if(ele.result == 'wala'){
+                        walaResult++;
+                        html2 += '<button type="button" class="btn trend_output btn_result" style="background: #1072BA;"></button><br>';
+                    }else if(ele.result == 'draw'){
+                        drawResult++;
+                        html2 += '<button type="button" class="btn trend_output btn_result" style="background: #198754;"></button><br>';
+                    }
+                })
+                html2 += '</td>';
+        })
+
+
+        html2 += '</tr>';
+
+        $('#display_trade_group2').html(html2);
 
     if(event.isCurrentFight){
 
